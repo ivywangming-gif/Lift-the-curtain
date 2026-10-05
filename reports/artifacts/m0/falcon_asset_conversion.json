@@ -1,0 +1,10 @@
+{
+  "input_urdf": "C:\\Robotics\\FALCON-upstream\\humanoidverse\\data\\robots\\g1\\g1_29dof_fakehand.urdf",
+  "input_sha256": "3a561056e659cdcaaadeee6e650c2cff7ad0a11f27a43c3909c98ccb31e06a1a",
+  "output_usd": "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\g1_29dof_falcon_rubberhand.usd",
+  "output_sha256": "7e022955b8be18cd90dd2bbcd05f14d9ae2771ac6abb7dad089eab14efee6f5d",
+  "merge_fixed_joints": false,
+  "fix_base": false,
+  "source_commit": "a967a6d8494f57777cf8d266a644ac8e45833301",
+  "notes": "Converted locally from the external FALCON rubber-hand URDF; not a copied upstream repository."
+}
