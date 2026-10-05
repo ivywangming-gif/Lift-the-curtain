@@ -138,7 +138,7 @@ class FalconAdapter:
         dq_official = reorder(state.joint_vel, ISAACLAB_TO_OFFICIAL)
         fields = {
             "actions": self.previous_action,
-            "base_ang_vel": state.base_ang_vel,
+            "base_ang_vel": state.base_ang_vel_b,
             "command_ang_vel": np.asarray([command.wz], dtype=np.float32),
             "command_base_height": np.asarray([command.base_height], dtype=np.float32),
             "command_lin_vel": np.asarray([command.vx, command.vy], dtype=np.float32),
