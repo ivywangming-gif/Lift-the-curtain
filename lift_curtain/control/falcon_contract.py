@@ -184,11 +184,17 @@ class ObservationHistory:
 
 
 class OnnxReferencePolicy:
-    """Use ONNX's reference evaluator without changing the installed environment."""
+    """Evaluate the pinned FALCON MLP using NumPy.
+
+    Importing ``onnx.reference`` after Isaac Sim starts causes a native crash in
+    this Windows stack. The pinned graph is only two independent four-layer
+    Gemm/ELU branches followed by concatenation, so loading its initializers and
+    evaluating that exact graph avoids an extra runtime dependency.
+    """
 
     def __init__(self, path: Path | str):
         import onnx
-        from onnx.reference import ReferenceEvaluator
+        from onnx import numpy_helper
 
         self.path = Path(path).resolve()
         if not self.path.is_file():
@@ -196,7 +202,30 @@ class OnnxReferencePolicy:
         self.model = onnx.load(str(self.path), load_external_data=False)
         self.input_name = self.model.graph.input[0].name
         self.output_name = self.model.graph.output[0].name
-        self.session = ReferenceEvaluator(self.model)
+        op_types = tuple(node.op_type for node in self.model.graph.node)
+        expected_ops = ("Gemm", "Elu", "Gemm", "Elu", "Gemm", "Elu", "Gemm") * 2 + ("Concat",)
+        if op_types != expected_ops:
+            raise RuntimeError(f"unsupported FALCON ONNX graph: {op_types}")
+        initializers = {
+            value.name: numpy_helper.to_array(value).astype(np.float32, copy=False)
+            for value in self.model.graph.initializer
+        }
+        self.branches = []
+        for branch in ("lower_body", "upper_body"):
+            layers = []
+            for index in (0, 2, 4, 6):
+                prefix = f"actors.{branch}.actor_module.module.{index}"
+                layers.append((initializers[f"{prefix}.weight"], initializers[f"{prefix}.bias"]))
+            self.branches.append(tuple(layers))
+
+    @staticmethod
+    def _branch(observation: np.ndarray, layers: tuple[tuple[np.ndarray, np.ndarray], ...]) -> np.ndarray:
+        value = observation
+        for index, (weight, bias) in enumerate(layers):
+            value = value @ weight.T + bias
+            if index < len(layers) - 1:
+                value = np.where(value >= 0.0, value, np.expm1(value)).astype(np.float32, copy=False)
+        return value.astype(np.float32, copy=False)
 
     def __call__(self, observation: np.ndarray) -> np.ndarray:
         value = np.asarray(observation)
@@ -204,7 +233,9 @@ class OnnxReferencePolicy:
             raise ValueError(f"observation must be float32 with shape (1, {POLICY_OBSERVATION_DIM})")
         if not np.isfinite(value).all():
             raise ValueError("observation contains non-finite values")
-        action = np.asarray(self.session.run([self.output_name], {self.input_name: value})[0])
+        action = np.concatenate(
+            [self._branch(value, layers) for layers in self.branches], axis=-1
+        ).astype(np.float32, copy=False)
         if action.shape != (1, 29) or not np.isfinite(action).all():
             raise RuntimeError(f"invalid policy output: {action.shape}")
         return np.clip(action, -ACTION_CLIP, ACTION_CLIP).astype(np.float32, copy=False)
