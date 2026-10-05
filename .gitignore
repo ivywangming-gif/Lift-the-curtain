@@ -1,3 +1,6 @@
 __pycache__/
 *.py[cod]
 reports/artifacts/**/*.tmp
+
+# Generated locally from the external FALCON URDF; do not redistribute.
+assets/generated/

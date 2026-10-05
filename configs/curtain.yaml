@@ -5,7 +5,11 @@ width_m: 1.4
 height_m: 1.8
 columns: 16
 rows: 20
-density_kg_m2: 0.25
+density_kg_m3: 250.0
+surface_thickness_m: 0.002
 stretch_stiffness: 500.0
+shear_stiffness: 250.0
 bend_stiffness: 0.02
 damping: 0.05
+solver_position_iterations: 8
+support_thickness_m: 0.04
