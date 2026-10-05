@@ -1,0 +1,73 @@
+{
+  "mode": "fallback",
+  "source_asset": "C:\\Robotics\\MoDeSuite-reference\\asset\\objects\\curtain.usd",
+  "source_commit": "470681a7ff117e487060ad52bc4f199e3fa34474",
+  "source_license_status": "README_MIT_badge_but_no_LICENSE_file_in_checkout",
+  "seed": 42,
+  "num_envs": 1,
+  "headless": true,
+  "physics_dt_s": 0.005,
+  "render_interval": 4,
+  "steps": 300,
+  "probe_span_m": 0.8,
+  "isaac_sim_deformable_beta": true,
+  "status": "FAIL",
+  "fallback_config": {
+    "width_m": 1.4,
+    "height_m": 1.8,
+    "columns": 16,
+    "rows": 20,
+    "density_kg_m3": 250.0,
+    "surface_thickness_m": 0.002,
+    "stretch_stiffness": 500.0,
+    "shear_stiffness": 250.0,
+    "bend_stiffness": 0.02,
+    "damping": 0.05,
+    "solver_position_iterations": 8,
+    "support_z_m": 1.8,
+    "support_thickness_m": 0.04
+  },
+  "asset_root_path": "/World/Curtain/Cloth",
+  "support_path": "/World/Curtain/Cloth_Support",
+  "attachment_path": "/World/Curtain/Cloth_Attachment",
+  "material_path": "/World/Curtain/Cloth_PhysicsMaterial",
+  "world_bounds_min": [
+    -0.7,
+    0.0,
+    0.0
+  ],
+  "world_bounds_max": [
+    0.7,
+    0.0,
+    1.8
+  ],
+  "deformable_path": "/World/Curtain/Cloth",
+  "deformable_num_nodes": 320,
+  "deformable_interface_status": "PASS",
+  "probe_normal_axis": 1,
+  "probe_start": [
+    0.0,
+    -0.2,
+    0.9
+  ],
+  "probe_end": [
+    0.0,
+    0.2,
+    0.9
+  ],
+  "probe_half_extent_m": 0.11,
+  "load_status": "PASS",
+  "stability_status": "FAIL",
+  "max_displacement_m": 1.3338520942671506,
+  "max_extent_ratio": 664014.1308307648,
+  "max_probe_node_overlap_count": 0,
+  "telemetry_csv": "C:\\Robotics\\Lift-the-curtain\\reports\\artifacts\\m1\\fallback\\telemetry.csv",
+  "peak_gpu_allocated_mb": 0.009765625,
+  "peak_gpu_reserved_mb": 2.0,
+  "notes": [
+    "Probe is kinematic and moves once through the candidate along the thinnest world-axis.",
+    "Probe-node overlap is a coarse penetration proxy, not a contact-force measurement.",
+    "No camera or GUI was launched; headless physics telemetry is the primary evidence."
+  ],
+  "completed_rows": 300
+}

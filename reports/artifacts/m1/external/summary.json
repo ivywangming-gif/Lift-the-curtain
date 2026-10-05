@@ -1,0 +1,119 @@
+{
+  "mode": "external",
+  "source_asset": "C:\\Robotics\\MoDeSuite-reference\\asset\\objects\\curtain.usd",
+  "source_commit": "470681a7ff117e487060ad52bc4f199e3fa34474",
+  "source_license_status": "README_MIT_badge_but_no_LICENSE_file_in_checkout",
+  "seed": 42,
+  "num_envs": 1,
+  "headless": true,
+  "physics_dt_s": 0.005,
+  "render_interval": 4,
+  "steps": 300,
+  "probe_span_m": 0.8,
+  "isaac_sim_deformable_beta": true,
+  "source_size_bytes": 1070162,
+  "source_sha256": "6a5ca87a90ce79eca5e48b6763afc09202893d72ededb61edbd4730a3197f0d1",
+  "status": "PASS",
+  "asset_root_path": "/World/ExternalCurtain",
+  "asset_schema_summary": {
+    "mesh_prims": [
+      {
+        "path": "/World/ExternalCurtain/Cloth",
+        "schemas": [
+          "PhysxParticleClothAPI",
+          "PhysxParticleAPI",
+          "PhysxAutoParticleClothAPI",
+          "PhysicsMassAPI"
+        ],
+        "point_count": 2601
+      },
+      {
+        "path": "/World/ExternalCurtain/Group/Cube",
+        "schemas": [
+          "MaterialBindingAPI",
+          "PhysicsCollisionAPI",
+          "PhysxCollisionAPI",
+          "PhysxConvexHullCollisionAPI",
+          "PhysicsMeshCollisionAPI",
+          "PhysxTriangleMeshCollisionAPI"
+        ],
+        "point_count": 8
+      },
+      {
+        "path": "/World/ExternalCurtain/Group/Cube_01",
+        "schemas": [
+          "MaterialBindingAPI",
+          "PhysicsCollisionAPI",
+          "PhysxCollisionAPI",
+          "PhysxTriangleMeshCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "point_count": 8
+      },
+      {
+        "path": "/World/ExternalCurtain/Group/Cube_02",
+        "schemas": [
+          "MaterialBindingAPI",
+          "PhysicsCollisionAPI",
+          "PhysxCollisionAPI",
+          "PhysxTriangleMeshCollisionAPI",
+          "PhysicsMeshCollisionAPI"
+        ],
+        "point_count": 8
+      },
+      {
+        "path": "/World/ExternalCurtain/Group/Cube_03",
+        "schemas": [
+          "MaterialBindingAPI",
+          "PhysicsCollisionAPI",
+          "PhysxCollisionAPI",
+          "PhysxConvexHullCollisionAPI",
+          "PhysicsMeshCollisionAPI",
+          "PhysxSDFMeshCollisionAPI"
+        ],
+        "point_count": 8
+      }
+    ],
+    "deformable_prims": []
+  },
+  "legacy_mesh_path": "/World/ExternalCurtain/Cloth",
+  "world_bounds_min": [
+    -0.6200000002980232,
+    -0.020000000298023225,
+    -0.09412252399181487
+  ],
+  "world_bounds_max": [
+    0.6200000002980232,
+    0.0363454815000296,
+    1.109939582748464
+  ],
+  "deformable_path": "/World/ExternalCurtain/Cloth",
+  "deformable_num_nodes": 2601,
+  "deformable_interface_status": "PASS",
+  "probe_normal_axis": 1,
+  "probe_start": [
+    0.0,
+    -0.22000000029802325,
+    0.5079085293783245
+  ],
+  "probe_end": [
+    0.0,
+    0.2363454815000296,
+    0.5079085293783245
+  ],
+  "probe_half_extent_m": 0.11,
+  "load_status": "PASS",
+  "stability_status": "PASS",
+  "max_displacement_m": 0.0,
+  "max_extent_ratio": 1.0,
+  "max_probe_node_overlap_count": 122,
+  "telemetry_csv": "C:\\Robotics\\Lift-the-curtain\\reports\\artifacts\\m1\\external\\telemetry.csv",
+  "peak_gpu_allocated_mb": 0.009765625,
+  "peak_gpu_reserved_mb": 2.0,
+  "notes": [
+    "Probe is kinematic and moves once through the candidate along the thinnest world-axis.",
+    "Probe-node overlap is a coarse penetration proxy, not a contact-force measurement.",
+    "No camera or GUI was launched; headless physics telemetry is the primary evidence."
+  ],
+  "completed_rows": 300
+}

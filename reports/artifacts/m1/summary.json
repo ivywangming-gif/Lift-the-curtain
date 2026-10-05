@@ -1,0 +1,53 @@
+{
+  "phase": "M1",
+  "status": "BLOCKED",
+  "decision": "STOP_AFTER_NARROW_COMPATIBILITY_AND_STABILITY_ATTEMPTS",
+  "num_envs": 1,
+  "headless": true,
+  "external_asset": {
+    "path": "C:\\Robotics\\MoDeSuite-reference\\asset\\objects\\curtain.usd",
+    "source_commit": "470681a7ff117e487060ad52bc4f199e3fa34474",
+    "source_sha256": "6a5ca87a90ce79eca5e48b6763afc09202893d72ededb61edbd4730a3197f0d1",
+    "license_status": "unclear_no_LICENSE_file",
+    "redistributed": false
+  },
+  "external_result": {
+    "load_status": "PASS",
+    "finite_simulation_status": "PASS",
+    "current_surface_deformable_schema_status": "FAIL",
+    "deformation_status": "FAIL",
+    "max_displacement_m": 0.0,
+    "max_extent_ratio": 1.0,
+    "deformable_num_nodes": 2601,
+    "legacy_mesh_path": "/World/ExternalCurtain/Cloth",
+    "applied_schemas": [
+      "PhysxParticleClothAPI",
+      "PhysxParticleAPI",
+      "PhysxAutoParticleClothAPI",
+      "PhysicsMassAPI"
+    ],
+    "interpretation": "The asset loads as a legacy particle-cloth USD and remains finite for 300 steps, but the isolated kinematic probe produces no measurable mesh displacement. It is not a validated Isaac Sim 5.1 deformable curtain for this baseline."
+  },
+  "fallback_result": {
+    "load_status": "PASS",
+    "current_surface_api_status": "PASS",
+    "finite_simulation_status": "FAIL",
+    "stability_status": "FAIL",
+    "deformable_num_nodes": 320,
+    "max_displacement_m": 1.3338520942671506,
+    "max_extent_ratio": 664014.1308307648,
+    "max_probe_node_overlap_count": 0,
+    "interpretation": "The current Isaac Sim 5.1 surface-deformable schema and material API load successfully, but the generated top-edge auto attachment does not remain physically stable during the probe run. The final top-edge displacement is grossly inconsistent with a supported curtain."
+  },
+  "exact_commands": [
+    "$env:CONDA_PREFIX='C:\\conda_envs\\isaaclab'; & C:\\Robotics\\IsaacLab\\isaaclab.bat -p C:\\Robotics\\Lift-the-curtain\\scripts\\test_curtain.py --headless --mode external --steps 300",
+    "$env:CONDA_PREFIX='C:\\conda_envs\\isaaclab'; & C:\\Robotics\\IsaacLab\\isaaclab.bat -p C:\\Robotics\\Lift-the-curtain\\scripts\\test_curtain.py --headless --mode fallback --steps 300"
+  ],
+  "m2_m3_gate": "NOT_RUN_M1_DID_NOT_PASS",
+  "artifacts": {
+    "external_summary": "external/summary.json",
+    "external_telemetry": "external/telemetry.csv",
+    "fallback_summary": "fallback/summary.json",
+    "fallback_telemetry": "fallback/telemetry.csv"
+  }
+}

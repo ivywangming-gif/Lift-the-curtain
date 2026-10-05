@@ -1,0 +1,16 @@
+{
+  "mode": "external",
+  "source_asset": "C:\\Robotics\\MoDeSuite-reference\\asset\\objects\\curtain.usd",
+  "source_commit": "470681a7ff117e487060ad52bc4f199e3fa34474",
+  "source_license_status": "README_MIT_badge_but_no_LICENSE_file_in_checkout",
+  "seed": 42,
+  "num_envs": 1,
+  "headless": true,
+  "physics_dt_s": 0.005,
+  "render_interval": 4,
+  "steps": 300,
+  "probe_span_m": 0.8,
+  "isaac_sim_deformable_beta": true,
+  "source_size_bytes": 1070162,
+  "source_sha256": "6a5ca87a90ce79eca5e48b6763afc09202893d72ededb61edbd4730a3197f0d1"
+}
