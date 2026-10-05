@@ -1,0 +1,11 @@
+source_asset: C:\Robotics\MoDeSuite-reference\asset\objects\curtain.usd
+source_commit: 470681a7ff117e487060ad52bc4f199e3fa34474
+source_license_status: unclear_no_license_file
+width_m: 1.4
+height_m: 1.8
+columns: 16
+rows: 20
+density_kg_m2: 0.25
+stretch_stiffness: 500.0
+bend_stiffness: 0.02
+damping: 0.05

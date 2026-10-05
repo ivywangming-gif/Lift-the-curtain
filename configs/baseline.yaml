@@ -1,0 +1,17 @@
+seed: 42
+num_envs: 1
+headless: true
+physics_dt_s: 0.005
+control_decimation: 4
+control_dt_s: 0.02
+forward_speed_mps: 0.20
+turn_target_rad: 0.35
+max_linear_speed_mps: 0.30
+max_yaw_rate_radps: 0.30
+camera_width_px: 320
+camera_height_px: 240
+probe:
+  displacement_threshold_m: 0.015
+  effort_threshold_nm: 18.0
+  tracking_error_threshold_rad: 0.30
+  required_samples: 3
