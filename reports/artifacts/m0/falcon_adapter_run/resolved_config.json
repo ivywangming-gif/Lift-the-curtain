@@ -1,0 +1,14 @@
+{
+  "asset": "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\g1_29dof_falcon_rubberhand.usd",
+  "onnx": "C:\\Robotics\\FALCON-upstream\\sim2real\\models\\falcon\\g1_29dof.onnx",
+  "run_root": "C:\\Robotics\\Lift-the-curtain\\reports\\artifacts\\m0\\falcon_adapter_run",
+  "seed": 42,
+  "num_envs": 1,
+  "headless": true,
+  "physics_dt_s": 0.005,
+  "decimation": 4,
+  "control_dt_s": 0.02,
+  "case_duration_s": 2.0,
+  "forward_speed_mps": 0.2,
+  "turn_target_rad": 0.35
+}
