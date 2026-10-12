@@ -38,7 +38,7 @@ python scripts/check_assets.py --json-out <output-dir>/asset_audit.json
 
 当前没有发现凭据或可疑敏感内容。仍需用户单独提供/获取：FALCON ONNX、FALCON URDF、MoDeSuite curtain USD、Isaac Sim/Lab 和可选的生成机器人 USD。MoDeSuite license 未明确，因此不上传其资产。默认 pytest cache provider 受宿主临时目录 ACL 影响，但禁用 cache 后完整 suite 已通过；5090 renderer/MP4 backend 是本轮主要未验证项。
 
-GitHub 源码发布的本地提交已经完成，但正常 HTTPS push 超过四分钟无响应，未确认远端写入；不使用 force push。
+GitHub 源码发布的本地提交已经完成，但当前会话没有可用的 GitHub HTTPS 凭据；非交互 push 返回 `unable to get password from user`，未确认远端写入；不使用 force push。
 
 ## 明确不能推出的结论
 

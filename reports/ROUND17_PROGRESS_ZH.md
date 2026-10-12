@@ -61,8 +61,8 @@
 
 - 本地源码发布提交：`6c734e2feb71aaa554aacd6f83f6dd39706ca206`，提交信息为 `chore: publish portable replay release`。
 - 目标远端：`https://github.com/ivywangming-gif/Lift-the-curtain.git`，分支：`main`。
-- `git push origin main` 在 HTTPS 通道无输出超过四分钟；已中止无响应进程，没有观察到远端成功，也没有使用 force push。
-- 因此本轮不能把本地 commit 写成 GitHub 已发布；后续应在网络/认证可用的机器上做普通 push。
+- `git push origin main` 首次在 HTTPS 通道无输出超过四分钟；随后启用非交互和超时限制的重试明确返回“无法提示用户输入密码”。没有观察到远端成功，也没有使用 force push。
+- 因此本轮不能把本地 commit 写成 GitHub 已发布；后续需要在已配置 GitHub 凭据的机器上做普通 push。
 
 ## 下一步
 

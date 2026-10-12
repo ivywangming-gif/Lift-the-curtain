@@ -72,7 +72,7 @@
       "id": "R17-08",
       "hypothesis": "The audited release commit can be written to the user-specified GitHub remote through a bounded normal push.",
       "command": "git commit -m \"chore: publish portable replay release\"; git push origin main",
-      "result": "The audited source release commit is 6c734e2feb71aaa554aacd6f83f6dd39706ca206. The HTTPS push produced no output for more than four minutes and was interrupted; no remote success was observed.",
+      "result": "The audited source release commit is 6c734e2feb71aaa554aacd6f83f6dd39706ca206. An initial HTTPS push produced no output for more than four minutes and was interrupted. A bounded non-interactive retry returned `Cannot prompt because user interactivity has been disabled` and `unable to get password from user`; no remote success was observed.",
       "status": "BLOCKED"
     }
   ],
@@ -86,7 +86,7 @@
     "branch": "main",
     "local_commit_sha": "6c734e2feb71aaa554aacd6f83f6dd39706ca206",
     "push_status": "BLOCKED",
-    "blocker": "Normal HTTPS push remained silent for more than four minutes; remote write was not confirmed and no force push was attempted."
+    "blocker": "This session has no usable GitHub HTTPS credential. The bounded non-interactive retry returned `unable to get password from user`; remote write was not confirmed and no force push was attempted."
   },
   "next": "On a machine with working GitHub HTTPS authentication/network, verify git ls-remote and retry a normal git push origin main; do not force push."
 }

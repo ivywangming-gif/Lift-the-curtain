@@ -55,8 +55,8 @@
 
 - 本地源码发布提交已完成：`6c734e2feb71aaa554aacd6f83f6dd39706ca206`，分支 `main`。
 - 目标仓库：`https://github.com/ivywangming-gif/Lift-the-curtain.git`。
-- `git push origin main` 通过 HTTPS 长时间无输出，超过四分钟后中止；没有观察到远端 ref 更新，也没有执行 force push。
-- 当前应报告为 `SOURCE_PUSHED=BLOCKED`，而不是已发布。后续只需在网络/认证可用时重新执行普通 push，并先复核远端是否出现新 refs。
+- `git push origin main` 首次通过 HTTPS 长时间无输出，超过四分钟后中止；带连接/低速超时的非交互重试明确返回 `Cannot prompt because user interactivity has been disabled` 和 `unable to get password from user`。没有观察到远端 ref 更新，也没有执行 force push。
+- 当前应报告为 `SOURCE_PUSHED=BLOCKED`，而不是已发布。后续需要在已配置 GitHub 凭据的环境中重新执行普通 push，并先复核远端是否出现新 refs。
 
 ## 十个问题
 
