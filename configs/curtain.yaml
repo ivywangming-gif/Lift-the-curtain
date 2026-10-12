@@ -1,4 +1,7 @@
-source_asset: C:\Robotics\MoDeSuite-reference\asset\objects\curtain.usd
+# Resolve this template with MODESUITE_ROOT; the external asset is never
+# copied into this repository.
+source_asset: ${MODESUITE_ROOT}/asset/objects/curtain.usd
+source_asset_env: MODESUITE_ROOT
 source_commit: 470681a7ff117e487060ad52bc4f199e3fa34474
 source_license_status: unclear_no_license_file
 width_m: 1.4

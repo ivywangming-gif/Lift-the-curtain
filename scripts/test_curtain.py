@@ -18,10 +18,11 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
+from lift_curtain.paths import modesuite_curtain_path
 from isaaclab.app import AppLauncher
 
 
-DEFAULT_EXTERNAL = Path(r"C:\Robotics\MoDeSuite-reference\asset\objects\curtain.usd")
+DEFAULT_EXTERNAL = modesuite_curtain_path()
 DEFAULT_RUN_ROOT = REPO / "reports" / "artifacts" / "m1"
 DT = 0.005
 RENDER_INTERVAL = 4

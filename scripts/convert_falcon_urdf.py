@@ -6,12 +6,16 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import sys
 
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
+
+from lift_curtain.paths import falcon_urdf_path
 from isaaclab.app import AppLauncher
 
 
-REPO = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = Path(r"C:\Robotics\FALCON-upstream\humanoidverse\data\robots\g1\g1_29dof_fakehand.urdf")
+DEFAULT_INPUT = falcon_urdf_path()
 DEFAULT_OUTPUT = REPO / "assets" / "generated" / "g1_29dof_falcon_rubberhand.usd"
 
 parser = argparse.ArgumentParser(description=__doc__)

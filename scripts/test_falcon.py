@@ -13,11 +13,12 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
+from lift_curtain.paths import falcon_onnx_path
 from isaaclab.app import AppLauncher
 
 
 DEFAULT_ASSET = REPO / "assets" / "generated" / "g1_29dof_falcon_rubberhand.usd"
-DEFAULT_ONNX = Path(r"C:\Robotics\FALCON-upstream\sim2real\models\falcon\g1_29dof.onnx")
+DEFAULT_ONNX = falcon_onnx_path()
 DEFAULT_RUN_ROOT = REPO / "reports" / "artifacts" / "m0" / "falcon_adapter_run"
 DT = 0.005
 DECIMATION = 4

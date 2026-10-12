@@ -1,0 +1,24 @@
+{
+  "schema": "lift-the-curtain.research-scope.v1",
+  "round": 16,
+  "nominal_baseline": "PASS_LIMITED_SCOPE",
+  "robust_extension": "NOT_COMPLETE",
+  "privileged_information_isolation": "PASS_WITH_LOCALIZATION_CAVEAT",
+  "learning_readiness": "NOT_READY",
+  "supported_findings": [
+    "A short local proprioceptive response does not imply whole-body passability.",
+    "Phase-aware monitoring, PointGoal separation, FK mapping, and map contracts are engineering fixes.",
+    "Some extended scenarios show position-dependent passage opportunities."
+  ],
+  "not_assessable": [
+    "Strict hidden-rigid matched deployment comparison",
+    "Physical two-location probe strategy",
+    "Frozen-parameter repeated success rate across the extension matrix"
+  ],
+  "source_reports": [
+    "reports/ROUND16_ENGINEERING_BASELINE_COMPARISON_ZH.md",
+    "reports/ROUND16_MATCHED_EXPERIMENTS_ZH.md",
+    "reports/ROUND16_RESEARCH_DIAGNOSIS_ZH.md",
+    "reports/ROUND16_RESEARCH_DIRECTION_ASSESSMENT_ZH.md"
+  ]
+}

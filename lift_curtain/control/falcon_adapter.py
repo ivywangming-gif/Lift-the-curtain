@@ -22,10 +22,25 @@ class VelocityCommand:
     wz: float = 0.0
     base_height: float = 0.75
     waist_dofs: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    walk_mode: bool | None = None
+
+    def __post_init__(self) -> None:
+        values = np.asarray((self.vx, self.vy, self.wz, self.base_height, *self.waist_dofs), dtype=np.float64)
+        if not np.isfinite(values).all() or self.base_height <= 0.0:
+            raise ValueError("velocity command fields must be finite and base_height must be positive")
+        if self.walk_mode is False and self.moving:
+            raise ValueError("explicit stand mode cannot carry a nonzero velocity command")
 
     @property
     def moving(self) -> bool:
         return bool(np.linalg.norm((self.vx, self.vy, self.wz)) > 1.0e-8)
+
+    @property
+    def policy_walk_flag(self) -> float:
+        """Return the official command_stand field: 0=stance, 1=walk."""
+        if self.walk_mode is None:
+            return 1.0 if self.moving else 0.0
+        return 1.0 if self.walk_mode else 0.0
 
 
 @dataclass
@@ -133,7 +148,19 @@ class FalconAdapter:
         state.validate()
         return state
 
-    def _build_observation(self, state: RobotState, command: VelocityCommand) -> np.ndarray:
+    def _validated_upper_reference(self, upper_reference: np.ndarray | None) -> np.ndarray:
+        upper = self.upper_reference if upper_reference is None else np.asarray(upper_reference, dtype=np.float32)
+        if upper.shape != (14,) or not np.isfinite(upper).all():
+            raise ValueError("upper_reference must be finite with shape (14,)")
+        return upper
+
+    def _build_observation(
+        self,
+        state: RobotState,
+        command: VelocityCommand,
+        upper_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
+        upper = self._validated_upper_reference(upper_reference)
         q_official = reorder(state.joint_pos, ISAACLAB_TO_OFFICIAL)
         dq_official = reorder(state.joint_vel, ISAACLAB_TO_OFFICIAL)
         fields = {
@@ -142,20 +169,26 @@ class FalconAdapter:
             "command_ang_vel": np.asarray([command.wz], dtype=np.float32),
             "command_base_height": np.asarray([command.base_height], dtype=np.float32),
             "command_lin_vel": np.asarray([command.vx, command.vy], dtype=np.float32),
-            "command_stand": np.asarray([1.0 if command.moving else 0.0], dtype=np.float32),
+            "command_stand": np.asarray([command.policy_walk_flag], dtype=np.float32),
             "command_waist_dofs": np.asarray(command.waist_dofs, dtype=np.float32),
             "dof_pos": q_official - DEFAULT_JOINT_POS,
             "dof_vel": dq_official,
             "projected_gravity": state.projected_gravity_b,
-            "ref_upper_dof_pos": self.upper_reference,
+            "ref_upper_dof_pos": upper,
         }
         if set(fields) != set(OBSERVATION_DIMS):
             raise AssertionError("FALCON observation field contract changed")
         return build_frame(fields)
 
-    def compute_target(self, state: RobotState, command: VelocityCommand) -> np.ndarray:
+    def compute_target(
+        self,
+        state: RobotState,
+        command: VelocityCommand,
+        upper_reference: np.ndarray | None = None,
+    ) -> np.ndarray:
         """Evaluate the policy and return a 29-vector in Isaac Lab joint order."""
-        frame = self._build_observation(state, command)
+        upper = self._validated_upper_reference(upper_reference)
+        frame = self._build_observation(state, command, upper)
         observation = self.history.push(frame)
         action = np.asarray(self.policy(observation), dtype=np.float32)
         if action.shape == (1, 29):
@@ -169,7 +202,7 @@ class FalconAdapter:
             JOINT_POS_LOWER, JOINT_POS_UPPER,
         )
         target_official[15:] = np.clip(
-            self.upper_reference, JOINT_POS_LOWER[15:], JOINT_POS_UPPER[15:]
+            upper, JOINT_POS_LOWER[15:], JOINT_POS_UPPER[15:]
         )
         self.previous_action = action.copy()
         self.last_observation = observation.copy()

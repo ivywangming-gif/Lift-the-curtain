@@ -1,0 +1,10 @@
+{
+  "minimum_samples": 4,
+  "responsive_progress_m": 0.0076811246573925025,
+  "blocked_progress_max_m": 0.009077692776918412,
+  "responsive_progress_ratio_min": 0.75,
+  "blocked_progress_ratio_max": 0.6,
+  "blocked_effort_deviation_min": 2.2690875035237013,
+  "blocked_stall_duration_s": 0.15,
+  "low_hand_speed_mps": 0.004
+}

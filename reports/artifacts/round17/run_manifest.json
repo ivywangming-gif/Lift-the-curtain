@@ -1,0 +1,92 @@
+{
+  "schema": "lift-the-curtain.round17-run-manifest.v1",
+  "round": 17,
+  "date": "2026-10-12",
+  "workspace": "C:\\Robotics\\Lift-the-curtain",
+  "constraints": {
+    "headless": true,
+    "num_envs": 1,
+    "learning": false,
+    "isaac_environment_modified": false,
+    "external_repositories_modified": false,
+    "force_push": false
+  },
+  "status": {
+    "source_pushed": "BLOCKED",
+    "replay_code_ready": "PASS",
+    "replay_physics_verified_on_4070": "HISTORICAL_ONLY",
+    "rendering_verified_on_5090": "NOT_RUN",
+    "video_recorded_on_5090": "NOT_RUN"
+  },
+  "experiments": [
+    {
+      "id": "R17-01",
+      "hypothesis": "The configured remote has no competing refs and can receive a normal first push after audit.",
+      "command": "git ls-remote origin",
+      "result": "No heads/tags returned; no force push used.",
+      "status": "PASS"
+    },
+    {
+      "id": "R17-02",
+      "hypothesis": "External assets can be located through explicit environment variables and checked without importing Isaac.",
+      "command": "python scripts/check_assets.py --allow-missing-external",
+      "result": "Static path layer passed; full local asset audit found matching ONNX hash.",
+      "status": "PASS"
+    },
+    {
+      "id": "R17-03",
+      "hypothesis": "One thin CLI can construct all three existing replay commands without importing Isaac for help/dry-run.",
+      "command": "python scripts/replay_nominal.py --scenario {curtain|rigid|curtain_nearfield} --dry-run",
+      "result": "Help and dry-run passed; no physics started.",
+      "status": "PASS"
+    },
+    {
+      "id": "R17-04",
+      "hypothesis": "Recording metadata and deformable visual mismatch checks can be prepared without renderer startup.",
+      "command": "python scripts/recording_smoke.py",
+      "result": "RECORDING_STATIC_SMOKE_PASS; video backend remains unimplemented/unaudited.",
+      "status": "PASS"
+    },
+    {
+      "id": "R17-05",
+      "hypothesis": "New source compiles independently of Isaac runtime.",
+      "command": "python -m compileall -q lift_curtain scripts tests",
+      "result": "COMPILEALL_EXIT=0.",
+      "status": "PASS"
+    },
+    {
+      "id": "R17-06",
+      "hypothesis": "The available test environment can run the pytest suite without changing dependencies.",
+      "command": "python -m pytest -q -p no:cacheprovider",
+      "result": "41 passed; cache provider disabled only because the host temp/cache ACL is restricted; no dependency installation attempted.",
+      "status": "PASS"
+    },
+    {
+      "id": "R17-07",
+      "hypothesis": "A new 4070 physics/render replay is necessary for this release.",
+      "command": "No Isaac replay launched.",
+      "result": "Historical Round 10/12 evidence retained; known renderer crash path not repeated.",
+      "status": "NOT RUN"
+    },
+    {
+      "id": "R17-08",
+      "hypothesis": "The audited release commit can be written to the user-specified GitHub remote through a bounded normal push.",
+      "command": "git commit -m \"chore: publish portable replay release\"; git push origin main",
+      "result": "Local commit succeeded at 0bf30cc0b615d019097dd060c8da0cefd9d74b8f. The HTTPS push produced no output for more than four minutes and was interrupted; no remote success was observed.",
+      "status": "BLOCKED"
+    }
+  ],
+  "historical_artifacts": [
+    "reports/artifacts/round12/episodes/curtain_final_gate_fix/",
+    "reports/artifacts/round12/episodes/rigid_primary/",
+    "reports/artifacts/round10/formal_matched_effective_speed_e1/curtain/"
+  ],
+  "release": {
+    "remote": "https://github.com/ivywangming-gif/Lift-the-curtain.git",
+    "branch": "main",
+    "local_commit_sha": "0bf30cc0b615d019097dd060c8da0cefd9d74b8f",
+    "push_status": "BLOCKED",
+    "blocker": "Normal HTTPS push remained silent for more than four minutes; remote write was not confirmed and no force push was attempted."
+  },
+  "next": "On a machine with working GitHub HTTPS authentication/network, verify git ls-remote and retry a normal git push origin main; do not force push."
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "lift-the-curtain.historical-release-manifest.v1",
+  "round": 12,
+  "status": "PASS_LIMITED_SCOPE",
+  "historical_only": true,
+  "conditions": {
+    "curtain": "PASS",
+    "rigid": "PASS"
+  },
+  "map_contract": {
+    "free": 0,
+    "fixed_obstacle": 1,
+    "interaction_candidate": 2,
+    "rigid_update": "2_to_1"
+  },
+  "control": {
+    "falcon": "frozen",
+    "se2_feedback": true,
+    "headless": true,
+    "num_envs": 1,
+    "privileged_object_identity_in_deployment": false
+  },
+  "source_report": "reports/ROUND12_ORACLE_MAP_END_TO_END_REPORT_ZH.md",
+  "raw_artifacts": "reports/artifacts/round12/ (local only; ignored by default)",
+  "limitations": [
+    "This manifest records historical evidence and is not a new replay result.",
+    "Localization and effort feedback remain deployment assumptions.",
+    "Robustness across extended flexible constraints was not established."
+  ]
+}

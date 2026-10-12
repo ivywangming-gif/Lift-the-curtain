@@ -2,5 +2,38 @@ __pycache__/
 *.py[cod]
 reports/artifacts/**/*.tmp
 
+# Local test/runtime output. Curated release summaries live under reports/release.
+.pytest_cache/
+pytest-cache-files-*/
+.round17-recording-*/
+work/
+reports/artifacts/
+outputs/
+*.log
+*.dmp
+*.core
+
+# External checkpoints, robot descriptions, USD exports, and rendered videos
+# are acquired/generated locally and are never part of the source release.
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.urdf
+*.usd
+*.mp4
+*.avi
+*.mov
+
+# Local credentials and environment overrides.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+
+!reports/release/
+!reports/release/**
+
 # Generated locally from the external FALCON URDF; do not redistribute.
 assets/generated/
