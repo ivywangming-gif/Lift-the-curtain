@@ -13,7 +13,7 @@
 | 5090 camera | `NOT RUN` | 需先通过 empty renderer smoke |
 | MP4 视频 | `NOT RUN/BLOCKED` | standalone runner backend 尚未接入/验证 |
 | 纯软件 pytest | `PASS` | 41 tests passed；使用 `-p no:cacheprovider` 避开宿主 cache ACL |
-| GitHub 源码发布 | `BLOCKED` | 本地 commit `0bf30cc0b615d019097dd060c8da0cefd9d74b8f` 已创建；HTTPS push 无响应 |
+| GitHub 源码发布 | `BLOCKED` | 本地源码发布 commit `6c734e2feb71aaa554aacd6f83f6dd39706ca206` 已创建；HTTPS push 无响应 |
 | 真实 G1 | `NOT VALIDATED` | 本轮不连接真实机器人 |
 
 ## 是否能复用同一 FALCON checkpoint

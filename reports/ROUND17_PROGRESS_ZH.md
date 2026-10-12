@@ -59,7 +59,7 @@
 
 ## 提交与远端写入结果
 
-- 本地普通提交：`0bf30cc0b615d019097dd060c8da0cefd9d74b8f`，提交信息为 `chore: publish portable replay release`。
+- 本地源码发布提交：`6c734e2feb71aaa554aacd6f83f6dd39706ca206`，提交信息为 `chore: publish portable replay release`。
 - 目标远端：`https://github.com/ivywangming-gif/Lift-the-curtain.git`，分支：`main`。
 - `git push origin main` 在 HTTPS 通道无输出超过四分钟；已中止无响应进程，没有观察到远端成功，也没有使用 force push。
 - 因此本轮不能把本地 commit 写成 GitHub 已发布；后续应在网络/认证可用的机器上做普通 push。

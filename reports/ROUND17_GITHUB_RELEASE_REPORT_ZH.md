@@ -53,7 +53,7 @@
 
 ## 提交与推送结果
 
-- 本地提交已完成：`0bf30cc0b615d019097dd060c8da0cefd9d74b8f`，分支 `main`。
+- 本地源码发布提交已完成：`6c734e2feb71aaa554aacd6f83f6dd39706ca206`，分支 `main`。
 - 目标仓库：`https://github.com/ivywangming-gif/Lift-the-curtain.git`。
 - `git push origin main` 通过 HTTPS 长时间无输出，超过四分钟后中止；没有观察到远端 ref 更新，也没有执行 force push。
 - 当前应报告为 `SOURCE_PUSHED=BLOCKED`，而不是已发布。后续只需在网络/认证可用时重新执行普通 push，并先复核远端是否出现新 refs。
@@ -61,7 +61,7 @@
 ## 十个问题
 
 1. **哪些源码已经推送？** 没有源码被确认推送。核心控制、导航、场景、统一 runner、测试、配置和文档已进入本地提交；远端写入因 HTTPS 无响应而阻塞。
-2. **GitHub 仓库、分支和 commit SHA 是什么？** 目标仓库为上述 GitHub 仓库，分支 `main`；本地待推送 commit 为 `0bf30cc0b615d019097dd060c8da0cefd9d74b8f`，远端可见 SHA 尚未确认。
+2. **GitHub 仓库、分支和 commit SHA 是什么？** 目标仓库为上述 GitHub 仓库，分支 `main`；本地源码发布 commit 为 `6c734e2feb71aaa554aacd6f83f6dd39706ca206`，远端可见 SHA 尚未确认。
 3. **是否有外部资产仍需单独获取？** 有：FALCON ONNX/URDF、MoDeSuite curtain USD、Isaac Sim/Lab 和本地生成机器人 USD。
 4. **5090 是否能使用相同的 FALCON checkpoint？** 可以，但必须通过同一 ONNX SHA256、29 DoF/joint-order 和版本 contract 检查。
 5. **Round12 Curtain/Rigid 的重放入口是什么？** `scripts/replay_nominal.py --scenario curtain|rigid ...`；近场为 `curtain_nearfield`。
