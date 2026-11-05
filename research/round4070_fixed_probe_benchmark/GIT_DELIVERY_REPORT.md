@@ -11,6 +11,7 @@
 - Pre-E local checkpoint: `bf8b54e65f7cf495a558d11d5f713029d8ec75b3` (`research: checkpoint Round 4070 evidence and runners`).
 - E implementation checkpoint: `93bc6c1` (`research: implement Round 4070-E fixed probe benchmark`). The full SHA and final branch state are recorded in the task response with `git log`.
 - The checkpoint contains the frozen manifest, fixed-command runners, gate status, observed research summaries, evaluator outputs, and the final integrity index.
+- Follow-up research correction checkpoint: `1491db9` (`research: align Round 4070-E failure taxonomy`), which adds the protocol F1-F7 taxonomy and preserves the lower-level execution diagnostics.
 - `git push origin main` was attempted once during this task and was rejected by the Codex safety policy because the proposed checkpoint was treated as a potentially private large change to an unverified external remote.
 - No remote update is claimed. No force-push, history rewrite, or destructive cleanup was performed.
 
