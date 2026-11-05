@@ -635,6 +635,47 @@ def write_final_report(rows: list[dict[str, Any]], metric_rows: list[dict[str, A
             f"runtime={sum(row['runtime_valid'] for row in selected)}, probe={sum(row['probe_valid'] for row in selected)}, "
             f"label_valid={sum(row['label_valid'] for row in selected)}。"
         )
+    phase1_noncore_unobserved = [
+        row for row in rows
+        if row["phase"] == "PHASE_1" and row["scope"] == "noncore" and not row["summary_exists"]
+    ]
+    p0_core_conditions = sorted({
+        str(row["condition_id"])
+        for row in rows
+        if row["scope"] == "core" and row["condition_id"]
+    })
+    cumulative_repeat_counts = {
+        condition: {
+            side: sum(
+                row["condition_id"] == condition
+                and row["probe_side"] == side
+                and row["phase"] in {"PHASE_1", "PHASE_2"}
+                for row in rows
+            )
+            for side in ("left", "right")
+        }
+        for condition in p0_core_conditions
+    }
+    phase2_under_repeated = [
+        condition for condition, side_counts in cumulative_repeat_counts.items()
+        if min(side_counts.values()) < 4
+    ]
+    phase2_four_per_side = [
+        condition for condition, side_counts in cumulative_repeat_counts.items()
+        if min(side_counts.values()) >= 4
+    ]
+    phase3_conditions = sorted({
+        str(row["condition_id"])
+        for row in rows
+        if row["phase"] == "PHASE_3" and row["scope"] == "core"
+    })
+    coverage_notes = [
+        f"- Phase 1 formal core rows: registered={sum(row['phase']=='PHASE_1' and row['scope']=='core' for row in rows)}, observed={sum(row['phase']=='PHASE_1' and row['scope']=='core' and row['summary_exists'] for row in rows)}。",
+        f"- Phase 1 未执行的 {len(phase1_noncore_unobserved)} 条非核心控制行未计入正式失败；Phase 0 控制与 {sum(row['phase']=='MATCHED_CONTROL' and row['summary_exists'] for row in rows)} 条 matched controls 已实际完成。" if phase1_noncore_unobserved else "- Phase 1 非核心控制行均已观测。",
+        f"- Phase 1+2 累计达到每侧至少 4 次的 P0 条件：{', '.join(phase2_four_per_side) or '无'}。" ,
+        f"- 尚未达到每侧 4 次累计重复的 P0 条件：{', '.join(phase2_under_repeated) or '无'}。",
+        f"- Phase 3 独立确认条件：{', '.join(phase3_conditions) or '无'}。",
+    ]
     label_counts = {
         label: sum(row["label"] == label for row in eligible)
         for label in ("PASSABLE", "BLOCKED", "UNKNOWN")
@@ -693,6 +734,7 @@ def write_final_report(rows: list[dict[str, Any]], metric_rows: list[dict[str, A
         "- 接触受限、自由空间跟踪不足和安全停止是不同结果类别；只有独立物理/几何证据充分时才产生有效 BLOCKED。",
         "", "## 阶段完成度", "",
         *phase_lines,
+        *coverage_notes,
         "", "## 科学问题逐项回答", "",
         f"1. **E1 能否判断通行性？** 当前有效标签集为 PASSABLE={label_counts['PASSABLE']}、BLOCKED={label_counts['BLOCKED']}；另有观测 UNKNOWN={observed_label_counts['UNKNOWN']}。" + (
             "在这组有效标签上可以做有限判断，但必须把 UNKNOWN/覆盖率一起报告。" if label_counts["PASSABLE"] and label_counts["BLOCKED"] else "当前有效正负标签不足，不能据此宣称 E1 已可靠判断通行性。"
@@ -721,6 +763,10 @@ def write_integrity() -> None:
     for name in names:
         path = RESEARCH / name
         data = path.read_bytes() if path.is_file() else b""
+        # Hash normalized text so Git's Windows line-ending conversion does not
+        # make a committed artifact appear different from its working copy.
+        if path.is_file() and path.suffix.lower() in {".csv", ".md", ".json"}:
+            data = data.replace(b"\r\n", b"\n")
         output.append({"artifact": name, "exists": path.is_file(), "size_bytes": len(data), "sha256": hashlib.sha256(data).hexdigest() if path.is_file() else None})
     write_csv(RESEARCH / "E_ARTIFACT_INTEGRITY.csv", output)
 

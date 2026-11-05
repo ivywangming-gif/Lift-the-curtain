@@ -20,6 +20,11 @@
 - `PHASE_2`: registered=32, observed=32, runtime=32, probe=32, label_valid=12。
 - `PHASE_3`: registered=10, observed=10, runtime=10, probe=10, label_valid=4。
 - `MATCHED_CONTROL`: registered=12, observed=12, runtime=12, probe=12, label_valid=12。
+- Phase 1 formal core rows: registered=44, observed=44。
+- Phase 1 未执行的 8 条非核心控制行未计入正式失败；Phase 0 控制与 12 条 matched controls 已实际完成。
+- Phase 1+2 累计达到每侧至少 4 次的 P0 条件：FABRIC_BOTH_BOTTOM_CORNERS, FABRIC_BOTTOM_LEFT_ANCHOR, FABRIC_BOTTOM_RIGHT_ANCHOR, FABRIC_HEAVY_CONSTRAINED, FABRIC_NOMINAL, FABRIC_WALL_GAP_02, FABRIC_WALL_GAP_05, FABRIC_WALL_GAP_08。
+- 尚未达到每侧 4 次累计重复的 P0 条件：FABRIC_FOUR_CORNERS_ONLY, FABRIC_FULL_PERIMETER_FIXED, FABRIC_HEAVY_FREE。
+- Phase 3 独立确认条件：FABRIC_BOTTOM_LEFT_ANCHOR, FABRIC_BOTTOM_RIGHT_ANCHOR, FABRIC_HEAVY_CONSTRAINED, FABRIC_NOMINAL, FABRIC_WALL_GAP_05。
 
 ## 科学问题逐项回答
 
