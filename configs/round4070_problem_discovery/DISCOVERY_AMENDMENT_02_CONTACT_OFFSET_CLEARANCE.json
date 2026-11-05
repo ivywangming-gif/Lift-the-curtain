@@ -1,0 +1,16 @@
+{
+  "schema": "lift-the-curtain.round4070-discovery-amendment.v1",
+  "amendment_id": "DISCOVERY_AMENDMENT_02_CONTACT_OFFSET_CLEARANCE",
+  "trigger_trial": "scene_validation/split_free_layered/no_probe_seed47",
+  "trigger_result": {
+    "status": "FAIL_PHYSICS_SANITY",
+    "max_speed_mps": 10.327462951386,
+    "max_free_region_displacement_m": 0.377277112785,
+    "single_sheet_no_probe_reference_speed_mps": 0.034031578665,
+    "single_sheet_no_probe_reference_displacement_m": 0.002406543758
+  },
+  "hypothesis": "The 8 mm gap remains inside the combined 5 mm contact offsets and 2 mm authored surface thickness; a 24 mm split gap should remove initialization contact without changing lateral coverage or material.",
+  "changed_variable": "Only world-x layer separation: split pair -12/+12 mm; strips -20/0/+20 mm.",
+  "attempt_limit": "This is the final layer-spacing correction. Failure blocks the overlapping multi-sheet family for this campaign.",
+  "new_scene_ids": ["split_free_layered24", "split_left_limited_layered24", "split_right_limited_layered24", "strips_3_overlap_layered40"]
+}

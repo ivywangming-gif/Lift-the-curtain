@@ -1,0 +1,187 @@
+{
+  "schema": "lift-the-curtain.round4070-fixed10cm-probe-validation.v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "manifest_count",
+      "observed": 250,
+      "required": 250,
+      "pass": true
+    },
+    {
+      "check": "all_probe_modes",
+      "observed": [
+        "PROBE_10CM"
+      ],
+      "required": [
+        "PROBE_10CM"
+      ],
+      "pass": true
+    },
+    {
+      "check": "all_target_displacements",
+      "observed": [
+        0.1
+      ],
+      "required": [
+        0.1
+      ],
+      "pass": true
+    },
+    {
+      "check": "core_condition_count",
+      "observed": 10,
+      "required": 10,
+      "pass": true
+    },
+    {
+      "check": "core_side_repeat_count",
+      "observed": [
+        10
+      ],
+      "required": [
+        10
+      ],
+      "pass": true
+    },
+    {
+      "check": "runner_rejects_old_depth_schedule",
+      "observed": true,
+      "required": true,
+      "pass": true
+    },
+    {
+      "check": "hidden_wall_gaps_inside_probe",
+      "observed": [
+        0.02,
+        0.05,
+        0.08
+      ],
+      "required": "0 < gap <= 0.10",
+      "pass": true
+    },
+    {
+      "check": "bilateral_safety_validation",
+      "observed": [
+        {
+          "trial_id": "D_EMPTY_CONTROL_L_04_S410502",
+          "summary_exists": true,
+          "runtime_valid": true,
+          "target_m": 0.1,
+          "actual_m": 0.08235049247741699,
+          "post_contact_m": null,
+          "stop_reason": "PROBE_INCOMPLETE",
+          "safety_stop": null,
+          "safe_recovery": true,
+          "joint_step_rad": 0.85,
+          "protocol_match": true,
+          "protocol_detail": "",
+          "condition_id": "EMPTY_CONTROL",
+          "probe_side": "left"
+        },
+        {
+          "trial_id": "D_EMPTY_CONTROL_R_04_S410520",
+          "summary_exists": true,
+          "runtime_valid": true,
+          "target_m": 0.1,
+          "actual_m": 0.08738696575164795,
+          "post_contact_m": null,
+          "stop_reason": "PROBE_INCOMPLETE",
+          "safety_stop": null,
+          "safe_recovery": true,
+          "joint_step_rad": 0.85,
+          "protocol_match": true,
+          "protocol_detail": "",
+          "condition_id": "EMPTY_CONTROL",
+          "probe_side": "right"
+        },
+        {
+          "trial_id": "D_RIGID_CONTROL_L_04_S410672",
+          "summary_exists": true,
+          "runtime_valid": true,
+          "target_m": 0.1,
+          "actual_m": -0.0136910080909729,
+          "post_contact_m": 0.004373013973236084,
+          "stop_reason": "PROBE_INCOMPLETE",
+          "safety_stop": null,
+          "safe_recovery": true,
+          "joint_step_rad": 0.85,
+          "protocol_match": true,
+          "protocol_detail": "",
+          "condition_id": "RIGID_CONTROL",
+          "probe_side": "left"
+        },
+        {
+          "trial_id": "D_RIGID_CONTROL_R_04_S410690",
+          "summary_exists": true,
+          "runtime_valid": true,
+          "target_m": 0.1,
+          "actual_m": 0.01232755184173584,
+          "post_contact_m": 0.012447595596313477,
+          "stop_reason": "PROBE_INCOMPLETE",
+          "safety_stop": null,
+          "safe_recovery": true,
+          "joint_step_rad": 0.85,
+          "protocol_match": true,
+          "protocol_detail": "",
+          "condition_id": "RIGID_CONTROL",
+          "probe_side": "right"
+        },
+        {
+          "trial_id": "D_FABRIC_NOMINAL_L_04_S407102",
+          "summary_exists": true,
+          "runtime_valid": true,
+          "target_m": 0.1,
+          "actual_m": 0.07563197612762451,
+          "post_contact_m": 0.075717031955719,
+          "stop_reason": "PROBE_INCOMPLETE",
+          "safety_stop": null,
+          "safe_recovery": true,
+          "joint_step_rad": 0.85,
+          "protocol_match": true,
+          "protocol_detail": "",
+          "condition_id": "FABRIC_NOMINAL",
+          "probe_side": "left"
+        },
+        {
+          "trial_id": "D_FABRIC_NOMINAL_R_04_S407120",
+          "summary_exists": true,
+          "runtime_valid": true,
+          "target_m": 0.1,
+          "actual_m": 0.08794575929641724,
+          "post_contact_m": 0.08827453851699829,
+          "stop_reason": "PROBE_INCOMPLETE",
+          "safety_stop": null,
+          "safe_recovery": true,
+          "joint_step_rad": 0.85,
+          "protocol_match": true,
+          "protocol_detail": "",
+          "condition_id": "FABRIC_NOMINAL",
+          "probe_side": "right"
+        },
+        {
+          "empty_target_reached_bilateral": false,
+          "empty_probe_fields_bilateral": true,
+          "note": "The protocol treats 0.10 m as a target, not a forced actual displacement; PROBE_INCOMPLETE remains recorded and is excluded from passability labels."
+        }
+      ],
+      "required": "empty, rigid and nominal fabric both sides runtime-valid with safe recovery and explicit target/actual/post-contact/stop fields; incomplete target is not forced",
+      "pass": true
+    },
+    {
+      "check": "deployment_header_leakage",
+      "observed": {
+        "D_FABRIC_NOMINAL_L_04_S407102": [],
+        "D_FABRIC_NOMINAL_R_04_S407120": [],
+        "D_EMPTY_CONTROL_L_02_S410434": [],
+        "D_EMPTY_CONTROL_L_04_S410502": [],
+        "D_EMPTY_CONTROL_R_04_S410520": [],
+        "D_EMPTY_CONTROL_L_05_S410536": [],
+        "D_RIGID_CONTROL_L_04_S410672": [],
+        "D_RIGID_CONTROL_R_04_S410690": []
+      },
+      "required": "no forbidden fields",
+      "pass": true
+    }
+  ]
+}

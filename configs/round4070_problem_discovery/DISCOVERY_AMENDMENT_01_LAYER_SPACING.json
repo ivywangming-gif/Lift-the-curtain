@@ -1,0 +1,17 @@
+{
+  "schema": "lift-the-curtain.round4070-discovery-amendment.v1",
+  "amendment_id": "DISCOVERY_AMENDMENT_01_LAYER_SPACING",
+  "trigger_trial": "scene_validation/split_free/no_probe_seed47",
+  "trigger_result": {
+    "status": "FAIL_PHYSICS_SANITY",
+    "max_speed_mps": 11.188978765724,
+    "max_free_region_displacement_m": 0.461893257083,
+    "top_attachment_exact": true,
+    "interpretation": "Exactly coplanar overlap generated immediate mutual collision response without a probe."
+  },
+  "hypothesis": "A physically explicit front/back layer spacing removes exact coplanar overlap while preserving lateral coverage, material and attachment mechanics.",
+  "changed_variable": "Only sheet world-x offsets: split pair -4/+4 mm; strip layers -6/0/+6 mm.",
+  "unchanged": ["lateral centers", "sheet widths", "overlap projection", "height", "material", "mesh resolution", "top attachment", "bottom anchor definitions", "acceptance thresholds"],
+  "new_scene_ids": ["split_free_layered", "split_left_limited_layered", "split_right_limited_layered", "strips_3_overlap_layered"],
+  "g1_gate": "No G1 integration unless matched no-probe and probe validations pass."
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "lift-the-curtain.round4070-fixed10cm-physics-gate-status.v1",
+  "gates": {
+    "A0_TOP_EDGE_ONLY": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "A1_TOP_EDGE_BOTTOM_TWO_CORNERS": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "A2_FOUR_CORNERS_ONLY": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "A3_FULL_PERIMETER_FIXED": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "B_D225_A1": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "B_D225_NEW": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "CONTROL_ONLY": {
+      "status": "PASS_CONTROL",
+      "source": "control contract"
+    },
+    "C_GAP02": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "C_GAP05": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "C_GAP08": {
+      "status": "PASS",
+      "source": "D physics-only gate",
+      "probe_status": "PASS_PHYSICS_SANITY",
+      "no_probe_status": "PASS_PHYSICS_SANITY"
+    },
+    "INHERITED_RIGID_CONTROL": {
+      "status": "PASS_CONTROL",
+      "source": "control contract"
+    }
+  }
+}

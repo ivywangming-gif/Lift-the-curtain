@@ -1,0 +1,7 @@
+{
+  "schema": "lift-the-curtain.round4070-fixed10cm-integrity.v1",
+  "required_artifacts": 14,
+  "present_artifacts": 14,
+  "deployment_truth_leakage_audit": "LABEL_AUDIT.csv; truth_used_online=false",
+  "status": "PASS"
+}

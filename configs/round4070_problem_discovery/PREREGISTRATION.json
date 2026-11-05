@@ -1,0 +1,75 @@
+{
+  "schema": "lift-the-curtain.round4070-problem-discovery-preregistration.v1",
+  "frozen_at_start": "2026-11-02",
+  "git_head_at_start": "1e18825a42bf5cc19a39bf63f76fa172869cc6cd",
+  "new_g1_trial_hard_limit": 48,
+  "initial_matrix_count": 22,
+  "confirmatory_budget_reserved": 16,
+  "active_probe_budget_reserved": 8,
+  "common_contract": {
+    "runner": "scripts/round4070_problem_discovery/run_episode.py",
+    "policy": "r1",
+    "headless": true,
+    "num_envs": 1,
+    "precontact_offset_m": 0.40,
+    "precontact_region_x_m": [0.36, 0.48],
+    "precontact_region_y_half_width_m": 0.10,
+    "precontact_region_speed_max_mps": 0.06,
+    "pointgoal_xy_tolerance_m": 0.08,
+    "opening_mode": "none",
+    "threshold_file": "configs/proprioceptive_thresholds.json",
+    "baseline_file": "reports/artifacts/round8/formal_matched_proprio/reset_x045/none/deployment_observation.csv",
+    "effort_source_requirement": "must be recorded and must not be unavailable during probe classification"
+  },
+  "stopping_rules": [
+    "Stop a scene branch after two consecutive runtime-invalid launches with the same cause.",
+    "Do not use a runtime-invalid trial as a physical negative.",
+    "Do not start G1 trials for F2/F3 until the matched no-probe/probe physics sanity pair passes.",
+    "Freeze any confirmatory condition before using new seeds; discovery trials cannot be reused as confirmation.",
+    "Do not exceed 48 newly launched full G1 trials."
+  ],
+  "frozen_early_match_rule": {
+    "cutoff": "T1 physical_probe plus physical_probe_hold; no cautious-advance samples",
+    "same_required_fields": ["probe_side", "probe command", "probe duration", "policy r1", "effort_source"],
+    "maximum_absolute_differences": {
+      "hand_forward_delta_m": 0.003,
+      "base_delta_m": 0.003,
+      "upper_tracking_rms_mean_rad": 0.005,
+      "effort_rms_mean": 1.0,
+      "initial_base_xy_m": 0.005,
+      "initial_yaw_rad": 0.005
+    },
+    "interpretation": "A pair satisfying every limit is an early-feature matched candidate; a different clearance outcome still requires independent confirmation before a causal claim."
+  },
+  "physics_validation": [
+    {"scene": "split_free", "modes": ["no_probe", "probe"], "seed": 47},
+    {"scene": "split_left_limited", "modes": ["no_probe", "probe"], "seed": 47},
+    {"scene": "split_right_limited", "modes": ["no_probe", "probe"], "seed": 47},
+    {"scene": "strips_3_overlap", "modes": ["no_probe", "probe"], "seed": 47}
+  ],
+  "trials": [
+    {"trial_id":"D00_EMPTY_LEFT_S47","stage":"baseline","scenario":"empty","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"EMPTY_S47"},
+    {"trial_id":"D00_EMPTY_RIGHT_S47","stage":"baseline","scenario":"empty","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"EMPTY_S47"},
+    {"trial_id":"D01_RIGID_LEFT_S47","stage":"baseline","scenario":"rigid_panel","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"RIGID_S47"},
+    {"trial_id":"D01_RIGID_RIGHT_S47","stage":"baseline","scenario":"rigid_panel","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"RIGID_S47"},
+    {"trial_id":"D02_NOMINAL_LEFT_S47","stage":"baseline","scenario":"nominal","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"NOMINAL_S47"},
+    {"trial_id":"D02_NOMINAL_RIGHT_S47","stage":"baseline","scenario":"nominal","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"NOMINAL_S47"},
+    {"trial_id":"D03_NOMINAL_LEFT_S48","stage":"baseline","scenario":"nominal","policy":"r1","probe_side":"left","seed":48,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"NOMINAL_S48"},
+    {"trial_id":"D03_NOMINAL_RIGHT_S48","stage":"baseline","scenario":"nominal","policy":"r1","probe_side":"right","seed":48,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"NOMINAL_S48"},
+
+    {"trial_id":"E01_HALF_LEFT_S47","stage":"exploration","scenario":"half_density","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"HALF_S47"},
+    {"trial_id":"E01_HALF_RIGHT_S47","stage":"exploration","scenario":"half_density","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"HALF_S47"},
+    {"trial_id":"E02_DOUBLE_LEFT_S47","stage":"exploration","scenario":"double_density","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"DOUBLE_S47"},
+    {"trial_id":"E02_DOUBLE_RIGHT_S47","stage":"exploration","scenario":"double_density","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"DOUBLE_S47"},
+    {"trial_id":"E03_BOTTOM_LEFT_LEFT_S47","stage":"exploration","scenario":"bottom_left_anchor","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"BOTTOM_LEFT_S47"},
+    {"trial_id":"E03_BOTTOM_LEFT_RIGHT_S47","stage":"exploration","scenario":"bottom_left_anchor","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"BOTTOM_LEFT_S47"},
+    {"trial_id":"E04_BOTTOM_RIGHT_LEFT_S47","stage":"exploration","scenario":"bottom_right_anchor","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"BOTTOM_RIGHT_S47"},
+    {"trial_id":"E04_BOTTOM_RIGHT_RIGHT_S47","stage":"exploration","scenario":"bottom_right_anchor","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"BOTTOM_RIGHT_S47"},
+    {"trial_id":"E05_BOTH_LEFT_S47","stage":"exploration","scenario":"both_bottom_corners","policy":"r1","probe_side":"left","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"BOTH_S47"},
+    {"trial_id":"E05_BOTH_RIGHT_S47","stage":"exploration","scenario":"both_bottom_corners","policy":"r1","probe_side":"right","seed":47,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"BOTH_S47"},
+    {"trial_id":"E06_BOTTOM_RIGHT_LEFT_Y004_S48","stage":"exploration","scenario":"bottom_right_anchor","policy":"r1","probe_side":"left","seed":48,"reset_root_y":0.04,"reset_root_yaw":0.0,"condition_id":"BOTTOM_RIGHT_Y004_S48"},
+    {"trial_id":"E06_BOTTOM_RIGHT_RIGHT_Y004_S48","stage":"exploration","scenario":"bottom_right_anchor","policy":"r1","probe_side":"right","seed":48,"reset_root_y":0.04,"reset_root_yaw":0.0,"condition_id":"BOTTOM_RIGHT_Y004_S48"},
+    {"trial_id":"E07_BOTTOM_LEFT_LEFT_YM004_S48","stage":"exploration","scenario":"bottom_left_anchor","policy":"r1","probe_side":"left","seed":48,"reset_root_y":-0.04,"reset_root_yaw":0.0,"condition_id":"BOTTOM_LEFT_YM004_S48"},
+    {"trial_id":"E07_BOTTOM_LEFT_RIGHT_YM004_S48","stage":"exploration","scenario":"bottom_left_anchor","policy":"r1","probe_side":"right","seed":48,"reset_root_y":-0.04,"reset_root_yaw":0.0,"condition_id":"BOTTOM_LEFT_YM004_S48"}
+  ]
+}

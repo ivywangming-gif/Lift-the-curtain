@@ -1,0 +1,58 @@
+{
+  "schema": "lift-the-curtain.round4070-structural-probe-discovery-preregistered-manifest.v1",
+  "campaign": "Round 4070-C: Physical Traversability Judgment: Structural Diversity and Safe Probe Depth",
+  "frozen_at_start": "2026-11-05T11:30:00+08:00",
+  "git_head_at_freeze": "local-working-tree-preserved",
+  "new_g1_trial_hard_limit": 48,
+  "trial_count_frozen": 22,
+  "runner": "scripts/round4070_structural_probe_discovery/run_episode.py",
+  "physics_runner": "scripts/round4070_structural_probe_discovery/validate_single_panel.py",
+  "serial_execution_required": true,
+  "headless": true,
+  "num_envs": 1,
+  "probe_depth_contract": {
+    "D0_BASELINE": 0.0,
+    "D1_PLUS_020M": 0.02,
+    "D2_PLUS_040M": 0.04,
+    "D3_PLUS_060M": 0.06,
+    "actual_hand_fk_is_authoritative": true,
+    "depth_is_not_a_force_measurement": true
+  },
+  "safety_limits_frozen_for_campaign": true,
+  "label_contract": {
+    "local_response": ["RESPONSIVE", "BLOCKED", "UNCERTAIN"],
+    "upper_decision": ["PASSABLE_FOR_ACTION", "BLOCKED_FOR_ACTION", "UNKNOWN"],
+    "runtime_invalid_is_not_a_physical_negative": true
+  },
+  "stopping_rules": [
+    "No G1 launch before the matching physics gate passes or an inherited unchanged rigid control gate is cited.",
+    "Do not launch more than 48 new G1 trial directories.",
+    "Stop a condition after two same-cause runtime-invalid launches.",
+    "Do not alter frozen detector thresholds, probe timing, or safety limits.",
+    "Do not use a failed single action to claim all actions are blocked."
+  ],
+  "trials": [
+    {"trial_id":"C_DEPTH_EMPTY_L_D0_S4070","stage":"depth_validation","group":"EMPTY_CONTROL","condition_id":"EMPTY_CONTROL","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_EMPTY_R_D0_S4070","stage":"depth_validation","group":"EMPTY_CONTROL","condition_id":"EMPTY_CONTROL","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_EMPTY_L_D1_S4070","stage":"depth_validation","group":"EMPTY_CONTROL","condition_id":"EMPTY_CONTROL","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D1_PLUS_020M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_EMPTY_R_D1_S4070","stage":"depth_validation","group":"EMPTY_CONTROL","condition_id":"EMPTY_CONTROL","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D1_PLUS_020M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_RIGID_L_D0_S4070","stage":"depth_validation","group":"RIGID_CONTROL","condition_id":"RIGID_CONTROL","scenario":"rigid_panel","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_RIGID_R_D0_S4070","stage":"depth_validation","group":"RIGID_CONTROL","condition_id":"RIGID_CONTROL","scenario":"rigid_panel","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_RIGID_L_D1_S4070","stage":"depth_validation","group":"RIGID_CONTROL","condition_id":"RIGID_CONTROL","scenario":"rigid_panel","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D1_PLUS_020M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_RIGID_R_D1_S4070","stage":"depth_validation","group":"RIGID_CONTROL","condition_id":"RIGID_CONTROL","scenario":"rigid_panel","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D1_PLUS_020M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_FABRIC_L_D0_S4070","stage":"depth_validation","group":"FABRIC_BASELINE","condition_id":"A0_TOP_EDGE_ONLY","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_FABRIC_R_D0_S4070","stage":"depth_validation","group":"FABRIC_BASELINE","condition_id":"A0_TOP_EDGE_ONLY","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_FABRIC_L_D1_S4070","stage":"depth_validation","group":"FABRIC_BASELINE","condition_id":"A0_TOP_EDGE_ONLY","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D1_PLUS_020M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_DEPTH_FABRIC_R_D1_S4070","stage":"depth_validation","group":"FABRIC_BASELINE","condition_id":"A0_TOP_EDGE_ONLY","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D1_PLUS_020M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_TOPO_A1_L_D0_S4070","stage":"topology","group":"A_TOPOLOGY","condition_id":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS"},
+    {"trial_id":"C_TOPO_A1_R_D0_S4070","stage":"topology","group":"A_TOPOLOGY","condition_id":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS"},
+    {"trial_id":"C_TOPO_A2_L_D0_S4070","stage":"topology","group":"A_TOPOLOGY","condition_id":"A2_FOUR_CORNERS_ONLY","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A2_FOUR_CORNERS_ONLY"},
+    {"trial_id":"C_TOPO_A2_R_D0_S4070","stage":"topology","group":"A_TOPOLOGY","condition_id":"A2_FOUR_CORNERS_ONLY","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A2_FOUR_CORNERS_ONLY"},
+    {"trial_id":"C_TOPO_A3_L_D0_S4070","stage":"topology","group":"A_TOPOLOGY","condition_id":"A3_FULL_PERIMETER_FIXED_V2","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A3_FULL_PERIMETER_FIXED"},
+    {"trial_id":"C_TOPO_A3_R_D0_S4070","stage":"topology","group":"A_TOPOLOGY","condition_id":"A3_FULL_PERIMETER_FIXED_V2","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A3_FULL_PERIMETER_FIXED"},
+    {"trial_id":"C_MAT_D225_L_D0_S4070","stage":"material","group":"B_MATERIAL","condition_id":"B_D225_NEW","scenario":"nominal","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY","density_scale_multiplier":2.25},
+    {"trial_id":"C_MAT_D225_R_D0_S4070","stage":"material","group":"B_MATERIAL","condition_id":"B_D225_NEW","scenario":"nominal","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY","density_scale_multiplier":2.25},
+    {"trial_id":"C_HIDDEN_G05_L_D0_S4070","stage":"hidden_wall","group":"C_HIDDEN_WALL","condition_id":"C_GAP05","scenario":"curtain_hidden_rigid","policy":"r1","probe_side":"left","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY","hidden_rigid_x":0.92},
+    {"trial_id":"C_HIDDEN_G10_R_D0_S4070","stage":"hidden_wall","group":"C_HIDDEN_WALL","condition_id":"C_GAP10","scenario":"curtain_hidden_rigid","policy":"r1","probe_side":"right","seed":4070,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D0_BASELINE","structural_topology":"A0_TOP_EDGE_ONLY","hidden_rigid_x":0.97}
+  ]
+}

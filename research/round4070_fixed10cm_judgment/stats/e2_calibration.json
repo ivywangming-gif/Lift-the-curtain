@@ -1,0 +1,18 @@
+{
+  "schema": "round4070-d-e2-calibration.v1",
+  "target_displacement_m": 0.1,
+  "threshold_source": "pre-registered fixed thresholds; only empty residual baseline is discovery-derived",
+  "thresholds": {
+    "pass_progress_m": 0.075,
+    "blocked_progress_m": 0.035,
+    "blocked_ratio": 0.4,
+    "blocked_stall_s": 0.2,
+    "blocked_q_residual_rms": 0.1,
+    "e0_q_error_threshold": 0.12
+  },
+  "normal_baseline_sides": [
+    "left",
+    "right"
+  ],
+  "frozen_before_confirmation": true
+}

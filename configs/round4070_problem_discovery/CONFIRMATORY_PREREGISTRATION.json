@@ -1,0 +1,95 @@
+{
+  "schema": "lift-the-curtain.round4070-problem-discovery-confirmatory-preregistration.v1",
+  "frozen_at": "2026-11-03T09:15:00+08:00",
+  "git_head_at_freeze": "1e18825a42bf5cc19a39bf63f76fa172869cc6cd",
+  "source_discovery_manifest": "configs/round4070_problem_discovery/PREREGISTRATION.json",
+  "source_discovery_evidence": {
+    "trial_index": "outputs/round4070_problem_discovery/trial_index.json",
+    "matched_candidates": "research/round4070_problem_discovery/matched_T1_candidates.csv",
+    "valid_discovery_trials_at_freeze": 21,
+    "runtime_invalid_discovery_trials_at_freeze": 1
+  },
+  "trial_count": 16,
+  "hard_budget_accounting": {
+    "launches_before_confirmation": 22,
+    "confirmation_launches_planned": 16,
+    "launches_reserved_after_confirmation": 10,
+    "campaign_hard_limit": 48
+  },
+  "common_contract": {
+    "runner": "scripts/round4070_problem_discovery/run_episode.py",
+    "policy": "r1",
+    "headless": true,
+    "num_envs": 1,
+    "precontact_offset_m": 0.40,
+    "precontact_region_x_m": [0.36, 0.48],
+    "precontact_region_y_half_width_m": 0.10,
+    "precontact_region_speed_max_mps": 0.06,
+    "pointgoal_xy_tolerance_m": 0.08,
+    "opening_mode": "none",
+    "effort_source_requirement": "recorded and not unavailable during the probe cutoff",
+    "frozen_falcon": true
+  },
+  "confirmatory_questions": [
+    {
+      "id": "C_H1_H3_NOMINAL_VS_BOTTOM_RIGHT",
+      "question": "For the same hand, seed, command and T1 cutoff, do nominal and bottom-right-anchor episodes remain T1-matched while producing different whole-body clearance outcomes?",
+      "discovery_pairs": [
+        ["D02_NOMINAL_LEFT_S47", "E04_BOTTOM_RIGHT_LEFT_S47"],
+        ["D02_NOMINAL_RIGHT_S47", "E04_BOTTOM_RIGHT_RIGHT_S47"]
+      ],
+      "independent_seeds": [49, 50],
+      "success_rule": "At least one independent seed must reproduce the frozen T1 match and discordant clearance for each claimed hand-specific result; report raw pairs rather than pooling away failures."
+    },
+    {
+      "id": "C_SPATIAL_HALF_DENSITY_SIDE_ASYMMETRY",
+      "question": "Does the discovery left/right outcome asymmetry in the same half-density scene reproduce under independent seeds?",
+      "discovery_pair": ["E01_HALF_LEFT_S47", "E01_HALF_RIGHT_S47"],
+      "independent_seeds": [49, 50],
+      "interpretation_limit": "A replicated side difference is evidence for spatial coverage sensitivity, not proof that the left hand has unique information or that active selection helps."
+    },
+    {
+      "id": "C_BOUNDARY_STABILITY",
+      "question": "Do bottom-left and both-bottom anchored scenes remain local-response/no-clearance cases under an independent seed?",
+      "independent_seed": 49,
+      "interpretation_limit": "These runs test outcome stability only and are not an H2 split-curtain counterexample."
+    }
+  ],
+  "frozen_early_match_rule": {
+    "source": "configs/round4070_problem_discovery/PREREGISTRATION.json",
+    "cutoff": "T1 physical_probe plus physical_probe_hold; no cautious-advance samples",
+    "maximum_absolute_differences": {
+      "hand_forward_delta_m": 0.003,
+      "base_delta_m": 0.003,
+      "upper_tracking_rms_mean_rad": 0.005,
+      "effort_rms_mean": 1.0,
+      "initial_base_xy_m": 0.005,
+      "initial_yaw_rad": 0.005
+    }
+  },
+  "stopping_rules": [
+    "Stop a condition branch after two consecutive runtime-invalid launches with the same cause.",
+    "Stop all new G1 launches after OOM, CUDA failure, renderer startup, or repeated solver instability.",
+    "Do not count unavailable effort, missing deployment observations, or planner exceptions as physical negatives.",
+    "Do not add active-probe trials unless a matched spatial-information condition survives confirmation and the extra action can be separated from mechanical opening.",
+    "Do not alter this manifest after the first confirmation launch."
+  ],
+  "trials": [
+    {"trial_id":"C01_NOMINAL_LEFT_S49","stage":"confirmatory","scenario":"nominal","policy":"r1","probe_side":"left","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_NOMINAL_S49"},
+    {"trial_id":"C01_NOMINAL_RIGHT_S49","stage":"confirmatory","scenario":"nominal","policy":"r1","probe_side":"right","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_NOMINAL_S49"},
+    {"trial_id":"C02_BOTTOM_RIGHT_LEFT_S49","stage":"confirmatory","scenario":"bottom_right_anchor","policy":"r1","probe_side":"left","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTTOM_RIGHT_S49"},
+    {"trial_id":"C02_BOTTOM_RIGHT_RIGHT_S49","stage":"confirmatory","scenario":"bottom_right_anchor","policy":"r1","probe_side":"right","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTTOM_RIGHT_S49"},
+    {"trial_id":"C03_NOMINAL_LEFT_S50","stage":"confirmatory","scenario":"nominal","policy":"r1","probe_side":"left","seed":50,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_NOMINAL_S50"},
+    {"trial_id":"C03_NOMINAL_RIGHT_S50","stage":"confirmatory","scenario":"nominal","policy":"r1","probe_side":"right","seed":50,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_NOMINAL_S50"},
+    {"trial_id":"C04_BOTTOM_RIGHT_LEFT_S50","stage":"confirmatory","scenario":"bottom_right_anchor","policy":"r1","probe_side":"left","seed":50,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTTOM_RIGHT_S50"},
+    {"trial_id":"C04_BOTTOM_RIGHT_RIGHT_S50","stage":"confirmatory","scenario":"bottom_right_anchor","policy":"r1","probe_side":"right","seed":50,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTTOM_RIGHT_S50"},
+    {"trial_id":"C05_HALF_LEFT_S49","stage":"confirmatory","scenario":"half_density","policy":"r1","probe_side":"left","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_HALF_S49"},
+    {"trial_id":"C05_HALF_RIGHT_S49","stage":"confirmatory","scenario":"half_density","policy":"r1","probe_side":"right","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_HALF_S49"},
+    {"trial_id":"C06_HALF_LEFT_S50","stage":"confirmatory","scenario":"half_density","policy":"r1","probe_side":"left","seed":50,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_HALF_S50"},
+    {"trial_id":"C06_HALF_RIGHT_S50","stage":"confirmatory","scenario":"half_density","policy":"r1","probe_side":"right","seed":50,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_HALF_S50"},
+    {"trial_id":"C07_BOTTOM_LEFT_LEFT_S49","stage":"confirmatory","scenario":"bottom_left_anchor","policy":"r1","probe_side":"left","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTTOM_LEFT_S49"},
+    {"trial_id":"C07_BOTTOM_LEFT_RIGHT_S49","stage":"confirmatory","scenario":"bottom_left_anchor","policy":"r1","probe_side":"right","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTTOM_LEFT_S49"},
+    {"trial_id":"C08_BOTH_LEFT_S49","stage":"confirmatory","scenario":"both_bottom_corners","policy":"r1","probe_side":"left","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTH_S49"},
+    {"trial_id":"C08_BOTH_RIGHT_S49","stage":"confirmatory","scenario":"both_bottom_corners","policy":"r1","probe_side":"right","seed":49,"reset_root_y":0.0,"reset_root_yaw":0.0,"condition_id":"CONF_BOTH_S49"}
+  ]
+}

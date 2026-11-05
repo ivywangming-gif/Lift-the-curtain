@@ -1,0 +1,15 @@
+{
+  "schema": "lift-the-curtain.round4070-structural-probe-discovery-independent-confirmatory-manifest.v1",
+  "campaign": "Round 4070-C independent-seed confirmation",
+  "frozen_at_start": "2026-11-05T16:50:00+08:00",
+  "parent_manifest": "PREREGISTERED_MANIFEST.json",
+  "confirmatory_addendum": "CONFIRMATORY_MANIFEST.json",
+  "hard_limit_shared_with_parent": 48,
+  "entry_rule": "Same frozen runner, thresholds and safety limits; new seed 4071 only.",
+  "trials": [
+    {"trial_id":"C_INDEP_EMPTY_L_D3_S4071","stage":"independent_confirmatory_depth","group":"EMPTY_CONTROL","condition_id":"EMPTY_CONTROL","scenario":"nominal","policy":"r1","probe_side":"left","seed":4071,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D3_PLUS_060M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_INDEP_EMPTY_R_D3_S4071","stage":"independent_confirmatory_depth","group":"EMPTY_CONTROL","condition_id":"EMPTY_CONTROL","scenario":"nominal","policy":"r1","probe_side":"right","seed":4071,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D3_PLUS_060M","structural_topology":"A0_TOP_EDGE_ONLY"},
+    {"trial_id":"C_INDEP_A1_L_D2_S4071","stage":"independent_confirmatory_topology","group":"A_TOPOLOGY_INDEPENDENT_CONFIRMATION","condition_id":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS","scenario":"nominal","policy":"r1","probe_side":"left","seed":4071,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D2_PLUS_040M","structural_topology":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS"},
+    {"trial_id":"C_INDEP_A1_R_D2_S4071","stage":"independent_confirmatory_topology","group":"A_TOPOLOGY_INDEPENDENT_CONFIRMATION","condition_id":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS","scenario":"nominal","policy":"r1","probe_side":"right","seed":4071,"reset_root_y":0.0,"reset_root_yaw":0.0,"probe_depth_level":"D2_PLUS_040M","structural_topology":"A1_TOP_EDGE_BOTTOM_TWO_CORNERS"}
+  ]
+}

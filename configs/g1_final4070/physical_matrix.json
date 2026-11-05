@@ -1,0 +1,47 @@
+{
+  "schema": "lift-the-curtain.g1-final4070-physical-matrix.v1",
+  "evidence_level": "MATCHED_INITIAL_CONDITION",
+  "launch_limit": 48,
+  "target_valid_range": [18, 24],
+  "frozen_protocol": {
+    "precontact_offset_m": 0.40,
+    "precontact_region_x_m": [0.36, 0.48],
+    "precontact_region_y_half_width_m": 0.10,
+    "precontact_speed_max_mps": 0.06,
+    "pointgoal_position_tolerance_m": 0.08,
+    "headless": true,
+    "num_envs": 1,
+    "progress_monitor": "round15_frozen",
+    "post_clearance_replan": true
+  },
+  "trials": [
+    {"order": 1, "trial_id": "R0_EMPTY_R1_right_seed45", "batch": "RESOURCE_BASELINE", "condition_id": "R0_EMPTY", "scenario": "empty", "policy": "r1", "probe_side": "right", "seed": 45},
+    {"order": 2, "trial_id": "R0_EMPTY_R1_right_seed46", "batch": "RESOURCE_BASELINE", "condition_id": "R0_EMPTY", "scenario": "empty", "policy": "r1", "probe_side": "right", "seed": 46},
+    {"order": 3, "trial_id": "R1_RIGID_R1_right_seed45", "batch": "RESOURCE_BASELINE", "condition_id": "R1_RIGID", "scenario": "rigid_panel", "policy": "r1", "probe_side": "right", "seed": 45},
+    {"order": 4, "trial_id": "R1_RIGID_R1_right_seed46", "batch": "RESOURCE_BASELINE", "condition_id": "R1_RIGID", "scenario": "rigid_panel", "policy": "r1", "probe_side": "right", "seed": 46},
+    {"order": 5, "trial_id": "R2_BOTTOM_RIGHT_R1_right_seed45", "batch": "RESOURCE_BASELINE", "condition_id": "R2_FLEXIBLE", "scenario": "bottom_right_anchor", "policy": "r1", "probe_side": "right", "seed": 45},
+    {"order": 6, "trial_id": "R2_BOTTOM_RIGHT_R1_right_seed46", "batch": "RESOURCE_BASELINE", "condition_id": "R2_FLEXIBLE", "scenario": "bottom_right_anchor", "policy": "r1", "probe_side": "right", "seed": 46},
+
+    {"order": 7, "trial_id": "B1_NOMINAL_R1_right_seed45", "batch": "MATCHED_ACTION", "condition_id": "NOMINAL_RIGHT", "scenario": "nominal", "policy": "r1", "probe_side": "right", "seed": 45},
+    {"order": 8, "trial_id": "B1_NOMINAL_R2_right_seed45", "batch": "MATCHED_ACTION", "condition_id": "NOMINAL_RIGHT", "scenario": "nominal", "policy": "r2", "probe_side": "right", "seed": 45},
+    {"order": 9, "trial_id": "B1_BOTTOM_RIGHT_R2_right_seed45", "batch": "MATCHED_ACTION", "condition_id": "BOTTOM_RIGHT_RIGHT", "scenario": "bottom_right_anchor", "policy": "r2", "probe_side": "right", "seed": 45},
+    {"order": 10, "trial_id": "B1_BOTTOM_LEFT_R1_right_seed45", "batch": "MATCHED_ACTION", "condition_id": "BOTTOM_LEFT_RIGHT", "scenario": "bottom_left_anchor", "policy": "r1", "probe_side": "right", "seed": 45},
+    {"order": 11, "trial_id": "B1_BOTTOM_LEFT_R2_right_seed45", "batch": "MATCHED_ACTION", "condition_id": "BOTTOM_LEFT_RIGHT", "scenario": "bottom_left_anchor", "policy": "r2", "probe_side": "right", "seed": 45},
+    {"order": 12, "trial_id": "B1_RIGID_R2_right_seed45", "batch": "MATCHED_ACTION", "condition_id": "RIGID_RIGHT", "scenario": "rigid_panel", "policy": "r2", "probe_side": "right", "seed": 45},
+
+    {"order": 13, "trial_id": "B1_NOMINAL_R1_left_seed45", "batch": "MATCHED_STATE", "condition_id": "NOMINAL_LEFT", "scenario": "nominal", "policy": "r1", "probe_side": "left", "seed": 45},
+    {"order": 14, "trial_id": "B1_NOMINAL_R2_left_seed45", "batch": "MATCHED_STATE", "condition_id": "NOMINAL_LEFT", "scenario": "nominal", "policy": "r2", "probe_side": "left", "seed": 45},
+    {"order": 15, "trial_id": "B1_BOTTOM_RIGHT_R1_left_seed45", "batch": "MATCHED_STATE", "condition_id": "BOTTOM_RIGHT_LEFT", "scenario": "bottom_right_anchor", "policy": "r1", "probe_side": "left", "seed": 45},
+    {"order": 16, "trial_id": "B1_BOTTOM_RIGHT_R2_left_seed45", "batch": "MATCHED_STATE", "condition_id": "BOTTOM_RIGHT_LEFT", "scenario": "bottom_right_anchor", "policy": "r2", "probe_side": "left", "seed": 45},
+    {"order": 17, "trial_id": "B1_BOTTOM_LEFT_R1_left_seed45", "batch": "MATCHED_STATE", "condition_id": "BOTTOM_LEFT_LEFT", "scenario": "bottom_left_anchor", "policy": "r1", "probe_side": "left", "seed": 45},
+    {"order": 18, "trial_id": "B1_BOTTOM_LEFT_R2_left_seed45", "batch": "MATCHED_STATE", "condition_id": "BOTTOM_LEFT_LEFT", "scenario": "bottom_left_anchor", "policy": "r2", "probe_side": "left", "seed": 45},
+    {"order": 19, "trial_id": "B1_RIGID_R1_left_seed45", "batch": "MATCHED_STATE", "condition_id": "RIGID_LEFT", "scenario": "rigid_panel", "policy": "r1", "probe_side": "left", "seed": 45},
+    {"order": 20, "trial_id": "B1_RIGID_R2_left_seed45", "batch": "MATCHED_STATE", "condition_id": "RIGID_LEFT", "scenario": "rigid_panel", "policy": "r2", "probe_side": "left", "seed": 45},
+
+    {"order": 21, "trial_id": "B2_NOMINAL_R1_right_seed46", "batch": "KEY_REPEAT", "condition_id": "NOMINAL_RIGHT_REPEAT", "scenario": "nominal", "policy": "r1", "probe_side": "right", "seed": 46},
+    {"order": 22, "trial_id": "B2_NOMINAL_R2_right_seed46", "batch": "KEY_REPEAT", "condition_id": "NOMINAL_RIGHT_REPEAT", "scenario": "nominal", "policy": "r2", "probe_side": "right", "seed": 46},
+    {"order": 23, "trial_id": "B2_BOTTOM_LEFT_R1_right_seed46", "batch": "KEY_REPEAT", "condition_id": "BOTTOM_LEFT_RIGHT_REPEAT", "scenario": "bottom_left_anchor", "policy": "r1", "probe_side": "right", "seed": 46},
+    {"order": 24, "trial_id": "B2_BOTTOM_LEFT_R2_right_seed46", "batch": "KEY_REPEAT", "condition_id": "BOTTOM_LEFT_RIGHT_REPEAT", "scenario": "bottom_left_anchor", "policy": "r2", "probe_side": "right", "seed": 46}
+  ]
+}
+

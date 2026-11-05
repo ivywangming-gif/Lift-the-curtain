@@ -1,0 +1,16 @@
+condition_family,condition_id,density_scale_multiplier,formal_core,hidden_rigid_center_x_m,hidden_rigid_front_gap_m,notes,online_scene_identity_available,physics_gate_id,physics_status_at_registration,scenario_builder,structural_topology,target_displacement_m
+basic_fabric,FABRIC_NOMINAL,1.0,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,A0_TOP_EDGE_ONLY,PENDING_D_VALIDATION,nominal,A0_TOP_EDGE_ONLY,0.1
+basic_fabric,FABRIC_BOTTOM_RIGHT_ANCHOR,1.0,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,A0_TOP_EDGE_ONLY,PENDING_D_VALIDATION,bottom_right_anchor,A0_TOP_EDGE_ONLY,0.1
+basic_fabric,FABRIC_BOTTOM_LEFT_ANCHOR,1.0,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,A0_TOP_EDGE_ONLY,PENDING_D_VALIDATION,bottom_left_anchor,A0_TOP_EDGE_ONLY,0.1
+strong_constraint,FABRIC_FOUR_CORNERS_ONLY,1.0,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,A2_FOUR_CORNERS_ONLY,PENDING_D_VALIDATION,nominal,A2_FOUR_CORNERS_ONLY,0.1
+strong_constraint,FABRIC_FULL_PERIMETER_FIXED,1.0,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,A3_FULL_PERIMETER_FIXED_V2,PENDING_D_VALIDATION,nominal,A3_FULL_PERIMETER_FIXED,0.1
+hidden_wall,FABRIC_WALL_GAP_02,1.0,True,0.89,0.02,One unified PROBE_10CM rule; no condition-specific classifier.,False,C_GAP02,PENDING_D_VALIDATION,curtain_hidden_rigid,A0_TOP_EDGE_ONLY,0.1
+hidden_wall,FABRIC_WALL_GAP_05,1.0,True,0.92,0.05,One unified PROBE_10CM rule; no condition-specific classifier.,False,C_GAP05,PENDING_D_VALIDATION,curtain_hidden_rigid,A0_TOP_EDGE_ONLY,0.1
+hidden_wall,FABRIC_WALL_GAP_08,1.0,True,0.95,0.08,One unified PROBE_10CM rule; no condition-specific classifier.,False,C_GAP08,PENDING_D_VALIDATION,curtain_hidden_rigid,A0_TOP_EDGE_ONLY,0.1
+heavy,FABRIC_HEAVY_FREE,2.25,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,B_D225_NEW,PENDING_D_VALIDATION,nominal,A0_TOP_EDGE_ONLY,0.1
+heavy,FABRIC_HEAVY_CONSTRAINED,2.25,True,,,One unified PROBE_10CM rule; no condition-specific classifier.,False,B_D225_A1,PENDING_D_VALIDATION,nominal,A1_TOP_EDGE_BOTTOM_TWO_CORNERS,0.1
+control,EMPTY_CONTROL,1.0,False,,,Safety/control only; never substitutes for flexible positive examples.,False,CONTROL_ONLY,CONTROL_OR_INHERITED,nominal,A0_TOP_EDGE_ONLY,0.1
+control,RIGID_CONTROL,1.0,False,,,Safety/control only; never substitutes for flexible positive examples.,False,INHERITED_RIGID_CONTROL,CONTROL_OR_INHERITED,rigid_panel,A0_TOP_EDGE_ONLY,0.1
+matched_no_wall,WALL_GAP_02_MATCHED_NO_WALL,1.0,False,,,Matched no-wall control for FABRIC_WALL_GAP_02; paired by seed and side.,False,A0_TOP_EDGE_ONLY,MATCHED_NO_WALL_CONTROL,nominal,A0_TOP_EDGE_ONLY,0.1
+matched_no_wall,WALL_GAP_05_MATCHED_NO_WALL,1.0,False,,,Matched no-wall control for FABRIC_WALL_GAP_05; paired by seed and side.,False,A0_TOP_EDGE_ONLY,MATCHED_NO_WALL_CONTROL,nominal,A0_TOP_EDGE_ONLY,0.1
+matched_no_wall,WALL_GAP_08_MATCHED_NO_WALL,1.0,False,,,Matched no-wall control for FABRIC_WALL_GAP_08; paired by seed and side.,False,A0_TOP_EDGE_ONLY,MATCHED_NO_WALL_CONTROL,nominal,A0_TOP_EDGE_ONLY,0.1

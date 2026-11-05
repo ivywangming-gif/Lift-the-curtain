@@ -1,0 +1,23 @@
+{
+  "profile": "FULL_ARM_FK_10CM_RIGHT_CALIBRATION",
+  "probe_side": "right",
+  "target_displacement_m": 0.1,
+  "direction_world": [1.0, 0.0, 0.0],
+  "upper_target": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.34672030,
+    -0.25684630,
+    -0.11763668,
+    1.28077425,
+    -0.00823224,
+    0.11023014,
+    0.03708617
+  ],
+  "purpose": "isolated calibration only; not a formal benchmark target"
+}
