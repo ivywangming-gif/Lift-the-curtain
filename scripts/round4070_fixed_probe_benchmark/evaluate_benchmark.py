@@ -514,20 +514,91 @@ def write_left_right(rows: list[dict[str, Any]]) -> None:
 
 
 def write_failure_analysis(rows: list[dict[str, Any]]) -> None:
-    mechanisms = {
-        "F1_RUNTIME_INVALID": lambda row: row["summary_exists"] and not row["runtime_valid"],
-        "F2_PROBE_INVALID_OR_MISSING_HISTORY": lambda row: row["summary_exists"] and row["runtime_valid"] and not row["probe_valid"],
-        "F3_CONTACT_LIMITED_MOTION": lambda row: row["summary_exists"] and row["probe_outcome_class"] == "CONTACT_LIMITED_MOTION",
-        "F4_FREE_SPACE_UNDERTRACKING": lambda row: row["summary_exists"] and row["probe_outcome_class"] == "FREE_SPACE_UNDERTRACKING",
-        "F5_SAFETY_STOP": lambda row: row["summary_exists"] and str(row["probe_outcome_class"]).startswith("SAFETY_STOP"),
-        "F6_POINTGOAL_FAILURE_WITHOUT_LABEL_EVIDENCE": lambda row: row["summary_exists"] and not row["probe_validation_only"] and not row["task_success"] and not row["label_valid"],
-        "F7_LABEL_UNKNOWN_INDEPENDENT_EVIDENCE_MISSING": lambda row: row["summary_exists"] and row["label"] == "UNKNOWN" and row["probe_valid"],
+    observed = [row for row in rows if row["summary_exists"]]
+    eligible = [row for row in rows if row["benchmark_eligible"]]
+    flexible_unknown = [row for row in observed if row["scope"] == "core" and row["label"] == "UNKNOWN"]
+    f2_rows = [
+        row for row in flexible_unknown
+        if row["probe_valid"] and row["probe_outcome_class"] == "CONTACT_LIMITED_MOTION"
+    ]
+    f1_rows = [
+        row for row in eligible
+        if row["label"] == "BLOCKED"
+        and row["decisions"]["E1"] == "PASSABLE"
+        and row["decisions"]["E2"] == "BLOCKED"
+    ]
+    f1_closest = [
+        row for row in eligible
+        if row["label"] == "BLOCKED" and row["decisions"]["E1"] == "PASSABLE"
+    ]
+    f4_rows = [
+        row for row in eligible
+        if row["condition_family"] == "fabric_heavy"
+        and row["label"] == "PASSABLE"
+        and row["decisions"]["E1"] == "BLOCKED"
+    ]
+    f4_closest = [row for row in flexible_unknown if row["condition_family"] == "fabric_heavy"]
+    f5_by_method = {
+        method: [
+            row for row in eligible
+            if row["label"] == "BLOCKED" and row["decisions"][method] == "PASSABLE"
+        ]
+        for method in ("E0", "E1", "E2")
     }
-    lines = ["# Failure Mechanism Analysis", "", "Counts use observed trial directories only. Low displacement is not counted as BLOCKED without independent contact/clearance evidence. F6 counts only observed trials that executed the task branch; probe-validation-only trials are not PointGoal failures.", "", "| Mechanism | Count | Example trial IDs |", "|---|---:|---|"]
-    for name, predicate in mechanisms.items():
+    f5_rows = {row["trial_id"]: row for values in f5_by_method.values() for row in values}
+    f6_rows = [
+        row for row in observed
+        if not row["probe_validation_only"] and not row["task_success"] and not row["label_valid"]
+    ]
+    p1_payload = read_json(OUTPUT / "p1" / "P1_GATE_RESULTS.json", {}) or {}
+    p1_failure_ids = [
+        f"P1_{item.get('scene')}_{item.get('mode')}"
+        for item in p1_payload.get("results", [])
+        if str(item.get("status")) == "FAIL_PHYSICS_SANITY"
+    ] if isinstance(p1_payload, dict) else []
+
+    def ids(items: list[dict[str, Any]] | list[str], limit: int = 6) -> str:
+        values = [item if isinstance(item, str) else str(item["trial_id"]) for item in items]
+        return ", ".join(values[:limit]) or "-"
+
+    lines = [
+        "# Failure Mechanism Analysis",
+        "",
+        "Counts use observed trial directories only. The required F1-F7 research mechanisms are not mutually exclusive; an execution record may appear in more than one evidence category. Low displacement is not counted as BLOCKED without independent contact/clearance evidence.",
+        "",
+        "## Required Research Taxonomy",
+        "",
+        "| Mechanism | Count | Evidence trial/run IDs | Interpretation |",
+        "|---|---:|---|---|",
+        f"| F1 information underuse | {len(f1_rows)} proven | closest E1 false-pass cases: {ids(f1_closest)} | No proven E2-correct rescue exists; current data cannot isolate an E1 threshold/use failure from insufficient decisive observation. |",
+        f"| F2 probe information insufficient | {len(f2_rows)} | {ids(f2_rows)} | Valid one-shot probes were contact-limited but did not independently establish whole-body clearance; these remain UNKNOWN. |",
+        f"| F3 local contact versus whole-body traversal mismatch | 0 confirmed; {len(f2_rows)} candidates | {ids(f2_rows)} | Candidate pattern overlaps F2, but no independent whole-body evidence is sufficient to call these confirmed local-contact/global-traversal mismatches. |",
+        f"| F4 heavy-curtain over-conservatism | {len(f4_rows)} proven | heavy UNKNOWN examples: {ids(f4_closest)} | No valid heavy-curtain PASSABLE label exists in this run, so a false-reject claim is not supported. |",
+        f"| F5 constrained-curtain over-release | {len(f5_rows)} unique blocked trials (E0={len(f5_by_method['E0'])}, E1={len(f5_by_method['E1'])}, E2={len(f5_by_method['E2'])}) | {ids(list(f5_rows.values()))} | Hidden-wall BLOCKED rows are independent negative evidence; local responsiveness causes false PASSABLE decisions, reduced but not eliminated by E2. |",
+        f"| F6 robot control/planning | {len(f6_rows)} | {ids(f6_rows)} | Full task-branch PointGoal failures without independent label evidence; these are not relabeled BLOCKED. |",
+        f"| F7 physical-model invalidity | {len(p1_failure_ids)} P1 physics-only runs | {ids(p1_failure_ids)} | P1 runs failed the frozen physics sanity bound; they are excluded from G1 metrics, and real PVC is not claimed. |",
+        "",
+        "F1 and F4 are reported as unproven rather than inferred from UNKNOWN rows. F2/F3 candidate counts intentionally expose the evidence boundary instead of converting local contact into a whole-body truth label.",
+        "",
+        "## Execution Diagnostics",
+        "",
+        "| Diagnostic | Count | Example trial IDs |",
+        "|---|---:|---|",
+    ]
+    diagnostics = {
+        "RUNTIME_INVALID": lambda row: row["summary_exists"] and not row["runtime_valid"],
+        "PROBE_INVALID_OR_MISSING_HISTORY": lambda row: row["summary_exists"] and row["runtime_valid"] and not row["probe_valid"],
+        "CONTACT_LIMITED_MOTION": lambda row: row["summary_exists"] and row["probe_outcome_class"] == "CONTACT_LIMITED_MOTION",
+        "FREE_SPACE_UNDERTRACKING": lambda row: row["summary_exists"] and row["probe_outcome_class"] == "FREE_SPACE_UNDERTRACKING",
+        "SAFETY_STOP": lambda row: row["summary_exists"] and str(row["probe_outcome_class"]).startswith("SAFETY_STOP"),
+        "TASK_BRANCH_POINTGOAL_FAILURE_WITHOUT_LABEL_EVIDENCE": lambda row: row["summary_exists"] and not row["probe_validation_only"] and not row["task_success"] and not row["label_valid"],
+        "UNKNOWN_WITHOUT_INDEPENDENT_EVIDENCE": lambda row: row["summary_exists"] and row["label"] == "UNKNOWN" and row["probe_valid"],
+    }
+    for name, predicate in diagnostics.items():
         examples = [row["trial_id"] for row in rows if predicate(row)]
         lines.append(f"| {name} | {len(examples)} | {', '.join(examples[:5]) or '-'} |")
-    lines.append("\nP1 physics-only failures are excluded from these G1 counts and cannot invalidate P0.")
+    lines.append("\nP1 physics-only failures are listed under F7 and cannot invalidate P0.")
+    (RESEARCH / "FAILURE_MECHANISM_ANALYSIS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (RESEARCH / "FAILURE_MECHANISM_ANALYSIS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
