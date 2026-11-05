@@ -1,0 +1,167 @@
+{
+  "schema": "lift-the-curtain.round4070-fixed-probe-contract-validation.v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "manifest_count_within_budget",
+      "observed": 112,
+      "required": "<= 200",
+      "pass": true
+    },
+    {
+      "check": "manifest_ids_unique",
+      "observed": 112,
+      "required": 112,
+      "pass": true
+    },
+    {
+      "check": "all_registered_probe_modes",
+      "observed": [
+        "PROBE_10CM"
+      ],
+      "required": [
+        "PROBE_10CM"
+      ],
+      "pass": true
+    },
+    {
+      "check": "all_registered_targets",
+      "observed": [
+        0.1
+      ],
+      "required": [
+        0.1
+      ],
+      "pass": true
+    },
+    {
+      "check": "fixed_command_contract",
+      "observed": "FIXED_ONE_SHOT_NOMINAL_0P10M",
+      "required": "FIXED_ONE_SHOT_NOMINAL_0P10M",
+      "pass": true
+    },
+    {
+      "check": "p0_condition_coverage",
+      "observed": [
+        "EMPTY_CONTROL",
+        "FABRIC_BOTH_BOTTOM_CORNERS",
+        "FABRIC_BOTTOM_LEFT_ANCHOR",
+        "FABRIC_BOTTOM_RIGHT_ANCHOR",
+        "FABRIC_FOUR_CORNERS_ONLY",
+        "FABRIC_FULL_PERIMETER_FIXED",
+        "FABRIC_HEAVY_CONSTRAINED",
+        "FABRIC_HEAVY_FREE",
+        "FABRIC_NOMINAL",
+        "FABRIC_WALL_GAP_02",
+        "FABRIC_WALL_GAP_05",
+        "FABRIC_WALL_GAP_08",
+        "RIGID_CONTROL"
+      ],
+      "required": [
+        "EMPTY_CONTROL",
+        "FABRIC_BOTH_BOTTOM_CORNERS",
+        "FABRIC_BOTTOM_LEFT_ANCHOR",
+        "FABRIC_BOTTOM_RIGHT_ANCHOR",
+        "FABRIC_FOUR_CORNERS_ONLY",
+        "FABRIC_FULL_PERIMETER_FIXED",
+        "FABRIC_HEAVY_CONSTRAINED",
+        "FABRIC_HEAVY_FREE",
+        "FABRIC_NOMINAL",
+        "FABRIC_WALL_GAP_02",
+        "FABRIC_WALL_GAP_05",
+        "FABRIC_WALL_GAP_08",
+        "RIGID_CONTROL"
+      ],
+      "pass": true
+    },
+    {
+      "check": "phase0_minimum_six",
+      "observed": 6,
+      "required": 6,
+      "pass": true
+    },
+    {
+      "check": "phase1_two_seeds_per_side",
+      "observed_min": 2,
+      "required": 2,
+      "pass": true
+    },
+    {
+      "check": "hidden_wall_gap_set",
+      "observed": [
+        0.02,
+        0.05,
+        0.08
+      ],
+      "required": [
+        0.02,
+        0.05,
+        0.08
+      ],
+      "pass": true
+    },
+    {
+      "check": "old_depth_schedule_absent",
+      "observed": false,
+      "required": false,
+      "pass": true
+    },
+    {
+      "check": "actual_motion_not_validity_gate_in_runner",
+      "observed": true,
+      "required": true,
+      "pass": true
+    },
+    {
+      "check": "phase0_recorded_and_valid",
+      "observed": {
+        "summary": 6,
+        "runtime": 6,
+        "probe": 6
+      },
+      "required": "6 summaries, runtime-valid and probe-valid",
+      "pass": true
+    },
+    {
+      "check": "phase1_formal_initial_screen_recorded",
+      "observed": {
+        "registered": 44,
+        "summary": 44,
+        "runtime": 44,
+        "probe": 44
+      },
+      "required": "all registered Phase 1 formal rows",
+      "pass": true
+    },
+    {
+      "check": "deployment_header_leakage",
+      "observed": {},
+      "required": "no forbidden fields",
+      "pass": true
+    },
+    {
+      "check": "p0_physics_gates_pass",
+      "observed": {
+        "A0_TOP_EDGE_ONLY": "PASS_E_PHYSICS",
+        "A1_BOTTOM_LEFT_ANCHOR": "PASS_E_PHYSICS",
+        "A1_BOTTOM_RIGHT_ANCHOR": "PASS_E_PHYSICS",
+        "A1_TOP_EDGE_BOTTOM_TWO_CORNERS": "PASS_E_PHYSICS",
+        "A2_FOUR_CORNERS_ONLY": "PASS_E_PHYSICS",
+        "A3_FULL_PERIMETER_FIXED": "PASS_E_PHYSICS",
+        "B_D225_A1": "PASS_E_PHYSICS",
+        "B_D225_NEW": "PASS_E_PHYSICS",
+        "C_GAP02": "PASS_E_PHYSICS",
+        "C_GAP05": "PASS_E_PHYSICS",
+        "C_GAP08": "PASS_E_PHYSICS"
+      },
+      "required": "all PASS_E_PHYSICS",
+      "pass": true
+    }
+  ],
+  "observed": {
+    "registered_trials": 112,
+    "summaries": 104,
+    "runtime_valid": 104,
+    "probe_valid": 104
+  }
+}

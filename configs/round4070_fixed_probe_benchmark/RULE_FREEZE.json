@@ -1,0 +1,19 @@
+{
+  "schema": "lift-the-curtain.round4070-fixed-probe-rule-freeze.v1",
+  "campaign": "Round 4070-E",
+  "frozen_before_confirmation": true,
+  "nominal_target_displacement_m": 0.1,
+  "q_error_cutoff_rad": 0.12,
+  "e2_pass_progress_m": 0.075,
+  "e2_block_progress_m": 0.035,
+  "e2_block_ratio": 0.4,
+  "e2_stall_s": 0.2,
+  "e2_effort_deviation": 2.2690875035237013,
+  "e2_tracking_residual_rad": 0.12,
+  "e2_pass_stall_s": 0.8,
+  "selection_rule": "same thresholds for all P0 materials, attachment topologies, gap sizes, sides and phases",
+  "truth_in_classifier": false,
+  "confirmation_rows_may_not_change_thresholds": true,
+  "actual_displacement_is_not_validity_gate": true,
+  "source": "pre-registered engineering cutoff; no condition-specific tuning"
+}

@@ -1,0 +1,17 @@
+blocked_labels,condition_family,condition_id,density_scale_multiplier,formal_core,hidden_rigid_gap_m,label_valid_rows,left_observed,notes,observed_rows,passable_labels,physics_gate_id,physics_gate_status,probe_valid_rows,registered_rows,right_observed,runtime_valid_rows,scenario,structural_topology,unknown_labels
+0,control,EMPTY_CONTROL,1.0,False,,2,1,P1 is reported separately and cannot invalidate this P0 row.,2,0,PASS_CONTROL,PASS_CONTROL,2,6,1,2,nominal,A0_TOP_EDGE_ONLY,4
+0,control,RIGID_CONTROL,1.0,False,,2,1,P1 is reported separately and cannot invalidate this P0 row.,2,0,PASS_CONTROL,PASS_CONTROL,2,6,1,2,rigid_panel,A0_TOP_EDGE_ONLY,4
+0,fabric,FABRIC_NOMINAL,1.0,True,,1,6,P1 is reported separately and cannot invalidate this P0 row.,12,1,A0_TOP_EDGE_ONLY,PASS_E_PHYSICS,12,12,6,12,nominal,A0_TOP_EDGE_ONLY,11
+0,fabric,FABRIC_BOTTOM_LEFT_ANCHOR,1.0,True,,0,5,P1 is reported separately and cannot invalidate this P0 row.,10,0,A1_BOTTOM_LEFT_ANCHOR,PASS_E_PHYSICS,10,10,5,10,bottom_left_anchor,A0_TOP_EDGE_ONLY,10
+0,fabric,FABRIC_BOTTOM_RIGHT_ANCHOR,1.0,True,,1,5,P1 is reported separately and cannot invalidate this P0 row.,10,1,A1_BOTTOM_RIGHT_ANCHOR,PASS_E_PHYSICS,10,10,5,10,bottom_right_anchor,A0_TOP_EDGE_ONLY,9
+0,fabric,FABRIC_BOTH_BOTTOM_CORNERS,1.0,True,,0,4,P1 is reported separately and cannot invalidate this P0 row.,8,0,A1_TOP_EDGE_BOTTOM_TWO_CORNERS,PASS_E_PHYSICS,8,8,4,8,both_bottom_corners,A1_TOP_EDGE_BOTTOM_TWO_CORNERS,8
+0,fabric,FABRIC_FOUR_CORNERS_ONLY,1.0,True,,0,2,P1 is reported separately and cannot invalidate this P0 row.,4,0,A2_FOUR_CORNERS_ONLY,PASS_E_PHYSICS,4,4,2,4,nominal,A2_FOUR_CORNERS_ONLY,4
+0,fabric,FABRIC_FULL_PERIMETER_FIXED,1.0,True,,0,2,P1 is reported separately and cannot invalidate this P0 row.,4,0,A3_FULL_PERIMETER_FIXED,PASS_E_PHYSICS,4,4,2,4,nominal,A3_FULL_PERIMETER_FIXED,4
+0,fabric_heavy,FABRIC_HEAVY_FREE,2.25,True,,0,2,P1 is reported separately and cannot invalidate this P0 row.,4,0,B_D225_NEW,PASS_E_PHYSICS,4,4,2,4,nominal,A0_TOP_EDGE_ONLY,4
+0,fabric_heavy,FABRIC_HEAVY_CONSTRAINED,2.25,True,,0,5,P1 is reported separately and cannot invalidate this P0 row.,10,0,B_D225_A1,PASS_E_PHYSICS,10,10,5,10,nominal,A1_TOP_EDGE_BOTTOM_TWO_CORNERS,10
+8,hidden_wall,FABRIC_WALL_GAP_02,1.0,True,0.02,8,4,P1 is reported separately and cannot invalidate this P0 row.,8,0,C_GAP02,PASS_E_PHYSICS,8,8,4,8,curtain_hidden_rigid,A0_TOP_EDGE_ONLY,0
+10,hidden_wall,FABRIC_WALL_GAP_05,1.0,True,0.05,10,5,P1 is reported separately and cannot invalidate this P0 row.,10,0,C_GAP05,PASS_E_PHYSICS,10,10,5,10,curtain_hidden_rigid,A0_TOP_EDGE_ONLY,0
+8,hidden_wall,FABRIC_WALL_GAP_08,1.0,True,0.08,8,4,P1 is reported separately and cannot invalidate this P0 row.,8,0,C_GAP08,PASS_E_PHYSICS,8,8,4,8,curtain_hidden_rigid,A0_TOP_EDGE_ONLY,0
+0,matched_no_wall,WALL_GAP_02_MATCHED_NO_WALL,1.0,False,,4,2,P1 is reported separately and cannot invalidate this P0 row.,4,0,MATCHED_CONTROL,PASS_CONTROL,4,4,2,4,nominal,A0_TOP_EDGE_ONLY,0
+0,matched_no_wall,WALL_GAP_05_MATCHED_NO_WALL,1.0,False,,4,2,P1 is reported separately and cannot invalidate this P0 row.,4,0,MATCHED_CONTROL,PASS_CONTROL,4,4,2,4,nominal,A0_TOP_EDGE_ONLY,0
+0,matched_no_wall,WALL_GAP_08_MATCHED_NO_WALL,1.0,False,,4,2,P1 is reported separately and cannot invalidate this P0 row.,4,0,MATCHED_CONTROL,PASS_CONTROL,4,4,2,4,nominal,A0_TOP_EDGE_ONLY,0
