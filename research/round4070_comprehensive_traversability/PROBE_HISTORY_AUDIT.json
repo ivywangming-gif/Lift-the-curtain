@@ -1,0 +1,49 @@
+{
+  "status": "ACTUAL_DESCRIPTIVE_AUDIT_NOT_MODEL_EVALUATION",
+  "source_manifest_sha256": "f5f7663826ff7b4888390fbf5b3754ff52abe472d9118935d322f1aada46b2e4",
+  "selection": "first lexicographic completed ID per side in EMPTY/A01; no label-based selection",
+  "interpolation": false,
+  "histories": [
+    {
+      "trial_id": "G_EMPTY_left_empty_control_00_nominal_s74800__attempt01",
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_EMPTY_left_empty_control_00_nominal_s74800__attempt01.npz",
+      "npz_sha256": "27d304824638577eccd8c364daed1acb1e5029f24510c8dd3104e69357ebf702",
+      "label": "PASSABLE_FOR_ACTION",
+      "scene_id": "EMPTY",
+      "side": "left",
+      "sample_count": 102,
+      "actual_hz": 50.000000000001066
+    },
+    {
+      "trial_id": "G_A01_left_coverage_00_nominal_s70000__attempt01",
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_A01_left_coverage_00_nominal_s70000__attempt01.npz",
+      "npz_sha256": "a90b98256f20a526b8eb6425e5fcae2aa20004be42b39e83844f7e419e4c33b1",
+      "label": "LABEL_UNKNOWN",
+      "scene_id": "A01",
+      "side": "left",
+      "sample_count": 102,
+      "actual_hz": 50.000000000001066
+    },
+    {
+      "trial_id": "G_EMPTY_right_empty_control_00_nominal_s74800__attempt01",
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_EMPTY_right_empty_control_00_nominal_s74800__attempt01.npz",
+      "npz_sha256": "4544271d21bdec45fd53bb9efa7e1088b35c9f9c621c531e8521140b5920da52",
+      "label": "PASSABLE_FOR_ACTION",
+      "scene_id": "EMPTY",
+      "side": "right",
+      "sample_count": 102,
+      "actual_hz": 50.000000000001066
+    },
+    {
+      "trial_id": "G_A01_right_coverage_00_nominal_s70000__attempt01",
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_A01_right_coverage_00_nominal_s70000__attempt01.npz",
+      "npz_sha256": "d7d0101ef809ff140b96203a1bc3d1d04a36d0e9c8fa9ab53f365e45e4041f4e",
+      "label": "LABEL_UNKNOWN",
+      "scene_id": "A01",
+      "side": "right",
+      "sample_count": 102,
+      "actual_hz": 50.000000000001066
+    }
+  ],
+  "limitation": "One trial per condition/hand; no uncertainty bands or class-discrimination inference"
+}

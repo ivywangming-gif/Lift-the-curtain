@@ -8,4 +8,6 @@
 
 已实际完成的 G 提交：`c929722fa93c74cf1159b27dd86a99f19d94d3ad`，题目 `research: audit Round 4070-G provenance literature and map contract`。该提交已成功 push 到独立 G 分支并建立 upstream，仅含 7 个审计、文献和地图合同文件。
 
-第二阶段准备提交可执行场景/门禁/采集/学习/恢复源码、冻结 manifest v3、实际双手空场 smoke 及明确未完成的研究报告。没有正式 G 模型拟合结果；1280 个学习任务的阻塞状态是实际 preflight 结果，不是性能分数。提交与 push 的最终 SHA 将在 Git 返回后另行记录；此处不预写成功。
+第二阶段已实际提交并成功 push：`e9bdca5eb360a4eccede86318c6d58c7d87430c0`，题目 `research: implement resumable G physics data and learning campaign`。包含可执行场景/门禁/采集/学习/恢复源码、冻结 manifest v3、实际双手空场 smoke 及明确未完成的研究报告。没有正式 G 模型拟合结果；1280 个学习任务的阻塞状态是实际 preflight 结果，不是性能分数。
+
+检出完整性审查发现 Git `core.autocrlf=true` 会把 manifest 的提交 blob 与冻结 Windows 文件换行区分；已增加该目录的精确范围 `.gitattributes`，对冻结 manifest 与 SHA 文件禁用文本换行转换，以后续提交保留原始冻结字节。冻结物理内容、seed、动作合同及运行中的 v3 SHA 不改变。
