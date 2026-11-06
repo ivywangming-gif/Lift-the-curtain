@@ -1,0 +1,911 @@
+{
+  "g1_attempts": 15,
+  "runtime_valid": 13,
+  "probe_valid": 13,
+  "labels": {
+    "PASSABLE": 5,
+    "BLOCKED": 3,
+    "UNKNOWN": 5
+  },
+  "g1": [
+    {
+      "trial": "F_CONFIRM_bottom_right_anchor_right_S420202",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "PASSABLE",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8091.957
+    },
+    {
+      "trial": "F_CONFIRM_curtain_hidden_rigid_left_S420204",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "BLOCKED",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8090.539
+    },
+    {
+      "trial": "F_CONFIRM_curtain_hidden_rigid_right_S420203",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "BLOCKED",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8097.051
+    },
+    {
+      "trial": "F_CONFIRM_nominal_right_S420201",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "PASSABLE",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8096.172
+    },
+    {
+      "trial": "F_LEFT_COMPLETION_bottom_right_anchor_left_S420402",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "UNKNOWN",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8090.707
+    },
+    {
+      "trial": "F_LEFT_COMPLETION_nominal_left_S420401",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "UNKNOWN",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8133.832
+    },
+    {
+      "trial": "F_POSTURE_bottom_right_anchor_right_S420302",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "PASSABLE",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8091.902
+    },
+    {
+      "trial": "F_POSTURE_curtain_hidden_rigid_right_S420303",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "BLOCKED",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8088.16
+    },
+    {
+      "trial": "F_POSTURE_nominal_right_S420301",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "PASSABLE",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8127.266
+    },
+    {
+      "trial": "F_SCREEN_bottom_right_anchor_left_S420104_UNSANDBOXED_RETRY",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "UNKNOWN",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8097.789
+    },
+    {
+      "trial": "F_SCREEN_bottom_right_anchor_right_S420102",
+      "runtime_valid": false,
+      "probe_valid": false,
+      "summary_exists": false,
+      "stage": "STOPPED_BEFORE_SUMMARY",
+      "timeout": null,
+      "label": "UNKNOWN",
+      "gpu_peak_mb": null,
+      "ram_peak_mb": null
+    },
+    {
+      "trial": "F_SCREEN_bottom_right_anchor_right_S420102_UNSANDBOXED_RETRY",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "PASSABLE",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8111.652
+    },
+    {
+      "trial": "F_SCREEN_nominal_left_S420103_UNSANDBOXED_RETRY",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "UNKNOWN",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8092.805
+    },
+    {
+      "trial": "F_SCREEN_nominal_right_S420101",
+      "runtime_valid": false,
+      "probe_valid": false,
+      "summary_exists": false,
+      "stage": "BEFORE_APP",
+      "timeout": "PHASE_TIMEOUT_BEFORE_APP_180s",
+      "label": "UNKNOWN",
+      "gpu_peak_mb": 203,
+      "ram_peak_mb": 882.484
+    },
+    {
+      "trial": "F_SCREEN_nominal_right_S420101_UNSANDBOXED_RETRY",
+      "runtime_valid": true,
+      "probe_valid": true,
+      "summary_exists": true,
+      "stage": "FINALIZE",
+      "timeout": "CLEANUP_TIMEOUT_AFTER_FINALIZE_30s",
+      "label": "UNKNOWN",
+      "gpu_peak_mb": 3523,
+      "ram_peak_mb": 8115.391
+    }
+  ],
+  "p1": [
+    {
+      "scene": "NET_MESH",
+      "seed": "S420071",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.06983418562089302,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks",
+        "non-manifold vertex-connected mesh material validation"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "NET_MESH",
+      "seed": "S420071",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.1451664653689204,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks",
+        "non-manifold vertex-connected mesh material validation"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.3491279344885101,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "NET_MESH",
+      "seed": "S420072",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.06983418562089302,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks",
+        "non-manifold vertex-connected mesh material validation"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "NET_MESH",
+      "seed": "S420072",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.1451664653689204,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks",
+        "non-manifold vertex-connected mesh material validation"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.47919045941529265,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "ONE_SIDE_CONSTRAINED",
+      "seed": "S420071",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 2.2210608654228885,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "ONE_SIDE_CONSTRAINED",
+      "seed": "S420071",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.750574999294007,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.1379336077421542,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "ONE_SIDE_CONSTRAINED",
+      "seed": "S420072",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 2.2210608654228885,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "ONE_SIDE_CONSTRAINED",
+      "seed": "S420072",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.7505182248558686,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.011664252761610901,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "PLEATED_SINGLE",
+      "seed": "S420074",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.7367853609778153,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "PLEATED_SINGLE",
+      "seed": "S420074",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.7538300373151352,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.3687601747740152,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "PLEATED_SINGLE",
+      "seed": "S420075",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.7367853609778153,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "PLEATED_SINGLE",
+      "seed": "S420075",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.7367853609778153,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.2879592467365018,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "PVC_STRIPS_PROXY",
+      "seed": "S420071",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 1.7775507009403315,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "PVC_STRIPS_PROXY",
+      "seed": "S420071",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.439112751531025,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.695075640175929,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "PVC_STRIPS_PROXY",
+      "seed": "S420072",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 1.7771589812038704,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "PVC_STRIPS_PROXY",
+      "seed": "S420072",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.4715593171199544,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.4415260002765882,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "SLIDING_TOP_TRACK",
+      "seed": "S420071",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.06758955683974895,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {
+          "rail_y_limits": true,
+          "rail_transverse_fixed": true,
+          "attachment_relative_to_support": true,
+          "rail_rotation_locked": true
+        },
+        "rail_maxima": {
+          "dy_m": 5.440560471470235e-06,
+          "transverse_drift_m": 0.0,
+          "relative_anchor_drift_m": 1.5396569257136217e-05,
+          "rotation_error_rad": 0.0006905339694324072
+        }
+      }
+    },
+    {
+      "scene": "SLIDING_TOP_TRACK",
+      "seed": "S420071",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.4104598611243557,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.28848828526232567,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true,
+          "rail_y_limits": true,
+          "rail_transverse_fixed": true,
+          "attachment_relative_to_support": true,
+          "rail_rotation_locked": true
+        },
+        "rail_maxima": {
+          "dy_m": 1.6174612028407864e-05,
+          "transverse_drift_m": 0.0,
+          "relative_anchor_drift_m": 6.221686237173858e-05,
+          "rotation_error_rad": 0.0006905339694324072
+        }
+      }
+    },
+    {
+      "scene": "SLIDING_TOP_TRACK",
+      "seed": "S420072",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 0.06758955683974895,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {
+          "rail_y_limits": true,
+          "rail_transverse_fixed": true,
+          "attachment_relative_to_support": true,
+          "rail_rotation_locked": true
+        },
+        "rail_maxima": {
+          "dy_m": 5.440560471470235e-06,
+          "transverse_drift_m": 0.0,
+          "relative_anchor_drift_m": 1.5396569257136217e-05,
+          "rotation_error_rad": 0.0006905339694324072
+        }
+      }
+    },
+    {
+      "scene": "SLIDING_TOP_TRACK",
+      "seed": "S420072",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.4104600994906593,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.2084656346748139,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true,
+          "rail_y_limits": true,
+          "rail_transverse_fixed": true,
+          "attachment_relative_to_support": true,
+          "rail_rotation_locked": true
+        },
+        "rail_maxima": {
+          "dy_m": 1.0733761882875115e-05,
+          "transverse_drift_m": 0.0,
+          "relative_anchor_drift_m": 6.303916221910401e-05,
+          "rotation_error_rad": 0.0006905339694324072
+        }
+      }
+    },
+    {
+      "scene": "SLIDING_TOP_TRACK_MOBILITY",
+      "seed": "S420073",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.355530657802611,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {
+          "rail_y_limits": true,
+          "rail_transverse_fixed": true,
+          "attachment_relative_to_support": true,
+          "rail_rotation_locked": true,
+          "rail_mobility_demonstrated": true
+        },
+        "stimulus": "0.5 N world-Y support force during t=[0.5,1.0) s; physics-only mechanism diagnostic, not hand probing",
+        "rail_maxima": {
+          "dy_m": 0.29999998211860657,
+          "transverse_drift_m": 5.960464477539063e-08,
+          "relative_anchor_drift_m": 0.00021062994596570124,
+          "rotation_error_rad": 0.0006905339694324072
+        }
+      }
+    },
+    {
+      "scene": "SPLIT_CENTER",
+      "seed": "S420071",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 2.2210608654228885,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "SPLIT_CENTER",
+      "seed": "S420071",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.5336626828474116,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.2692838412185319,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    },
+    {
+      "scene": "SPLIT_CENTER",
+      "seed": "S420072",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 2.2210608654228885,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {},
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "checks": {}
+      }
+    },
+    {
+      "scene": "SPLIT_CENTER",
+      "seed": "S420072",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "runtime_status": "RUNTIME_PASS",
+      "max_speed_mps": 3.6550892386708824,
+      "failed_acceptance": [],
+      "additional_validity_required": [
+        "material calibration",
+        "continuous-time collision bound beyond sampled geometric checks"
+      ],
+      "error": null,
+      "probe_node_audit": {
+        "sampled_nodes_inside_probe_max": 0,
+        "sampled_nodes_inside_released_probe": 0,
+        "test_scope": "additional node test; see runtime extended geometry audit for triangle test"
+      },
+      "extended_geometry_audit": {
+        "scope": "0.005 s discrete geometry samples; not continuous collision certification",
+        "real_material_validated": false,
+        "probe_triangle_interior_max": 0,
+        "released_probe_triangle_interiors": 0,
+        "final_node_speed_mps": 0.23166864309444665,
+        "checks": {
+          "sampled_probe_nonpenetration": true,
+          "release_geometry_clear": true,
+          "release_speed_bounded": true
+        }
+      }
+    }
+  ],
+  "p0_new_size": [
+    {
+      "condition": "bottom_right_anchor_L1.95",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "error": null
+    },
+    {
+      "condition": "bottom_right_anchor_L1.95",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "error": null
+    },
+    {
+      "condition": "nominal_L1.95",
+      "mode": "no_probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "error": null
+    },
+    {
+      "condition": "nominal_L1.95",
+      "mode": "probe",
+      "status": "PASS_PHYSICS_SANITY",
+      "error": null
+    }
+  ],
+  "prior_11_labels_unchanged": true,
+  "withheld": [
+    {
+      "path": "p1\\PLEATED_SINGLE\\S420071\\probe\\withheld.json",
+      "status": "WITHHELD_EXECUTION_INVALID",
+      "reason": "Training boundary pause expired before Isaac startup; no physical initialization was attempted",
+      "raw_status": "WITHHELD_PHYSICS_INVALID"
+    }
+  ],
+  "p1_execution_invalid": [
+    {
+      "path": "p1\\PLEATED_SINGLE\\S420071\\no_probe",
+      "reason": "TRAINING_BOUNDARY_PAUSE_TIMEOUT"
+    }
+  ]
+}

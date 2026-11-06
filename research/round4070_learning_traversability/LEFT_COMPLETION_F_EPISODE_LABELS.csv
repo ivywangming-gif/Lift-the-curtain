@@ -1,0 +1,3 @@
+trial_id,group_id,condition_family_group,label,side,seed,source_stage,curtain_length_m,reset_root_y_m,reset_root_yaw_rad,label_source,sample_count
+F_LEFT_COMPLETION_nominal_left_S420401,FABRIC_NOMINAL|length=1.95,FABRIC_NOMINAL,UNKNOWN,left,420401,F_LEFT_COMPLETION,1.95,-0.004,-0.004,INSUFFICIENT_INDEPENDENT_EVIDENCE,22
+F_LEFT_COMPLETION_bottom_right_anchor_left_S420402,FABRIC_BOTTOM_RIGHT_ANCHOR|length=1.95,FABRIC_BOTTOM_RIGHT_ANCHOR,UNKNOWN,left,420402,F_LEFT_COMPLETION,1.95,-0.004,-0.004,INSUFFICIENT_INDEPENDENT_EVIDENCE,22

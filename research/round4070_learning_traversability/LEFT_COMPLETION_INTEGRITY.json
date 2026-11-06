@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "final_episodes": 117,
+  "final_real_samples": 2526,
+  "training_snapshot_episodes": 115,
+  "left_evaluation_view_episodes": 106,
+  "final_labels": {
+    "CONTROL_PASSABLE": 14,
+    "CONTROL_BLOCKED": 2,
+    "UNKNOWN": 65,
+    "BLOCKED": 29,
+    "PASSABLE": 7
+  },
+  "core_supervised": 36,
+  "formal_left_passable": 0,
+  "new_supervised_labels": 0,
+  "original11_rows_unchanged": true,
+  "original115_labels_groups_source_hashes_and_F_arrays_unchanged": true,
+  "protected_file_hashes_unchanged": 331,
+  "unknown_only_supervised_rates_empty": true,
+  "original_phase_c_manifest_sha256": "c9b6004f294e7c25f78113dd27de5267ebf1a611631a25fa45fc2db83bbdc370",
+  "final_manifest_sha256": "cc614290fcab9226297dd42acfbaef3131188f654311ea34b9fd1da01811579b",
+  "left_manifest_sha256": "16b52af9ee28b09ab4392cefb4196f9a14c21f458154ee4cd51a73531efe0a82"
+}

@@ -33,4 +33,19 @@ for ax,fold in zip(axs,['family_fold_0','family_fold_1']):
         ax.plot([int(r['epoch']) for r in rr],[float(r['validation_loss']) for r in rr],ls='--',label=method+' val')
     ax.set_title(fold+' | validation: BLOCKED only');ax.set_xlabel('Epoch');ax.set_ylabel('BCE');ax.set_yscale('log');ax.legend(fontsize=7)
 fig.tight_layout();fig.savefig(R/'TRAINING_CURVES.png',dpi=150)
+plt.close(fig)
+if (R/'PHASE_C_MODEL_MEAN_STD.csv').exists():
+    with (R/'PHASE_C_MODEL_MEAN_STD.csv').open(newline='',encoding='utf-8') as f: phase_c=list(csv.DictReader(f))
+    with (R/'STRICT_INSTANT_MODEL_MEAN_STD.csv').open(newline='',encoding='utf-8') as f: instant=list(csv.DictReader(f))
+    compare=['GRU','TCN','ResidualGRU','M2','GRUShuffled','Instantaneous']
+    fig,ax=plt.subplots(figsize=(10,4.8));x=np.arange(len(compare))
+    for offset,data,n,color,label in [(-.18,rows+instant,26,'#527da8','Phase A: 2 PASSABLE / 26 BLOCKED'),(.18,phase_c,29,'#bf8237','Phase C: 7 PASSABLE / 29 BLOCKED')]:
+        rr=[next(r for r in data if r['method']==m and r['mode']=='forced') for m in compare]
+        means=[float(r['false_pass_n_mean'])/n for r in rr];errs=[float(r['false_pass_n_std'])/n for r in rr]
+        ax.bar(x+offset,means,width=.34,yerr=errs,color=color,label=label,capsize=3)
+    ax.set_xticks(x,compare,rotation=20,ha='right');ax.set_ylabel('False-pass / BLOCKED');ax.set_ylim(0,.25)
+    ax.set_title('M2 advantage did not persist after adding physical data\nForced decisions, coverage = 1; error bars = initialization SD')
+    ax.legend(fontsize=9)
+    fig.text(.02,.02,'Exploratory, overlapping samples; 4 positive physical configurations, all positive episodes use the right hand.',fontsize=8)
+    fig.tight_layout(rect=[0,.05,1,1]);fig.savefig(R/'PHASE_C_COMPARISON.png',dpi=170);plt.close(fig)
 print('Saved actual-data figures')

@@ -32,9 +32,12 @@ def main():
             model_forward_ms_mean=statistics.mean(float(r['inference_ms']) for r in rr),
             train_seconds=sum(float(r['train_seconds']) for r in rr)))
     base={'Logistic','GradientBoosting','StatsMLP','HistoryMLP','GRU','TCN','ResidualGRU','M2'}
-    write(REPORT/(args.prefix+'LEARNING_MODEL_COMPARISON.csv'),[r for r in pooled if r['method'] in base])
-    write(REPORT/(args.prefix+'ABLATION_RESULTS.csv'),[r for r in pooled if r['method'] not in base])
-    write(REPORT/(args.prefix+'SIDE_EVALUATION.csv'),[r for r in raw if r['fold'] not in ['family_fold_0','family_fold_1']])
+    base_rows=[r for r in pooled if r['method'] in base]
+    ablation_rows=[r for r in pooled if r['method'] not in base]
+    side_rows=[r for r in raw if r['fold'] not in ['family_fold_0','family_fold_1']]
+    if base_rows: write(REPORT/(args.prefix+'LEARNING_MODEL_COMPARISON.csv'),base_rows)
+    if ablation_rows: write(REPORT/(args.prefix+'ABLATION_RESULTS.csv'),ablation_rows)
+    if side_rows: write(REPORT/(args.prefix+'SIDE_EVALUATION.csv'),side_rows)
     stats=[]; gg=defaultdict(list)
     for r in pooled:gg[r['method'],r['mode']].append(r)
     for (m,mode),rr in gg.items():

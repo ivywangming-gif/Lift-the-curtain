@@ -13,6 +13,7 @@ import importlib.util
 import json
 import math
 from pathlib import Path
+import re
 import sys
 
 import numpy as np
@@ -228,13 +229,34 @@ def main():
     print(json.dumps({"episodes": len(episodes), "labels": dict(labels), "features": len(names), "samples": [min(e["sample_count"] for e in episodes), max(e["sample_count"] for e in episodes)], "dt_medians": sorted({round(e["dt_median_s"], 6) for e in episodes}), "metrics": metrics, "older": [{k:v for k,v in r.items() if k in {"campaign", "history_files", "summary_files"}} for r in old]}, indent=2))
 
 
-def integrate_supplementary(label_path):
+def integrate_supplementary(label_path, output_dir=None, report_prefix=None, trial_ids=None):
     """Build a separate E+F view; failed runs remain audit entries, never negatives."""
     global OUT
-    base_manifest = load(OUT / "manifest.json")
-    OUT = ROOT / "outputs/round4070_learning_traversability/dataset_phase_c"
-    OUT.mkdir(parents=True, exist_ok=True)
+    base_path = ROOT / "outputs/round4070_learning_traversability/dataset/manifest.json"
+    base_manifest = load(base_path)
+    original_phase_c = ROOT / "outputs/round4070_learning_traversability/dataset_phase_c"
+    OUT = Path(output_dir) if output_dir is not None else original_phase_c
+    if not OUT.is_absolute():
+        OUT = ROOT / OUT
+    assert OUT.resolve() != base_path.parent.resolve(), "Supplementary export cannot overwrite the original E dataset"
+    if report_prefix is None:
+        assert OUT.resolve() == original_phase_c.resolve(), "A separate output directory requires --report-prefix to protect existing reports"
+        report_prefix = "PHASE_C_"
+    assert re.fullmatch(r"[A-Za-z0-9_]+", report_prefix), "Unsafe report prefix"
+    if OUT.resolve() != original_phase_c.resolve():
+        assert report_prefix != "PHASE_C_", "The PHASE_C_ reports belong to the immutable first-11 collection"
     label_path = Path(label_path)
+    # A trained manifest is immutable. Identical historical replays reuse it;
+    # later collections must explicitly select a new output directory/prefix.
+    trained_config = ROOT / "outputs/round4070_learning_traversability/phase_c/frozen_config.json"
+    if OUT.resolve() == original_phase_c.resolve() and trained_config.is_file():
+        assert sha(OUT / "manifest.json") == load(trained_config)["manifest_sha256"], "Original Phase C manifest differs from its frozen training input"
+        frozen_manifest = load(OUT / "manifest.json")
+        if trial_ids is None and sha(label_path) == frozen_manifest["supplementary_labels_sha256"]:
+            print(json.dumps({"status": "REUSED_IMMUTABLE_PHASE_C", "episodes": len(frozen_manifest["episodes"]), "manifest": str(OUT / "manifest.json")}))
+            return
+        raise ValueError("Phase C 115-episode training input is frozen; use --output-dir and --report-prefix for later data")
+    OUT.mkdir(parents=True, exist_ok=True)
     payload = load(label_path)
     if isinstance(payload, list):
         supplements = payload
@@ -243,6 +265,11 @@ def integrate_supplementary(label_path):
         if key is None:
             raise ValueError("Supplementary labels must be a list or contain trials/rows/labels/records/results list")
         supplements = payload[key]
+    if trial_ids is not None:
+        assert len(trial_ids) == len(set(trial_ids)), "Repeated requested trial ID"
+        selected_ids = set(trial_ids)
+        supplements = [item for item in supplements if item["trial_id"] in selected_ids]
+        assert {item["trial_id"] for item in supplements} == selected_ids, "Requested supplementary trial has not actually been collected"
     spec = importlib.util.spec_from_file_location("e_evaluator", ROOT / "scripts/round4070_fixed_probe_benchmark/evaluate_benchmark.py")
     evaluator = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(evaluator)
@@ -272,8 +299,19 @@ def integrate_supplementary(label_path):
         assert plan["equivalent_e_condition_id"] in {e["condition_id"] for e in base_manifest["episodes"]}, "F equivalent condition not in audited E configurations"
         plan = {**plan, "trial_id": trial, "probe_side": record["probe_side"]}
         protocol_ok, protocol_detail = evaluator.protocol_audit(plan, summary, metadata)
-        checked_label, checked_valid, checked_reason, _, checked_evidence = evaluator.independent_label(plan, summary, metadata.get("physics_gate_status", "MISSING"), protocol_ok, protocol_detail)
-        assert checked_label == record["label"] and checked_valid == evaluator.boolean(record["label_valid"]), "F label changed on independent source-data reproduction"
+        gate_status = metadata.get("physics_gate_status", "MISSING")
+        gate_hashes = {}
+        if gate_status == "PASS_F_PHYSICS":
+            gate_root = ROOT / "outputs/round4070_learning_traversability/physics/p0_gate" / f"{plan['scenario']}_L{plan['curtain_length']}"
+            for mode in ("no_probe", "probe"):
+                gate_path = gate_root / mode / "summary.json"
+                assert load(gate_path).get("status") == "PASS_PHYSICS_SANITY", (trial, "unverified new physics gate", gate_path)
+                gate_hashes[str(gate_path)] = sha(gate_path)
+            # E evaluator predates the PASS_F name. Map only after reading both
+            # actual new physics results; retain the original name and hashes.
+            gate_status = "PASS"
+        checked_label, checked_valid, checked_reason, _, checked_evidence = evaluator.independent_label(plan, summary, gate_status, protocol_ok, protocol_detail)
+        assert checked_label == record["label"] and checked_valid == evaluator.boolean(record["label_valid"]), ("F label changed on independent source-data reproduction", trial, checked_label, checked_valid, checked_reason, record["label"], record["label_valid"], metadata.get("physics_gate_status"))
         h, hr = evaluator.load_history(directory / "deployment_observation.csv")
         item = {"path": directory, "plan": plan, "history": h, "history_rows": hr}
         fields, names, blocks = export_episode(item)
@@ -298,20 +336,34 @@ def integrate_supplementary(label_path):
         entry = {"trial_id": trial, "campaign": "4070-F", "label": label, "y": 1 if label in {"PASSABLE", "CONTROL_PASSABLE"} else 0 if label in {"BLOCKED", "CONTROL_BLOCKED"} else -1, "is_control": label.startswith("CONTROL_"), "group_id": group, "condition_family_group": condition, "condition_id": condition, "condition_family": record.get("condition_family", plan.get("condition_family")), "side": side, "seed": record["seed"], "source_stage": plan.get("stage", plan.get("phase", "F_SCREENING")), "runtime_valid": True, "probe_valid": True, "label_valid": checked_valid, "label_source": checked_reason, "label_evidence": checked_evidence, "grouping_source": "explicit equivalent_e_condition_id and curtain_length in trial_metadata.json", "trial_metadata_sha256": sha(directory / "trial_metadata.json"), "engineering_decisions": decisions, "engineering_features_time_corrected": features, "physics_configuration_audit_only": plan, **fields}
         assert trial not in {e["trial_id"] for e in episodes}
         episodes.append(entry)
-        audit.update(included=True, label=label, group_id=group)
+        audit.update(included=True, label=label, group_id=group, new_physics_gate_sha256=gate_hashes)
         audits.append(audit)
-    base_manifest.update(episodes=episodes, labels=dict(collections.Counter(e["label"] for e in episodes)), source_e_manifest_sha256=sha(ROOT / "outputs/round4070_learning_traversability/dataset/manifest.json"), supplementary_labels_sha256=sha(label_path), supplementary_source=str(label_path), phase_c_note="E input files referenced unchanged; F raw logs independently exported. F screening is not independent confirmation. Group merges equivalent E/F configurations; new length has distinct full-config group but same structural family.")
+    base_manifest.update(episodes=episodes, labels=dict(collections.Counter(e["label"] for e in episodes)), source_e_manifest_sha256=sha(base_path), supplementary_labels_sha256=sha(label_path), supplementary_source=str(label_path), selected_supplementary_trial_ids=trial_ids, phase_c_note="E input files referenced unchanged; F raw logs independently exported. F screening is not independent confirmation. Group merges equivalent E/F configurations; new length has distinct full-config group but same structural family.")
     dump(OUT / "manifest.json", base_manifest)
     dump(OUT / "supplementary_audit.json", audits)
     save_csv(OUT / "episode_counts.csv", [{"campaign": campaign, "label": label, "n": sum(e["campaign"] == campaign and e["label"] == label for e in episodes)} for campaign in ("4070-E", "4070-F") for label in ("PASSABLE", "BLOCKED", "UNKNOWN", "CONTROL_PASSABLE", "CONTROL_BLOCKED")])
+    core_rows = [{"trial_id": e["trial_id"], "label": e["label"], "benchmark_eligible": e["y"] >= 0 and not e["is_control"], "split": "all", "scope": "core", "condition_family": e["condition_family"], "probe_side": e["side"], "decisions": e["engineering_decisions"]} for e in episodes]
+    methods = ("always_PASSABLE", "always_BLOCKED", "E0", "E1", "E2", "E0_time_corrected", "E1_time_corrected", "E2_time_corrected")
+    save_csv(REPORT / (report_prefix+"BASELINE_RESULTS.csv"), [evaluator.metric(core_rows, method) for method in methods])
+    configuration_counts = []
+    for group in sorted({e["group_id"] for e in episodes}):
+        selected = [e for e in episodes if e["group_id"] == group]
+        configuration_counts.append({"group_id": group, "episodes": len(selected), "E_n": sum(e["campaign"] == "4070-E" for e in selected), "F_n": sum(e["campaign"] == "4070-F" for e in selected), **{label: sum(e["label"] == label for e in selected) for label in ("PASSABLE", "BLOCKED", "UNKNOWN", "CONTROL_PASSABLE", "CONTROL_BLOCKED")}})
+    save_csv(REPORT / (report_prefix+"CONFIGURATION_COUNTS.csv"), configuration_counts)
+    label_report = "F_EPISODE_LABELS.csv" if report_prefix == "PHASE_C_" else report_prefix+"F_EPISODE_LABELS.csv"
+    save_csv(REPORT / label_report, [{"trial_id": e["trial_id"], "group_id": e["group_id"], "condition_family_group": e["condition_family_group"], "label": e["label"], "side": e["side"], "seed": e["seed"], "source_stage": e["source_stage"], "curtain_length_m": e["physics_configuration_audit_only"]["curtain_length"], "reset_root_y_m": e["physics_configuration_audit_only"]["reset_root_y"], "reset_root_yaw_rad": e["physics_configuration_audit_only"]["reset_root_yaw"], "label_source": e["label_source"], "sample_count": e["sample_count"]} for e in episodes if e["campaign"] == "4070-F"])
     print(json.dumps({"phase_c_episodes": len(episodes), "supplementary_records": len(audits), "supplementary_included": sum(a["included"] for a in audits), "labels": base_manifest["labels"], "manifest": str(OUT / "manifest.json")}, indent=2))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--supplementary-labels", type=Path)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--report-prefix")
+    parser.add_argument("--trial-ids", nargs="+")
     args = parser.parse_args()
     if args.supplementary_labels:
-        integrate_supplementary(args.supplementary_labels)
+        integrate_supplementary(args.supplementary_labels, args.output_dir, args.report_prefix, args.trial_ids)
     else:
+        assert args.output_dir is None and args.report_prefix is None and args.trial_ids is None, "Supplementary options require --supplementary-labels"
         main()

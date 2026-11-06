@@ -10,6 +10,7 @@ import csv
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 
 import numpy as np
@@ -149,7 +150,7 @@ def baseline_metrics(episodes, method):
     return result
 
 
-def evaluate_f(model_root, e_manifest, f_manifest, output):
+def evaluate_f(model_root, e_manifest, f_manifest, output, report_prefix=""):
     config = load(model_root / "frozen_config.json")
     frozen_metrics = {(r["fold"], r["method"], int(r["seed"]), r["mode"]): r for r in read_csv(model_root / "metrics.csv")}
     e_episodes = {e["trial_id"]: e for e in e_manifest["episodes"]}
@@ -184,10 +185,10 @@ def evaluate_f(model_root, e_manifest, f_manifest, output):
                     rows.append({"scope": scope, "method": method, "seed": seed, "mode": mode, "all_episode_n": len(full), "unknown_n": sum(r["y"] < 0 for r in full), "evaluation": "F_FROZEN_NO_TRAINING_OR_RECALIBRATION", **result})
         for method in ("always_PASSABLE", "always_BLOCKED", "E0", "E1", "E2", "E0_time_corrected", "E1_time_corrected", "E2_time_corrected"):
             rows.append({"scope": scope, "method": method, "seed": "frozen_rule", "mode": "rule", "all_episode_n": len(eps), "unknown_n": sum(e["y"] < 0 for e in eps), "evaluation": "F_FROZEN_RULE_SAME_PROBE_WINDOW", **baseline_metrics(eps, method)})
-    csvwrite(output / "F_FROZEN_PREDICTIONS.csv", predictions)
-    csvwrite(output / "F_FROZEN_EVALUATION.csv", rows)
-    csvwrite(REPORT / "F_FROZEN_EVALUATION.csv", rows)
-    dump(output / "F_FROZEN_PROVENANCE.json", {"assignments": assignments, "episode_count": len(supplements), "label_counts": {label: sum(e["label"] == label for e in supplements) for label in sorted({e["label"] for e in supplements})}, "unknown_in_metrics": False, "fit_called": False, "model_provenance": provenance, "threshold_source": "Phase-A validation metrics only; unchanged", "validity_note": "New seeds are independent executions; known family was held out from fitting. Prior E family performance was already observed, so this is not a newly blinded family selection. Screening is not confirmation."})
+    csvwrite(output / (report_prefix+"F_FROZEN_PREDICTIONS.csv"), predictions)
+    csvwrite(output / (report_prefix+"F_FROZEN_EVALUATION.csv"), rows)
+    csvwrite(REPORT / (report_prefix+"F_FROZEN_EVALUATION.csv"), rows)
+    dump(output / (report_prefix+"F_FROZEN_PROVENANCE.json"), {"assignments": assignments, "episode_count": len(supplements), "label_counts": {label: sum(e["label"] == label for e in supplements) for label in sorted({e["label"] for e in supplements})}, "unknown_in_metrics": False, "fit_called": False, "model_provenance": provenance, "threshold_source": "Phase-A validation metrics only; unchanged", "validity_note": "New seeds are independent executions; known family was held out from fitting. Prior E family performance was already observed, so this is not a newly blinded family selection. Screening is not confirmation."})
     return {"F_episode_count": len(supplements), "prediction_rows": len(predictions), "metric_rows": len(rows), "labels": {label: sum(e["label"] == label for e in supplements) for label in sorted({e["label"] for e in supplements})}}
 
 
@@ -197,15 +198,20 @@ def main():
     parser.add_argument("--e-manifest", type=Path, default=OUT / "dataset/manifest.json")
     parser.add_argument("--f-manifest", type=Path, default=OUT / "dataset_phase_c/manifest.json")
     parser.add_argument("--output", type=Path, default=OUT / "frozen_evaluation")
+    parser.add_argument("--report-prefix", default="")
     parser.add_argument("--verify-only", action="store_true")
     args = parser.parse_args()
+    assert not args.report_prefix or re.fullmatch(r"[A-Za-z0-9_]+", args.report_prefix), "Unsafe report prefix"
+    if args.f_manifest.resolve() != (OUT / "dataset_phase_c/manifest.json").resolve():
+        assert args.report_prefix, "Later collections require --report-prefix to protect the original F evaluation"
+        assert args.output.resolve() != (OUT / "frozen_evaluation").resolve(), "Later collections require a separate --output directory"
     args.output.mkdir(parents=True, exist_ok=True)
     e_manifest = load(args.e_manifest)
     assert sha(args.e_manifest) == load(args.model_root / "frozen_config.json")["manifest_sha256"], "E manifest differs from frozen training provenance"
     verified = replay(args.model_root, e_manifest, args.output)
     result = {"replay_status": verified["status"], "replay_count": verified["prediction_count"], "max_probability_error": verified["max_absolute_probability_error"]}
     if not args.verify_only:
-        result.update(evaluate_f(args.model_root, e_manifest, load(args.f_manifest), args.output))
+        result.update(evaluate_f(args.model_root, e_manifest, load(args.f_manifest), args.output, args.report_prefix))
     print(json.dumps(result, indent=2))
 
 

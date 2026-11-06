@@ -209,7 +209,14 @@ def run(args):
             x=np.clip((x-m)/s,-10,10).astype('float32')
             aa=arm+[i for i in range(len(names),x.shape[2]) if any(z in ra['target_names'][i-len(names)] for z in ['shoulder','elbow','wrist'])] if uses_res else arm
             bb=body
-            if method in ['GRUArm','ResidualGRU','M2NoBody']: x=x[:,:,aa]
+            input_indices=list(range(x.shape[2]))
+            if method in ['GRUArm','ResidualGRU','M2NoBody']: input_indices=aa
+            if method=='Instantaneous':
+                # SingleFrame is a last-row summary including accumulated hand
+                # progress. This stricter ablation removes that history-derived
+                # feature before using only the final instantaneous observation.
+                input_indices=[i for i,n in enumerate(names) if 'hand_delta_initial_b' not in n]
+            if input_indices!=list(range(x.shape[2])): x=x[:,:,input_indices]
             for seed in args.seeds:
                 torch.manual_seed(seed); np.random.seed(seed); xx=x.copy()
                 if method=='GRUShuffled':
@@ -219,7 +226,7 @@ def run(args):
                     model=StumpBoost().fit(stat(xx[tr]),y[tr]); p=model.predict(stat(xx)); params=len(model.trees)*4
                     dump(output/f'{fold}_{method}_{seed}.json',dict(bias=model.bias,trees=model.trees,mean=m.tolist(),scale=s.tolist()))
                 else:
-                    kind=method if method in ['Logistic','StatsMLP','HistoryMLP','SingleFrame','Orderless','TCN','M2','M2NoResidual','M2Orderless'] else 'GRU'
+                    kind='SingleFrame' if method=='Instantaneous' else (method if method in ['Logistic','StatsMLP','HistoryMLP','SingleFrame','Orderless','TCN','M2','M2NoResidual','M2Orderless'] else 'GRU')
                     model=Temporal(kind,xx.shape[2],aa,bb,xx.shape[1]); opt=torch.optim.AdamW(model.parameters(),lr=.003,weight_decay=.01)
                     xt=torch.tensor(xx); yt=torch.tensor(y)
                     for epoch in range(args.epochs):
@@ -231,7 +238,7 @@ def run(args):
                     model.eval()
                     with torch.no_grad(): p=torch.sigmoid(model(xt)).numpy()
                     params=sum(v.numel() for v in model.parameters())
-                    torch.save(dict(state_dict=model.state_dict(),kind=kind,feature_names=names,arm=aa,body=bb,mean=m,scale=s,seed=seed,train_ids=[eps[i]['trial_id'] for i in tr]),output/f'{fold}_{method}_{seed}.pt')
+                    torch.save(dict(state_dict=model.state_dict(),kind=kind,feature_names=names,arm=aa,body=bb,input_indices=input_indices,mean=m,scale=s,seed=seed,train_ids=[eps[i]['trial_id'] for i in tr]),output/f'{fold}_{method}_{seed}.pt')
                 train_seconds=time.perf_counter()-start
                 inferstart=time.perf_counter()
                 if method=='GradientBoosting': model.predict(stat(xx[te[:1]]))
