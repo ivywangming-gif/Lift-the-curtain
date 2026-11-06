@@ -1,6 +1,6 @@
 # G 学习执行协议与恢复入口
 
-当前代码实现 31 个学习方法/消融及 5 个工程/退化基线，默认学习 seed 为 40700–40704。八个具体划分共 1280 个计划任务（每划分 31×5 个学习 fit 和 5 个确定性规则）。实现完成与真实训练完成分开记录。`LEARNING_RUN_STATUS.csv` 的每个任务状态及理由来自冻结队列；没有实际 fit 的结果表只有列名，不填造分数。
+当前代码实现 31 个学习方法/消融及 5 个工程/退化基线，默认学习 seed 为 40700–40704。八个具体划分的全标签预算共 1280 个计划任务（每划分 31×5 个学习 fit 和 5 个确定性规则）；另加三方法×两种低标签预算×五 seed×八划分的 240 个任务，共 1520 个。实现完成与真实训练完成分开记录。`LEARNING_RUN_STATUS.csv` 的每个任务状态及理由来自冻结队列；没有实际 fit 的结果表只有列名，不填造分数。
 
 ## 已实施的方法
 
@@ -14,6 +14,12 @@
 - 观测随机化：GRUObsDR 与普通 GRU 同结构、同 clean 训练归一化，只扰动训练观察；全部学习模型另执行固定 seed 的 clean 校准→noisy test 敏感性诊断。它不改变标签、split 或独立 episode 数。
 
 神经模型固定 hidden=64、80 epoch、AdamW lr=.001、weight decay=.01、batch32；SupCon/真实配对使用训练标签全批以保留真实配对。分阶段预训练额外40 epoch，须披露其额外预算。梯度裁剪5；辅助与对比损失权重均.1。选择固定最后 epoch，不看测试挑 checkpoint。凸 Logistic 为 `mean BCE + ||w||²/(2*n_train)`，bias不正则，float64 LBFGS最多200次，记录真实梯度而不预设收敛。确定性的 boosting/AR重复拟合五次也不作为五份独立随机证据。
+
+## 标签效率协议
+
+GRU、GRUResponseAux 与 GRUPretrainFinetune 预先固定 25%、50%、100% 训练标签预算。每个 split 内按原训练标签分层，使用固定 SHA256 排序后逐类 `floor(fraction*n_class)` 取嵌套子集；三个方法及全部五个模型 seed 共用完全相同的标签 IDs。计数包括训练 controls，另记录核心 P/B 数；预算后核心双类不足也明确阻塞，不能仅靠空场正例支撑标签效率结论。预算比例、hash 盐及选择规则不读取校准/测试或模型预测。
+
+未选中的已知训练标签只在当前 fit 的视图中改为 UNKNOWN；原始 manifest、全部训练历史、训练归一化来源、校准集和测试集都保持不变。辅助方法可使用这些真实训练历史进行响应学习，纯监督 GRU 不获得被隐藏的标签。`frozen_protocol.json` 保存原训练标签审计、选中/隐藏 IDs 和实际数量，每个 fit 另写 `label_budget_audit.json`。100% 复用原有任务而不重复训练；25/50% 使用独立 display method 和 `label_fraction`，不会与全预算结果混合求均值。`LABEL_BUDGET_FROZEN_SUBSETS.csv` 与 `LABEL_EFFICIENCY_RESULTS.csv` 分别记录冻结子集和真实完成的模型结果；统计配对仅在相同标签预算内比较。
 
 ## 输入与因果边界
 
@@ -55,4 +61,8 @@ checkpoint、curve、校准参数、真实预测、指标和completion分别存�
 
 ## 当前实现验证
 
-九项小合成契约检查已实际通过：因果截止、训练归一化隔离/严格瞬时通道、实际采样降频、分组/配对真值、防 UNKNOWN 进入监督/拒判与校准指标、关节重排、各神经模型前反向、资源锁互斥，以及观测 DR 的训练尺度隔离/因果索引/单调时钟/确定性复现。全部 31 个学习方法的两 epoch 合成 fit（分阶段方法额外一轮预训练）、checkpoint 读取与数值回放、固定噪声测试推理、校准，以及 GRU partial 恢复一致性也全部通过；最新证据位于 `outputs/round4070_comprehensive_traversability/implementation_smoke/92d44ab68cbe47588fe2ab3150b8e723/implementation_test_results.json`。运行使用 CPU 两线程，Isaac 已退出且持共享资源锁；结束后关闭训练窗口。这些均为实现测试，不是物理 G 数据，不进入任何科研分数。
+十一项小合成契约检查已实际通过：因果截止、训练归一化隔离/严格瞬时通道、实际采样降频、分组/配对真值、防 UNKNOWN 进入监督/拒判与校准指标、关节重排、各神经模型前反向、资源锁互斥、观测 DR 的训练尺度隔离/因果索引/单调时钟/确定性复现、conformal 分数不复用温度拟合标签，以及标签预算嵌套/原标签与holdout不变/结果分离。全部 31 个学习方法的两 epoch 合成 fit（分阶段方法额外一轮预训练）、checkpoint 读取与数值回放、固定噪声测试推理、校准，以及 GRU partial 恢复一致性也全部通过；最新完整拟合证据位于 `outputs/round4070_comprehensive_traversability/implementation_smoke/92d44ab68cbe47588fe2ab3150b8e723/implementation_test_results.json`。完整拟合 smoke 使用 CPU 两线程，Isaac 已退出且持共享资源锁；结束后关闭训练窗口。随后修正 conformal 的 raw 分数语义并新增标签预算调度，实际通过全部十一项 CPU 合同，未重新运行拟合 smoke。这些均为实现测试，不是物理 G 数据，不进入任何科研分数。
+
+## 仍未评价的范围
+
+低标签预算入口已经实现，当前标签效率结果尚未实际训练；不能宣称提高标签效率。即使后续 full-label 辅助模型更好，也只能解释为同一监督量下的泛化变化。匹配正对照目前仅使用真实跨配置 P-P；并未声称同时使用跨配置 B-B 或存在真实跨材料配对。split7 按姿态/动作条件划分，含速度变体，评价按 robot_variant 分层，不能将总体差异归因于纯姿态。所有正式学习结果仍须等待新 G 标签及可评价划分，代码和合成验证不替代这些证据。

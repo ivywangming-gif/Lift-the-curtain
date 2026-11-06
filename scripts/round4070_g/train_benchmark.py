@@ -22,7 +22,7 @@ for _thread_variable in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THR
 
 import numpy as np
 
-from learning_core import (ROOT, ACTION_CONTRACT, approved_pairs, conformal_decisions,
+from learning_core import (ROOT, ACTION_CONTRACT, approved_pairs, apply_label_budget, frozen_label_budget, conformal_decisions,
     conformal_fit, load_dataset, metrics, prepare_features, read_json, select_thresholds,
     sha, split_indices, statistics_features, write_csv, write_json)
 
@@ -89,7 +89,7 @@ def freeze(args):
     split_doc = read_json(args.splits)
     pair_doc = read_json(args.pairs) if args.pairs and args.pairs.exists() else {"by_split": {}}
     split_list = split_doc["splits"]
-    tasks = []
+    tasks, label_budgets = [], {}
     for split in split_list:
         sid = split["split_id"]
         roles = split_indices(split, episodes)
@@ -109,6 +109,7 @@ def freeze(args):
             split_reason.extend(split.get("reasons", ["SPLIT_DECLARED_UNAVAILABLE"]))
         valid_pairs = approved_pairs(pair_doc, sid, train, episodes)
         kinds = {p[2] for p in valid_pairs}
+        label_budgets[sid] = {str(f): frozen_label_budget(episodes, train, sid, f) for f in (.25, .5, 1.)}
         for method in engineering+methods:
             reason = list(split_reason)
             if method in engineering:
@@ -127,8 +128,29 @@ def freeze(args):
             for seed in ([None] if method in engineering else args.seeds):
                 task_id = f"{sid}__{method}__{seed if seed is not None else 'deterministic'}"
                 tasks.append(dict(task_id=task_id, split_id=sid, method=method, seed=seed,
+                                  display_method=method, label_fraction=1.,
                                   status="BLOCKED_WITH_REASON" if reason else "PLANNED", reasons=reason,
                                   train_n=len(train), labelled_train_n=len(labelled), core_test_n=len(core_test)))
+        for fraction in (.25, .5):
+            budget = label_budgets[sid][str(fraction)]
+            selected_labels = set(budget["original_train_labels_audit_only"][tid] for tid in budget["selected_train_label_ids"])
+            reduced = apply_label_budget(episodes, train, budget)
+            for method in ("GRU", "GRUResponseAux", "GRUPretrainFinetune"):
+                if method not in methods:
+                    continue
+                reason = list(split_reason)
+                if selected_labels != {0, 1}:
+                    reason.append("LABEL_BUDGET_REQUIRES_RELIABLE_BOTH_TRAIN_CLASSES")
+                if not all(budget["selected_core_class_counts"][str(c)] for c in (0, 1)):
+                    reason.append("LABEL_BUDGET_CORE_BOTH_CLASSES_NOT_SUPPORTED")
+                if method != "GRU" and not any(int(reduced[i]["y"]) < 0 for i in train):
+                    reason.append("NO_TRAIN_UNKNOWN_FOR_UNLABELLED_RESPONSE_COMPARISON")
+                display = f"{method}__labels{int(fraction*100):03d}"
+                for seed in args.seeds:
+                    tasks.append(dict(task_id=f"{sid}__{display}__{seed}", split_id=sid, method=method,
+                                      display_method=display, label_fraction=fraction, seed=seed,
+                                      status="BLOCKED_WITH_REASON" if reason else "PLANNED", reasons=reason,
+                                      train_n=len(train), labelled_train_n=budget["selected_labelled_train_n"], core_test_n=len(core_test)))
     protocol = dict(schema="round4070_g.learning.freeze.v1", created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
                     scope="LEGACY_F_CONTRACT_DIAGNOSTIC_NOT_G_BENCHMARK" if args.legacy else "G_ACTION_CONTRACT_BENCHMARK",
                     legacy=args.legacy, action_contract=ACTION_CONTRACT, seeds=args.seeds,
@@ -143,6 +165,9 @@ def freeze(args):
                     risk_grid=[0., .01, .025, .05, .1, .2], conformal_alpha=.1,
                     observation_dr=OBSERVATION_DR, observation_test_seed=40706000,
                     observation_protocol="all standard models clean training/clean test; GRUObsDR only train raw observations corrupted; all fitted models additionally clean-calibrated/noisy-test diagnostic; same original labels and split IDs",
+                    label_efficiency=dict(fractions=[.25, .5, 1.], methods=["GRU", "GRUResponseAux", "GRUPretrainFinetune"],
+                                          subsets=label_budgets, full_budget="reuse original 100% tasks; never refit duplicate tasks",
+                                          note="five seeds and three methods share one frozen subset per split/fraction; withheld training labels become UNKNOWN; test/calibration unchanged"),
                     manifest=str(args.manifest.resolve()), manifest_sha256=sha(args.manifest), source_npz_sha256=hashes,
                     splits=str(args.splits.resolve()), splits_sha256=sha(args.splits), split_definitions=split_list,
                     pairs=str(args.pairs.resolve()) if args.pairs and args.pairs.exists() else None,
@@ -152,7 +177,7 @@ def freeze(args):
     write_json(args.output / "frozen_protocol.json", protocol)
     write_json(args.output / "task_queue.json", dict(status="PENDING", tasks=tasks))
     write_csv(args.output / "TASK_STATUS.csv", [{**t, "reasons": "|".join(t["reasons"])} for t in tasks],
-              fields=["task_id", "split_id", "method", "seed", "status", "reasons", "train_n", "labelled_train_n", "core_test_n"])
+              fields=["task_id", "split_id", "method", "display_method", "label_fraction", "seed", "status", "reasons", "train_n", "labelled_train_n", "core_test_n"])
     print(json.dumps(dict(status="FROZEN_NO_TRAINING", tasks=len(tasks), planned=sum(t["status"] == "PLANNED" for t in tasks), blocked=sum(t["status"] != "PLANNED" for t in tasks), output=str(args.output))), flush=True)
 
 
@@ -395,7 +420,7 @@ def calibrate_and_evaluate(probabilities, roles, episodes, protocol, folder, tas
         modes.append(("label_conditional_conformal", p, None, None, conformal_decisions(p, conformal)))
     test = [i for i in roles["test"] if y[i] >= 0 and not episodes[i].get("is_control")]
     subsets = [("all", "all", test)]
-    for key in ("side", "group_id", "condition_family"):
+    for key in ("side", "group_id", "condition_family", "robot_variant"):
         values = sorted({str(episodes[i].get(key, episodes[i].get("probe_side", "unspecified") if key == "side" else "unspecified")) for i in test})
         for value in values:
             indices = [i for i in test if str(episodes[i].get(key, episodes[i].get("probe_side", "unspecified") if key == "side" else "unspecified")) == value]
@@ -494,6 +519,10 @@ def run(args):
         folder = args.output/"fits"/task["task_id"]
         folder.mkdir(parents=True, exist_ok=True)
         roles = split_indices(split_map[task["split_id"]], episodes)
+        fraction = task.get("label_fraction", 1.)
+        budget = protocol.get("label_efficiency", {}).get("subsets", {}).get(task["split_id"], {}).get(str(fraction))
+        fit_episodes = apply_label_budget(episodes, roles["train"], budget) if budget else episodes
+        evaluation_task = {**task, "method": task.get("display_method", task["method"])}
         task["status"] = "TRAINING"
         write_json(args.output/"task_queue.json", queue)
         try:
@@ -541,10 +570,12 @@ def run(args):
                     cached_key = key
                 x, lengths, real_time, audit = cached
                 pairs = approved_pairs(protocol["approved_pairs"], task["split_id"], roles["train"], episodes)
-                p, curve, fit_metadata = train_fit(task["method"], task["seed"], x, lengths, audit, roles, episodes, pairs, protocol, folder, args.device, args.training_window)
+                p, curve, fit_metadata = train_fit(task["method"], task["seed"], x, lengths, audit, roles, fit_episodes, pairs, protocol, folder, args.device, args.training_window)
                 task["status"] = "TRAINED"
                 write_json(args.output/"task_queue.json", queue)
-                rows, predictions, bins = calibrate_and_evaluate(p, roles, episodes, protocol, folder, task)
+                rows, predictions, bins = calibrate_and_evaluate(p, roles, fit_episodes, protocol, folder, evaluation_task)
+                if budget:
+                    write_json(folder/"label_budget_audit.json", budget)
                 fit_metadata["inference_scope"] = "model_forward_only_excludes_acquisition_preprocessing_residual_and_IO"
                 # A shared heldout sensor realization tests robustness without
                 # retraining, changing labels, or fitting noisy-test thresholds.
@@ -562,7 +593,7 @@ def run(args):
                     noisy_p = checkpoint_predict(folder/"checkpoint.pt", nx, nl, noisy_pre, args.device)
                     hybrid_p = np.asarray(p).copy()
                     hybrid_p[roles["test"]] = noisy_p[roles["test"]]
-                    nr, npred, nb = calibrate_and_evaluate(hybrid_p, roles, episodes, protocol, noisy_folder, task)
+                    nr, npred, nb = calibrate_and_evaluate(hybrid_p, roles, fit_episodes, protocol, noisy_folder, evaluation_task)
                     for r in nr+npred:
                         r["mode"] = "noisy_test/"+r["mode"]
                     for r in nb:
@@ -573,6 +604,8 @@ def run(args):
                                calibration="identical clean calibration probabilities; no noisy holdout calibration", independent_new_episodes=0))
                 except ValueError as noise_error:
                     write_json(noisy_folder/"status.json", dict(status="UNAVAILABLE_WITH_REASON", reason=str(noise_error), clean_evaluation_preserved=True))
+            for record in rows+predictions+bins:
+                record.update(base_method=task["method"], label_fraction=fraction, supervised_train_n=task["labelled_train_n"])
             write_csv(folder/"metrics.csv", [{**r, **fit_metadata, "scope": protocol["scope"]} for r in rows])
             write_csv(folder/"predictions.csv", predictions)
             if curve:

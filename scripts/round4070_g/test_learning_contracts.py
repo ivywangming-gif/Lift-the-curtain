@@ -9,7 +9,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from learning_core import (approved_pairs, causal_rows, conformal_decisions, conformal_fit,
+from learning_core import (approved_pairs, apply_label_budget, frozen_label_budget, causal_rows, conformal_decisions, conformal_fit,
     metrics, prepare_features, remap_active_hand, select_thresholds, split_indices)
 from learning_models import METHODS, SmallModel, matched_pair_loss, supcon_loss
 from resource_lock import resource_lock
@@ -176,6 +176,34 @@ class LearningContracts(unittest.TestCase):
         roles["calibration"] = [0,1]
         _, _, bins = calibrate_and_evaluate(p, roles, episodes, protocol, folder, task)
         self.assertEqual({r["probability_kind"] for r in bins}, {"raw"})
+
+    def test_label_budgets_nested_holdout_untouched_and_reports_separate(self):
+        from learning_report import average_rows
+        episodes = [dict(trial_id=f"b{i}", y=i % 2, label="PASSABLE" if i % 2 else "BLOCKED", group_id=f"bg{i}", is_control=i < 2) for i in range(30)]
+        train = list(range(24))
+        quarter = frozen_label_budget(episodes, train, "synthetic_budget", .25)
+        half = frozen_label_budget(episodes, train, "synthetic_budget", .5)
+        full = frozen_label_budget(episodes, train, "synthetic_budget", 1.)
+        self.assertEqual(quarter["selected_class_counts"], {"0":3, "1":3})
+        self.assertEqual(half["selected_labelled_train_n"], 12)
+        self.assertTrue(set(quarter["selected_train_label_ids"]).issubset(half["selected_train_label_ids"]))
+        self.assertTrue(set(half["selected_train_label_ids"]).issubset(full["selected_train_label_ids"]))
+        self.assertEqual(quarter, frozen_label_budget(episodes, train[::-1], "synthetic_budget", .25))
+        altered = [dict(e) for e in episodes]
+        for e in altered[24:]:
+            e["y"] = -1
+        self.assertEqual(quarter, frozen_label_budget(altered, train, "synthetic_budget", .25))
+        reduced = apply_label_budget(episodes, train, quarter)
+        self.assertEqual(reduced[24:], episodes[24:])
+        self.assertEqual(sum(e["y"] >= 0 for e in reduced[:24]), 6)
+        self.assertEqual(sum(e["y"] == -1 for e in reduced[:24]), 18)
+        self.assertEqual([e["y"] for e in episodes], [i % 2 for i in range(30)])
+        rows = [dict(split_id="s", method=display, base_method="GRU", label_fraction=fraction, supervised_train_n=count,
+                     mode="forced_raw", seed=seed, n=2, passable_n=1, blocked_n=1, false_pass_n=0)
+                for display, fraction, count in (("GRU", 1., 24), ("GRU__labels050", .5, 12), ("GRU__labels025", .25, 6)) for seed in range(5)]
+        summary = average_rows(rows)
+        self.assertEqual(len(summary), 3)
+        self.assertTrue(all(r["actual_fits"] == 5 for r in summary))
 
 
 if __name__ == "__main__":

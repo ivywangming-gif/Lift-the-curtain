@@ -95,6 +95,39 @@ def split_indices(split, episodes):
     return roles
 
 
+def frozen_label_budget(episodes, train, split_id, fraction):
+    """Nested label-stratified fixed-hash subsets; model seeds never select IDs."""
+    if fraction not in (.25, .5, 1.):
+        raise ValueError("Only preregistered label fractions .25/.5/1 are allowed")
+    selected = []
+    for cls in (0, 1):
+        candidates = [episodes[i]["trial_id"] for i in train if int(episodes[i]["y"]) == cls]
+        ranked = sorted(candidates, key=lambda tid: hashlib.sha256(f"ROUND4070_G_LABEL_BUDGET_V1|{split_id}|{tid}".encode()).hexdigest())
+        selected.extend(ranked[:math.floor(fraction*len(ranked))])
+    selected = sorted(selected)
+    original = {episodes[i]["trial_id"]: int(episodes[i]["y"]) for i in train if int(episodes[i]["y"]) >= 0}
+    core_ids = {episodes[i]["trial_id"] for i in train if not episodes[i].get("is_control")}
+    return dict(label_fraction=fraction, selected_train_label_ids=selected,
+                hidden_train_label_ids=sorted(set(original)-set(selected)), original_train_labels_audit_only=original,
+                original_labelled_train_n=len(original), selected_labelled_train_n=len(selected),
+                selected_class_counts={str(c): sum(original[tid] == c for tid in selected) for c in (0, 1)},
+                selected_core_class_counts={str(c): sum(original[tid] == c and tid in core_ids for tid in selected) for c in (0, 1)},
+                scope="all original known train labels, including controls; floor fraction separately per class; train histories retained",
+                selection="nested deterministic SHA256 rank within train label strata; no model seed, test, calibration, or model predictions")
+
+
+def apply_label_budget(episodes, train, budget):
+    selected = set(budget["selected_train_label_ids"])
+    original = {episodes[i]["trial_id"]: int(episodes[i]["y"]) for i in train if int(episodes[i]["y"]) >= 0}
+    if original != budget["original_train_labels_audit_only"] or not selected.issubset(original):
+        raise ValueError("Frozen label budget no longer matches this training split")
+    result = [dict(e) for e in episodes]
+    for i in train:
+        if result[i]["trial_id"] in original and result[i]["trial_id"] not in selected:
+            result[i].update(y=-1, label="LABEL_UNKNOWN", evaluation_label="UNKNOWN", supervision_eligible=False)
+    return result
+
+
 def causal_rows(x, t, cutoff=2.0, max_steps=128):
     """Select actual observations, never synthesize measurements or use final length."""
     idx = np.flatnonzero(t <= cutoff + 1e-9)

@@ -25,6 +25,8 @@ def average_rows(rows):
     for (split_id, method, mode), values in sorted(grouped.items()):
         numeric = ["false_pass_n", "false_reject_n", "true_pass_n", "true_block_n", "false_pass", "false_reject", "passable_recall", "blocked_recall", "balanced_accuracy", "coverage", "uncertain_rate", "selective_risk", "auroc", "auprc", "brier", "ece", "parameters", "training_seconds", "inference_ms"]
         row = dict(split_id=split_id, method=method, mode=mode, actual_fits=len(values), actual_seeds="|".join(str(v["seed"]) for v in values),
+                   base_method=values[0].get("base_method", method), label_fraction=values[0].get("label_fraction", 1.),
+                   supervised_train_n=values[0].get("supervised_train_n"),
                    n=values[0]["n"], passable_n=values[0]["passable_n"], blocked_n=values[0]["blocked_n"],
                    repeat_interpretation="same physical test episodes; seed SD is optimization variability only")
         for key in numeric:
@@ -40,14 +42,15 @@ def paired_group_bootstrap(predictions, seeds, reference="GRU"):
     by_split = defaultdict(lambda: defaultdict(dict))
     for r in predictions:
         if r["mode"] == "forced_raw" and r["y"] == "0" and r.get("is_control") not in ("True", "true", "1"):
-            by_split[r["split_id"]][r["method"]][r["trial_id"], r["seed"]] = r
+            by_split[r["split_id"], float(r.get("label_fraction", 1.))][r["method"]][r["trial_id"], r["seed"]] = r
     output = []
-    for split, methods in by_split.items():
-        if reference not in methods:
+    for (split, fraction), methods in by_split.items():
+        local_reference = reference if fraction == 1. else f"{reference}__labels{int(fraction*100):03d}"
+        if local_reference not in methods:
             continue
-        ref = methods[reference]
+        ref = methods[local_reference]
         for method, records in methods.items():
-            if method == reference:
+            if method == local_reference:
                 continue
             candidates = {trial for trial, seed in ref} & {trial for trial, seed in records}
             differences = []
@@ -58,7 +61,7 @@ def paired_group_bootstrap(predictions, seeds, reference="GRU"):
                 values = [int(records[k]["decision"] == "1")-int(ref[k]["decision"] == "1") for k in keys]
                 differences.append((records[keys[0]]["group_id"], float(np.mean(values))))
             groups = sorted({g for g, value in differences})
-            row = dict(split_id=split, method=method, reference=reference, negative_episode_n=len(differences), physical_group_n=len(groups), paired_seed_n=len(seeds),
+            row = dict(split_id=split, method=method, reference=local_reference, label_fraction=fraction, negative_episode_n=len(differences), physical_group_n=len(groups), paired_seed_n=len(seeds),
                        mean_false_pass_rate_difference=float(np.mean([v for g, v in differences])) if differences else None,
                        ci95_low=None, ci95_high=None,
                        interpretation="configuration-cluster bootstrap of per-episode seed-averaged paired errors; descriptive, selected configurations")
@@ -95,7 +98,7 @@ def generate(run, report):
         evidence.append(dict(task_id=task["task_id"], completion=str(folder/"completion.json"), metrics=str(folder/"metrics.csv"),
                              metrics_sha256=sha(folder/"metrics.csv"), predictions_sha256=complete["predictions_sha256"], checkpoint_sha256=complete.get("checkpoint_sha256")))
     all_rows = [r for r in metrics_rows if r["subset"] == "all"]
-    schema = ["split_id", "method", "seed", "mode", "n", "passable_n", "blocked_n", "true_pass_n", "true_block_n", "false_pass_n", "false_reject_n", "uncertain_n", "coverage"]
+    schema = ["split_id", "method", "base_method", "label_fraction", "supervised_train_n", "seed", "mode", "n", "passable_n", "blocked_n", "true_pass_n", "true_block_n", "false_pass_n", "false_reject_n", "uncertain_n", "coverage"]
     # Empty files contain schema only. The status manifest explicitly says no
     # runs; zero rows never masquerade as zero errors or completed comparisons.
     names = {
@@ -107,8 +110,20 @@ def generate(run, report):
         "OBSERVATION_DR_TRAINING_RESULTS.csv": set(METHOD_GROUPS["observation_dr"]),
     }
     for filename, methods in names.items():
-        selected = [r for r in all_rows if r["method"] in methods]
+        selected = [r for r in all_rows if r["method"] in methods and float(r.get("label_fraction", 1.)) == 1.]
         write_csv(report/filename, selected, None if selected else schema)
+    efficiency = [r for r in all_rows if r.get("base_method", r["method"]) in ("GRU", "GRUResponseAux", "GRUPretrainFinetune")]
+    write_csv(report/"LABEL_EFFICIENCY_RESULTS.csv", efficiency, None if efficiency else schema)
+    budget_rows = []
+    for split_id, budgets in protocol.get("label_efficiency", {}).get("subsets", {}).items():
+        for fraction, budget in budgets.items():
+            budget_rows.append(dict(split_id=split_id, label_fraction=fraction,
+                original_labelled_train_n=budget["original_labelled_train_n"], selected_labelled_train_n=budget["selected_labelled_train_n"],
+                selected_train_label_ids="|".join(budget["selected_train_label_ids"]), hidden_train_label_ids="|".join(budget["hidden_train_label_ids"]),
+                selected_passable_n=budget["selected_class_counts"]["1"], selected_blocked_n=budget["selected_class_counts"]["0"],
+                selected_core_passable_n=budget["selected_core_class_counts"]["1"], selected_core_blocked_n=budget["selected_core_class_counts"]["0"],
+                scope=budget["scope"]))
+    write_csv(report/"LABEL_BUDGET_FROZEN_SUBSETS.csv", budget_rows, None if budget_rows else ["split_id", "label_fraction", "selected_labelled_train_n", "selected_train_label_ids", "hidden_train_label_ids"])
     kinds = {s["split_id"]: s.get("split_type", s.get("kind", "configuration")) for s in protocol["split_definitions"]}
     cross = [r for r in all_rows if kinds[r["split_id"]] in ("cross_hand", "posture", "legacy_side") or r["method"] in METHOD_GROUPS["cross_hand"]]
     ood = [r for r in all_rows if kinds[r["split_id"]] != "iid_seed"]
@@ -148,7 +163,8 @@ def generate(run, report):
         + "M3包括真实观测历史、固定seed乱序、删累计手部进展的末观测、命令进程、真实dt+进程、固定.5/1s前缀及按结构参数数匹配的GRU。只保留真实观测；高密度数据最多128点，用固定时间网格的past索引去重，低频日志不插值造高频。参数匹配不使用标签/测试。\n\n"
         + "同episode的GRU10Hz/GRU20Hz使用相同2s截止及真实past观测去重，保留安全早停；基准实际频率以源数据审计为准，不以模型名称假定50Hz。所有方法都可从已获得样本长度推知提前停止，属于合法但可能依赖安全策略的线索；DurationOnlyLogistic仅用已获得点数/观测时长作该捷径诊断。GRUShuffled与普通GRU同预算通道，均删除显式elapsed/dt/command_progress；已执行q_cmd本身仍可携带阶段线索，乱序不能单独证明无时序信息。\n\n"
         + "M4联合响应辅助使用训练组（含UNKNOWN）的下一已记录q/qdot；分阶段版本40轮响应预训练+80轮监督微调，普通/联合为80轮，因此额外训练预算必须披露，不作纯损失因果结论。任何测试/校准UNKNOWN不进入拟合或归一化。\n\n"
-        + "M5按真实关节名称重排active/opposite手并保留侧别，使用既有body-local FK；它不是经过运动学认证的带符号几何镜像。没有镜像标签或强制左右动作同标签。OldM2去FiLM的残差参照仍通过正常响应预测器间接使用身体状态，不是完全身体信息剥离。\n\n"
+        + "标签效率另设25/50/100%训练标签预算，三个方法GRU/GRUResponseAux/GRUPretrainFinetune及五seed共享同一固定hash、逐类floor的嵌套训练标签子集；100%复用原任务。预算计入已知训练controls，并单列核心P/B数；核心双类不足明确BLOCKED。未选标签只在训练视图改为UNKNOWN供响应学习，原manifest和校准/测试保持不变。`LABEL_BUDGET_FROZEN_SUBSETS.csv`记录实际IDs/数量，`LABEL_EFFICIENCY_RESULTS.csv`只记录实际完成结果；display method与label_fraction隔离统计，不把25%/50%和100%平均混为多seed。没有结果不能回答提高标签效率；额外预训练计算仍是混杂。\n\n"
+        + "M5按真实关节名称重排active/opposite手并保留侧别，使用既有body-local FK；它不是经过运动学认证的带符号几何镜像。没有镜像标签或强制左右动作同标签。split7包含姿态/动作条件（包括速度），按robot_variant分层，不能把pool结果归因纯姿态。OldM2去FiLM的残差参照仍通过正常响应预测器间接使用身体状态，不是完全身体信息剥离。\n\n"
         + "观测DR有真实执行入口：GRUObsDR与普通GRU同结构/同clean训练scaler，只对训练原始观察作固定seed扰动；所有模型另用同一固定seed的noisy heldout诊断，校准概率始终保持clean。q=.001rad、qdot=.01rad/s、effort=训练尺度2%噪声/1%每条偏置、IMU角速度=.005rad/s/姿态=.001rad、时钟±.002s、丢样1%；延迟按真实50Hz可实现的0/20ms端点逐episode抽取，严格不插值。真实source年龄不得超过20ms；稀疏日志无法实现时单列不可用。尺度仅训练数据，元数据/标签不变；它是未硬件标定的仿真敏感性，并未耦合重算FK。source/receipt索引、seed、每条偏置与时钟保留audit；实际运行前结果表为空，不以实现代码宣称DR实验已完成。\n\n"
         + "需要从实际CSV解释优势/无优势；本生成器不会以尚未运行的代码或空表给方法有效性结论。\n", encoding="utf-8")
     if risk:
