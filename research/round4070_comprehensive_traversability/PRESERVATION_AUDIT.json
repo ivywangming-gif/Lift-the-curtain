@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checked_utc": "2026-11-06T10:32:58.221484+00:00",
+  "baseline_head": "1d5136d85066c922b29e4901b18edd7fc9e977f7",
+  "snapshot_sha256": "37b977644982d65cc052e11de2204d32b6f910e6b64cae39fb53570b00a67d52",
+  "protected_file_count": 2012,
+  "protected_bytes": 729999234,
+  "changed_files": [],
+  "online_occupancy_sha256": "223908babf0fe72bd83d9a5f6801d85ed5d1a693e59ed0ea450f1b5da7207ffe"
+}
