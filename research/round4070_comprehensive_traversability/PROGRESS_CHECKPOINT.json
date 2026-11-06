@@ -1,0 +1,52 @@
+{
+  "status": "IN_PROGRESS_NOT_COMPLETE",
+  "checked_utc": "2026-11-06T11:25:53.819079+00:00",
+  "frozen_manifest": "outputs\\round4070_comprehensive_traversability\\campaign_manifest_v3.json",
+  "manifest_sha256": "5446d638895b61065d2d845ff031de83661b12698b890fb71c0776b6887812bb",
+  "planned_g1_trials": 976,
+  "max_g1_launches": 1000,
+  "physics_attempts_launched": 6,
+  "physics_summaries": 6,
+  "physics_gates_passed": 5,
+  "physical_configs_with_three_valid_seeds": 1,
+  "g1_attempts_launched": 2,
+  "g1_finalized_trial_ids": 2,
+  "g1_runtime_valid": 2,
+  "g1_probe_valid": 2,
+  "g1_label_valid": 2,
+  "g1_labels": {
+    "PASSABLE_FOR_ACTION": 2
+  },
+  "imported_history_count": 2,
+  "imported_core_labels": {},
+  "learning_runs": [
+    {
+      "run": "learning_campaign_eacea760b27f55f2f55f",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1280
+      }
+    },
+    {
+      "run": "learning_preflight_000",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1240
+      }
+    }
+  ],
+  "active_locks": {
+    "workflow_lock.json": {
+      "owner": "workflow",
+      "run_id": "workflow-54456",
+      "pid": 54456,
+      "token": "0900ce36d7b54f9a8151cd96f7d9ae61",
+      "created_utc": "2026-11-06T11:25:36.731647+00:00",
+      "pid_currently_exists": true
+    }
+  },
+  "completion_warning": "No full benchmark or method advantage is claimed. Planned work is not executed evidence.",
+  "resume_command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\run_round4070_g.ps1 -Mode all -RetryRuntimeFailures"
+}

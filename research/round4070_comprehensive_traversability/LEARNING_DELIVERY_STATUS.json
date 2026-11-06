@@ -1,0 +1,13 @@
+{
+  "scope": "G_ACTION_CONTRACT_BENCHMARK",
+  "evaluated_fit_n": 0,
+  "planned_task_n": 1280,
+  "task_counts": {
+    "BLOCKED_WITH_REASON": 1280
+  },
+  "run": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\learning_campaign_eacea760b27f55f2f55f",
+  "protocol_sha256": "15f080763b4814da4f0d3a7c3a694467e87405ad3956d812245bab3e93adaf94",
+  "benchmark_completion": "NOT_INFERRED_FROM_MODEL_EXECUTION: physical campaign and coverage gates remain separate",
+  "empty_table_meaning": "NO_COMPLETED_ACTUAL_RUNS; never zero errors",
+  "legacy_only": false
+}
