@@ -1,0 +1,26 @@
+{
+  "deployment_input": "randomization seed, scene and node metadata are evaluation-only, never model features",
+  "draw_order": [
+    "robot_delta_y_m",
+    "robot_delta_yaw_rad",
+    "free_node_velocity_xyz_global_node_order"
+  ],
+  "evidence": "record actual additive robot offsets, applied full node velocity array and SHA256, node IDs and injection simulation time",
+  "free_node_velocity_uniform_mps": [
+    -0.001,
+    0.001
+  ],
+  "node_rule": "one initial post-reset injection before first physical step; all attachment vertices exactly zero",
+  "purpose": "repair previously ineffective G1 seed variation; ranges fixed before revised primary runs; not outcome tuning",
+  "robot_reference": "add to existing frozen robot reset center; same seed means same robot draws for hands and paired variants",
+  "robot_y_uniform_m": [
+    -0.001,
+    0.001
+  ],
+  "robot_yaw_uniform_rad": [
+    -0.001,
+    0.001
+  ],
+  "schema": "G1_RNG_V1",
+  "seed_generator": "numpy.random.default_rng(episode_seed); PCG64"
+}

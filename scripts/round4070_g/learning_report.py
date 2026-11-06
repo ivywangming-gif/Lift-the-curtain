@@ -25,6 +25,7 @@ def average_rows(rows):
     for (split_id, method, mode), values in sorted(grouped.items()):
         numeric = ["false_pass_n", "false_reject_n", "true_pass_n", "true_block_n", "false_pass", "false_reject", "passable_recall", "blocked_recall", "balanced_accuracy", "coverage", "uncertain_rate", "selective_risk", "auroc", "auprc", "brier", "ece", "parameters", "training_seconds", "inference_ms"]
         row = dict(split_id=split_id, method=method, mode=mode, actual_fits=len(values), actual_seeds="|".join(str(v["seed"]) for v in values),
+                   evaluation_scope=values[0].get("evaluation_scope", "FULL_SPLIT_BENCHMARK"),
                    base_method=values[0].get("base_method", method), label_fraction=values[0].get("label_fraction", 1.),
                    supervised_train_n=values[0].get("supervised_train_n"),
                    n=values[0]["n"], passable_n=values[0]["passable_n"], blocked_n=values[0]["blocked_n"],
@@ -38,13 +39,17 @@ def average_rows(rows):
 
 
 def paired_group_bootstrap(predictions, seeds, reference="GRU"):
-    """Average paired error differences over training seeds, then resample groups."""
+    """Fixed-policy paired differences: average seeds first, bootstrap groups."""
     by_split = defaultdict(lambda: defaultdict(dict))
     for r in predictions:
-        if r["mode"] == "forced_raw" and r["y"] == "0" and r.get("is_control") not in ("True", "true", "1"):
-            by_split[r["split_id"], float(r.get("label_fraction", 1.))][r["method"]][r["trial_id"], r["seed"]] = r
+        mode = r["mode"].removeprefix("confirmation/")
+        endpoint = "confirmation" if r["mode"].startswith("confirmation/") else "main_test"
+        if (mode == "forced_raw" or mode.startswith("calibration_risk_")) and r["y"] in ("0", "1") and r.get("is_control") not in ("True", "true", "1"):
+            by_split[endpoint, r["split_id"], float(r.get("label_fraction", 1.)), mode][r["method"]][r["trial_id"], r["seed"]] = r
     output = []
-    for (split, fraction), methods in by_split.items():
+    definitions = {"false_pass": (0, lambda d: d == 1), "false_reject": (1, lambda d: d == 0),
+                   "coverage": (None, lambda d: d >= 0), "passable_recall": (1, lambda d: d == 1)}
+    for (endpoint, split, fraction, mode), methods in by_split.items():
         local_reference = reference if fraction == 1. else f"{reference}__labels{int(fraction*100):03d}"
         if local_reference not in methods:
             continue
@@ -53,28 +58,43 @@ def paired_group_bootstrap(predictions, seeds, reference="GRU"):
             if method == local_reference:
                 continue
             candidates = {trial for trial, seed in ref} & {trial for trial, seed in records}
-            differences = []
+            paired_episodes = []
             for trial in sorted(candidates):
                 keys = [(trial, str(s)) for s in seeds]
                 if not all(k in ref and k in records for k in keys):
                     continue
-                values = [int(records[k]["decision"] == "1")-int(ref[k]["decision"] == "1") for k in keys]
-                differences.append((records[keys[0]]["group_id"], float(np.mean(values))))
-            groups = sorted({g for g, value in differences})
-            row = dict(split_id=split, method=method, reference=local_reference, label_fraction=fraction, negative_episode_n=len(differences), physical_group_n=len(groups), paired_seed_n=len(seeds),
-                       mean_false_pass_rate_difference=float(np.mean([v for g, v in differences])) if differences else None,
-                       ci95_low=None, ci95_high=None,
-                       interpretation="configuration-cluster bootstrap of per-episode seed-averaged paired errors; descriptive, selected configurations")
-            if len(groups) >= 3:
-                chunks = {g: np.asarray([v for group, v in differences if group == g]) for g in groups}
-                rng = np.random.default_rng(407099)
-                samples = [float(np.concatenate([chunks[g] for g in rng.choice(groups, len(groups), replace=True)]).mean()) for _ in range(1000)]
-                row["ci95_low"], row["ci95_high"] = np.quantile(samples, [.025, .975]).tolist()
-            elif differences:
-                row["interpretation"] += "; CI unavailable: fewer than three negative physical groups"
-            else:
-                row["interpretation"] = "UNAVAILABLE: missing complete five-seed paired predictions"
-            output.append(row)
+                truth = int(ref[keys[0]]["y"])
+                group = ref[keys[0]]["group_id"]
+                if any(int(records[k]["y"]) != truth or int(ref[k]["y"]) != truth or records[k]["group_id"] != group or ref[k]["group_id"] != group for k in keys):
+                    raise ValueError("Paired predictions disagree on physical episode truth/group")
+                paired_episodes.append((truth, group, [int(records[k]["decision"]) for k in keys], [int(ref[k]["decision"]) for k in keys]))
+            for metric, (target_class, contribution) in definitions.items():
+                differences = [(group, float(np.mean([int(contribution(a))-int(contribution(b)) for a, b in zip(current, baseline)])))
+                               for truth, group, current, baseline in paired_episodes if target_class is None or truth == target_class]
+                groups = sorted({g for g, value in differences})
+                difference = float(np.mean([v for g, v in differences])) if differences else None
+                row = dict(evaluation_endpoint=endpoint, split_id=split, mode=mode, metric=metric,
+                           method=method, reference=local_reference, label_fraction=fraction,
+                           paired_episode_n=len(differences), physical_group_n=len(groups), paired_seed_n=len(seeds),
+                           mean_difference=difference, negative_episode_n=len(differences) if metric == "false_pass" else None,
+                           mean_false_pass_rate_difference=difference if metric == "false_pass" else None,
+                           ci95_low=None, ci95_high=None,
+                           interpretation="descriptive, multiplicity-unadjusted configuration-cluster CI; seed-averaged paired episode contributions; selected configurations; not a significance or deployment guarantee")
+                if mode.startswith("calibration_risk_"):
+                    row["interpretation"] += "; same calibration target, not guaranteed equal heldout risk; assess FPR and coverage jointly"
+                if len(groups) >= 3:
+                    chunks = {g: np.asarray([v for group, v in differences if group == g]) for g in groups}
+                    rng = np.random.default_rng(407099)
+                    draws = rng.integers(0, len(groups), size=(1000, len(groups)))
+                    group_sums = np.asarray([chunks[g].sum() for g in groups])
+                    group_counts = np.asarray([len(chunks[g]) for g in groups])
+                    samples = group_sums[draws].sum(1)/group_counts[draws].sum(1)
+                    row["ci95_low"], row["ci95_high"] = np.quantile(samples, [.025, .975]).tolist()
+                elif differences:
+                    row["interpretation"] += "; CI unavailable: fewer than three eligible physical groups"
+                else:
+                    row["interpretation"] += "; UNAVAILABLE: no complete paired labelled episodes for this metric"
+                output.append(row)
     return output
 
 
@@ -83,9 +103,18 @@ def generate(run, report):
     queue = read_json(run/"task_queue.json")
     report.mkdir(parents=True, exist_ok=True)
     from learning_models import METHOD_GROUPS, ENGINEERING
-    metrics_rows, predictions, bins, evidence = [], [], [], []
+    metrics_rows, predictions, bins, evidence, confirmation_states = [], [], [], [], []
+    split_map = {s["split_id"]: s for s in protocol["split_definitions"]}
     for task in queue["tasks"]:
         folder = run/"fits"/task["task_id"]
+        split = split_map[task["split_id"]]
+        confirmation_state = read_json(folder/"confirmation_status.json") if task["status"] == "EVALUATED" and (folder/"confirmation_status.json").exists() else dict(
+            status="NOT_EVALUATED", task_status=task["status"], task_reasons="|".join(task["reasons"]),
+            declared_confirmation_status=split.get("confirmation_status", "NOT_DECLARED_IN_OLD_PROTOCOL"),
+            confirmation_ids=split.get("confirmation", []), core_labelled_n=None)
+        confirmation_states.append(dict(task_id=task["task_id"], split_id=task["split_id"], method=task.get("display_method", task["method"]),
+            evaluation_scope=task.get("evaluation_scope", "FULL_SPLIT_BENCHMARK"),
+            seed=task["seed"], label_fraction=task.get("label_fraction", 1.), **confirmation_state))
         if task["status"] != "EVALUATED":
             continue
         complete = read_json(folder/"completion.json")
@@ -97,8 +126,34 @@ def generate(run, report):
             bins.extend(read_csv(folder/"calibration_bins.csv"))
         evidence.append(dict(task_id=task["task_id"], completion=str(folder/"completion.json"), metrics=str(folder/"metrics.csv"),
                              metrics_sha256=sha(folder/"metrics.csv"), predictions_sha256=complete["predictions_sha256"], checkpoint_sha256=complete.get("checkpoint_sha256")))
+    partial_rows = [r for r in metrics_rows if r.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    partial_predictions = [r for r in predictions if r.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    partial_bins = [r for r in bins if r.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    partial_schema = ["evaluation_scope", "split_id", "method", "seed", "mode", "n", "passable_n", "blocked_n", "false_pass_n", "false_reject_n", "coverage", "balanced_accuracy", "auroc", "selective_risk"]
+    write_csv(report/"PARTIAL_HELDOUT_SINGLE_CLASS_RESULTS.csv", partial_rows, None if partial_rows else partial_schema)
+    write_csv(report/"PARTIAL_HELDOUT_SINGLE_CLASS_PREDICTIONS.csv", partial_predictions, None if partial_predictions else ["evaluation_scope", "split_id", "method", "seed", "mode", "trial_id", "y", "p", "decision"])
+    partial_mean = average_rows([r for r in partial_rows if r["subset"] == "all"])
+    write_csv(report/"PARTIAL_HELDOUT_SINGLE_CLASS_MEAN_STD.csv", partial_mean, None if partial_mean else ["evaluation_scope", "split_id", "method", "mode", "actual_fits"])
+    write_csv(report/"PARTIAL_HELDOUT_SINGLE_CLASS_CALIBRATION_BINS.csv", partial_bins, None if partial_bins else ["evaluation_scope", "split_id", "method", "probability_kind", "bin", "n"])
+    metrics_rows = [r for r in metrics_rows if r.get("evaluation_scope") != "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    predictions = [r for r in predictions if r.get("evaluation_scope") != "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    bins = [r for r in bins if r.get("evaluation_scope") != "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    all_predictions = predictions
+    confirmation_rows = [r for r in metrics_rows if r["mode"].startswith("confirmation/")]
+    confirmation_predictions = [r for r in predictions if r["mode"].startswith("confirmation/")]
+    confirmation_bins = [r for r in bins if r["probability_kind"].startswith("confirmation/")]
+    metrics_rows = [r for r in metrics_rows if not r["mode"].startswith("confirmation/")]
+    predictions = [r for r in predictions if not r["mode"].startswith("confirmation/")]
+    bins = [r for r in bins if not r["probability_kind"].startswith("confirmation/")]
     all_rows = [r for r in metrics_rows if r["subset"] == "all"]
     schema = ["split_id", "method", "base_method", "label_fraction", "supervised_train_n", "seed", "mode", "n", "passable_n", "blocked_n", "true_pass_n", "true_block_n", "false_pass_n", "false_reject_n", "uncertain_n", "coverage"]
+    confirmation_all = [r for r in confirmation_rows if r["subset"] == "all"]
+    write_csv(report/"CONFIRMATION_RESULTS.csv", confirmation_all, None if confirmation_all else schema)
+    write_csv(report/"CONFIRMATION_ALL_SUBGROUP_METRICS.csv", confirmation_rows, None if confirmation_rows else schema)
+    write_csv(report/"CONFIRMATION_PREDICTIONS.csv", confirmation_predictions, None if confirmation_predictions else ["split_id", "method", "seed", "mode", "trial_id", "y", "p", "decision"])
+    write_csv(report/"CONFIRMATION_MEAN_STD.csv", average_rows(confirmation_all), None if confirmation_all else ["split_id", "method", "mode", "actual_fits"])
+    write_csv(report/"CONFIRMATION_STATUS.csv", confirmation_states, None if confirmation_states else ["task_id", "status", "confirmation_ids"])
+    write_csv(report/"CONFIRMATION_CALIBRATION_BINS.csv", confirmation_bins, None if confirmation_bins else ["split_id", "method", "seed", "probability_kind", "bin", "n"])
     # Empty files contain schema only. The status manifest explicitly says no
     # runs; zero rows never masquerade as zero errors or completed comparisons.
     names = {
@@ -136,13 +191,24 @@ def generate(run, report):
     summary = average_rows(all_rows)
     write_csv(report/"LEARNING_MEAN_STD.csv", summary, None if summary else ["split_id", "method", "mode", "actual_fits"])
     write_csv(report/"CALIBRATION_BINS.csv", bins, None if bins else ["split_id", "method", "seed", "probability_kind", "bin", "n", "predicted_mean", "observed_passable_rate"])
-    pairs = paired_group_bootstrap(predictions, protocol["seeds"])
-    write_csv(report/"PAIRED_CONFIGURATION_ANALYSIS.csv", pairs, None if pairs else ["split_id", "method", "reference", "negative_episode_n", "physical_group_n", "paired_seed_n", "mean_false_pass_rate_difference", "ci95_low", "ci95_high"])
+    pairs = paired_group_bootstrap(all_predictions, protocol["seeds"])
+    pair_schema = ["evaluation_endpoint", "split_id", "method", "reference", "mode", "metric", "label_fraction", "paired_episode_n", "physical_group_n", "paired_seed_n", "mean_difference", "ci95_low", "ci95_high"]
+    for filename, endpoint in (("PAIRED_CONFIGURATION_ANALYSIS.csv", "main_test"), ("CONFIRMATION_PAIRED_CONFIGURATION_ANALYSIS.csv", "confirmation")):
+        selected = [r for r in pairs if r["evaluation_endpoint"] == endpoint]
+        write_csv(report/filename, selected, None if selected else pair_schema)
     write_csv(report/"LEARNING_RUN_STATUS.csv", [{**t, "reasons": "|".join(t["reasons"])} for t in queue["tasks"]],
               None if queue["tasks"] else ["task_id", "split_id", "method", "seed", "status", "reasons"])
     write_csv(report/"LEARNING_ARTIFACT_INDEX.csv", evidence, None if evidence else ["task_id", "completion", "metrics", "metrics_sha256", "predictions_sha256", "checkpoint_sha256"])
-    counts = {status: sum(t["status"] == status for t in queue["tasks"]) for status in sorted({t["status"] for t in queue["tasks"]})}
-    state = dict(scope=protocol["scope"], evaluated_fit_n=len(evidence), planned_task_n=len(queue["tasks"]), task_counts=counts,
+    full_tasks = [t for t in queue["tasks"] if t.get("evaluation_scope") != "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    partial_tasks = [t for t in queue["tasks"] if t.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS"]
+    count_status = lambda tasks: {status:sum(t["status"]==status for t in tasks) for status in sorted({t["status"] for t in tasks})}
+    counts = count_status(full_tasks)
+    state = dict(scope=protocol["scope"], evaluated_fit_n=sum(t["status"]=="EVALUATED" for t in full_tasks), planned_task_n=len(full_tasks), task_counts=counts,
+                 all_scopes_evaluated_task_n=len(evidence),all_scopes_planned_task_n=len(queue["tasks"]),all_scopes_task_counts=count_status(queue["tasks"]),
+                 partial_single_class_planned_task_n=len(partial_tasks),partial_single_class_task_counts=count_status(partial_tasks),
+                 full_benchmark_evaluated_fit_n=sum(t["status"] == "EVALUATED" and t.get("evaluation_scope") != "PARTIAL_HELDOUT_SINGLE_CLASS" for t in queue["tasks"]),
+                 partial_single_class_evaluated_fit_n=sum(t["status"] == "EVALUATED" and t.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS" for t in queue["tasks"]),
+                 partial_single_class_scope="separate descriptive diagnostic; does not complete any original full split",
                  run=str(run), protocol_sha256=sha(run/"frozen_protocol.json"),
                  benchmark_completion="NOT_INFERRED_FROM_MODEL_EXECUTION: physical campaign and coverage gates remain separate",
                  empty_table_meaning="NO_COMPLETED_ACTUAL_RUNS; never zero errors", legacy_only=protocol["legacy"])
@@ -155,7 +221,9 @@ def generate(run, report):
         + "forced=0.5、固定拒判=.2/.8；温度拟合和风险阈值只用独立 calibration 组。阈值采用预先固定的 .025 网格，目标误放行率为 0/.01/.025/.05/.1/.2，同时约束校准 false-reject≤.1，再最大化确定覆盖率。该约束是校准样本上的经验约束，不是部署安全认证。缺任一校准类别则不拟合温度/经验阈值。\n\n"
         + "label-conditional split conformal 的 alpha=.1，分数使用冻结模型的raw概率，不能复用同calibration标签拟合temperature后的分数。有限样本分位数超出可用秩时使用 q=1 的保守集合，双类/空集合都输出 UNCERTAIN。物理配置采集存在选择偏差，交换性未验证，不宣称真实世界覆盖保证。\n\n"
         + "FP分母为全部可靠BLOCKED，FR为全部可靠PASSABLE；拒判不算TN/TP。selective risk只在已决策集合计错误，必须同时报告coverage与PASSABLE recall。UNKNOWN永远不进监督分母。工程规则的0/.5/1是决定编码，不作为概率报告Brier或校准。\n\n"
-        + "`RISK_COVERAGE_POINTS.csv`、`CALIBRATION_BINS.csv`、各fit的calibration.json均来自实际执行。有实际有效bin时生成 `CALIBRATION_RELIABILITY.png`，按固定候选方法展示 clean test 的 raw/temperature 可靠性曲线；汇总权重是预测数，不把重复seed当独立物理样本、不画未经支持的误差带。完整方法及noisy诊断都保留在CSV。只有表头表示尚无实际可用评价，不是零风险。`PAIRED_CONFIGURATION_ANALYSIS.csv`先在同episode上平均五个seed的配对误差，再按物理配置聚类bootstrap；不足3个负配置不报告CI，seed不是独立物理重复。\n", encoding="utf-8")
+        + "`RISK_COVERAGE_POINTS.csv`、`CALIBRATION_BINS.csv`、各fit的calibration.json均来自实际执行。有实际有效bin时生成 `CALIBRATION_RELIABILITY.png`，按固定候选方法展示 clean test 的 raw/temperature 可靠性曲线；汇总权重是预测数，不把重复seed当独立物理样本、不画未经支持的误差带。完整方法及noisy诊断都保留在CSV。只有表头表示尚无实际可用评价，不是零风险。\n\n"
+        + "`PAIRED_CONFIGURATION_ANALYSIS.csv`在forced和各预注册calibration风险模式下分别评价FPR/FR/coverage/PASSABLE recall差：先同episode平均五seed，再抽物理配置组；不足3个相应类别/总体配置不报告CI。CI为描述性、未多重比较校正，不能据此宣称显著新方法。相同calibration风险目标不保证相同heldout风险，coverage差必须与FPR联合解释。`false_pass_episode_binomial_wilson_*`仅为假设episode IID的二项描述区间，不是物理配置cluster区间或跨配置保证。\n\n"
+        + "confirmation是第四个独立角色，完全排除train/calibration/main test。每个预注册模型和预算用同一已冻结模型及main calibration参数独立评价；不重新拟温度/阈值、不选赢家。`CONFIRMATION_*`表与主表分开，状态列明缺样本/缺类别/未运行。确认集只做clean诊断，未声称已做其观测DR。\n", encoding="utf-8")
     report.joinpath("ABLATION_REPORT.md").write_text(
         "# G 消融执行审计\n\n"
         + f"真实已评价fit：{len(evidence)}；详细未运行/受阻原因见 `LEARNING_RUN_STATUS.csv`。当前范围 `{protocol['scope']}`，不据模型数量宣布完整benchmark完成。\n\n"
@@ -167,6 +235,11 @@ def generate(run, report):
         + "M5按真实关节名称重排active/opposite手并保留侧别，使用既有body-local FK；它不是经过运动学认证的带符号几何镜像。没有镜像标签或强制左右动作同标签。split7包含姿态/动作条件（包括速度），按robot_variant分层，不能把pool结果归因纯姿态。OldM2去FiLM的残差参照仍通过正常响应预测器间接使用身体状态，不是完全身体信息剥离。\n\n"
         + "观测DR有真实执行入口：GRUObsDR与普通GRU同结构/同clean训练scaler，只对训练原始观察作固定seed扰动；所有模型另用同一固定seed的noisy heldout诊断，校准概率始终保持clean。q=.001rad、qdot=.01rad/s、effort=训练尺度2%噪声/1%每条偏置、IMU角速度=.005rad/s/姿态=.001rad、时钟±.002s、丢样1%；延迟按真实50Hz可实现的0/20ms端点逐episode抽取，严格不插值。真实source年龄不得超过20ms；稀疏日志无法实现时单列不可用。尺度仅训练数据，元数据/标签不变；它是未硬件标定的仿真敏感性，并未耦合重算FK。source/receipt索引、seed、每条偏置与时钟保留audit；实际运行前结果表为空，不以实现代码宣称DR实验已完成。\n\n"
         + "需要从实际CSV解释优势/无优势；本生成器不会以尚未运行的代码或空表给方法有效性结论。\n", encoding="utf-8")
+    report.joinpath("PARTIAL_HELDOUT_SINGLE_CLASS_SCOPE.md").write_text(
+        "# 单类留出诊断范围\n\n"
+        "冻结规则仅依据真实标签支持、从不依据预测结果：测试核心样本恰好一个类别时，单列100%标签预算、五个seed与同一预注册模型/工程基准。训练核心仍须双类，各方法原有可执行门槛保持；使用相同固定末epoch，不用测试或校准选checkpoint。原8个完整split状态保持不可评价。\n\n"
+        "校准缺双类时，temperature/risk/conformal明确不可用，仍可报告raw forced-0.5与预设拒判策略的该类计数、错误率和覆盖率。BA/AUROC/双类selective risk为NA；class_conditional_selective_error仅描述当前支持类别。单类B不能回答P召回，单类P不能回答false pass；五seed只是优化重复，不是五倍独立物理样本。\n\n"
+        "结果只写PARTIAL_HELDOUT_SINGLE_CLASS文件，不并入主学习/OOD/跨手/标签效率/校准结果，不用于宣称完整OOD或跨手泛化优势；confirmation仍独立且不参与训练/选择。空表表示没有实际完成的该诊断。\n",encoding="utf-8")
     if risk:
         import matplotlib
         matplotlib.use("Agg")

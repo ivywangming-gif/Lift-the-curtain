@@ -1,12 +1,24 @@
 {
   "scope": "G_ACTION_CONTRACT_BENCHMARK",
   "evaluated_fit_n": 0,
-  "planned_task_n": 1280,
+  "planned_task_n": 1520,
   "task_counts": {
-    "BLOCKED_WITH_REASON": 1280
+    "BLOCKED_WITH_REASON": 1520
   },
-  "run": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\learning_campaign_eacea760b27f55f2f55f",
-  "protocol_sha256": "15f080763b4814da4f0d3a7c3a694467e87405ad3956d812245bab3e93adaf94",
+  "all_scopes_evaluated_task_n": 0,
+  "all_scopes_planned_task_n": 1840,
+  "all_scopes_task_counts": {
+    "BLOCKED_WITH_REASON": 1840
+  },
+  "partial_single_class_planned_task_n": 320,
+  "partial_single_class_task_counts": {
+    "BLOCKED_WITH_REASON": 320
+  },
+  "full_benchmark_evaluated_fit_n": 0,
+  "partial_single_class_evaluated_fit_n": 0,
+  "partial_single_class_scope": "separate descriptive diagnostic; does not complete any original full split",
+  "run": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\learning_campaign_12ac229296d8078b9d9a",
+  "protocol_sha256": "739cb831508159fd55425ac0b5d177360a94fbea3996abf310f5e6e80f6aadc2",
   "benchmark_completion": "NOT_INFERRED_FROM_MODEL_EXECUTION: physical campaign and coverage gates remain separate",
   "empty_table_meaning": "NO_COMPLETED_ACTUAL_RUNS; never zero errors",
   "legacy_only": false

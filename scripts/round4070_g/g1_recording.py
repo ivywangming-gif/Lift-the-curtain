@@ -13,6 +13,7 @@ import numpy as np
 
 CONTRACT = "PASSABLE_FOR_ACTION:G_HOLD_PROBE_POSE_FORWARD24_V1"
 ACTION_ID = "G_HOLD_PROBE_POSE_FORWARD24_V1"
+ONLINE_LABEL_REVISION = "G_FINITE_WALL_STATIC_B_GAP_V1"
 DT = .005
 PROBE_PHASES = {"physical_probe", "physical_probe_hold"}
 
@@ -40,12 +41,14 @@ def rotation(rpy):
 
 
 def action_spec(plan):
+    from g1_action_contract_v2 import PRIMARY_PROTOCOL as V5_PROTOCOL,ACTION_ID as V2_ACTION,LABEL_CONTRACT as V2_CONTRACT
     robot = plan.get("robot", plan.get("robot_conditions", {}))
     side = plan.get("probe_side", robot.get("probe_side", "right"))
     followup = plan.get("followup_hand", side)
     if followup != side:
         raise ValueError("V1 only validates hold of the just-probed hand; other followup hands require a new action contract")
-    return dict(action_id=ACTION_ID, label_contract=CONTRACT, probe_hand=side, followup_hand=followup,
+    v2=plan.get('primary_protocol')==V5_PROTOCOL
+    return dict(action_id=V2_ACTION if v2 else ACTION_ID, label_contract=V2_CONTRACT if v2 else CONTRACT, probe_hand=side, followup_hand=followup,
                 hold_upper_offset_rad=list(robot.get('upper_offset_rad',[0.]*14)),
                 hold="executed final probe upper reference", exit_xy_m=[1.3,0.0],
                 maximum_forward_segments=24, maximum_segment_step_m=.12, segment_timeout_s=7.,
@@ -56,11 +59,12 @@ def action_spec(plan):
                 observation_cutoff="end of single physical_probe + physical_probe_hold, before any followup")
 
 
-def geometry_blocked_for_action(metadata, action):
-    """Conservative proof only for a fixed full wall in the forward corridor.
+def local_forward_corridor_obstructed(metadata, action):
+    """Diagnostic obstruction of the nominal corridor, not action impossibility.
 
-    Metadata must describe actual constructed geometry, not desired scene name.
-    Partial and beyond-probe-range walls intentionally do not get this proof.
+    The existing V1 closed-loop action has no invariant lateral/height tube.
+    Finite wall coverage cannot prove BLOCKED for that action. This fact may
+    justify withholding an unsafe trial, but its formal label stays UNKNOWN.
     """
     wall = metadata.get("wall") or {}
     if not wall.get("fixed", False) or metadata.get("defer_visual_reobserve", False) or metadata.get("out_of_probe_range",False): return False
@@ -75,6 +79,21 @@ def geometry_blocked_for_action(metadata, action):
     return bool(near and low[0] >= plane-.03 and low[0] < action["exit_xy_m"][0] and low[1] <= -.35 and high[1] >= .35 and low[2] <= .05 and high[2] >= 1.6)
 
 
+def wall_crossing_audited(metadata):
+    """A candidate-plane crossing cannot establish wall nonpenetration.
+
+    This evidence must be produced by a separate actual G1 collision audit.
+    The current scene builder has no such audit; a physics-only probe-box gate
+    is deliberately insufficient. Wall-free scenes do not need this evidence.
+    """
+    if not metadata.get('wall'):return True
+    audit=metadata.get('g1_body_wall_nonpenetration_audit') or {}
+    return bool(audit.get('status')=='VERIFIED' and audit.get('all_robot_collision_bodies') is True
+                and audit.get('probe_followup_release_complete') is True and audit.get('finite') is True
+                and audit.get('penetration_free') is True and int(audit.get('sample_count',0))>0
+                and audit.get('source_evidence_path') and audit.get('source_evidence_sha256'))
+
+
 def assign_label(*, physics_valid, runtime_valid, probe_valid, recovered, clearance, advance_steps, metadata, action):
     if not physics_valid: return "LABEL_UNKNOWN", "PHYSICS_NOT_VALIDATED"
     if metadata.get("out_of_probe_range",False) or metadata.get("label_scope")=="DEFER_VISUAL_REOBSERVATION":
@@ -82,10 +101,12 @@ def assign_label(*, physics_valid, runtime_valid, probe_valid, recovered, cleara
     if not runtime_valid or not probe_valid: return "LABEL_UNKNOWN", "EXECUTION_OR_PROBE_INVALID"
     if not recovered: return "LABEL_UNKNOWN", "SAFE_RECOVERY_NOT_VERIFIED"
     if clearance and advance_steps > 0:
+        if not wall_crossing_audited(metadata):
+            return "LABEL_UNKNOWN", "WALL_PRESENT_G1_BODY_NONPENETRATION_NOT_VERIFIED"
         return "PASSABLE_FOR_ACTION", "FIXED_ACTION_WHOLE_BODY_CLEARANCE_AND_RECOVERY"
-    if geometry_blocked_for_action(metadata, action):
-        return "BLOCKED", "INDEPENDENT_FIXED_WALL_COVERS_FORWARD_ACTION_CORRIDOR"
-    return "LABEL_UNKNOWN", "NO_INDEPENDENT_ACTION_PASSABILITY_PROOF"
+    if local_forward_corridor_obstructed(metadata, action):
+        return "LABEL_UNKNOWN", "FINITE_WALL_NO_CLOSED_LOOP_ACTION_IMPOSSIBILITY_PROOF"
+    return "LABEL_UNKNOWN", "WALL_PRESENT_G1_BODY_NONPENETRATION_NOT_VERIFIED" if metadata.get('wall') and not wall_crossing_audited(metadata) else "NO_INDEPENDENT_ACTION_PASSABILITY_PROOF"
 
 
 def online_physics_invalid(telemetry, external_reason):
@@ -114,6 +135,7 @@ class Recorder:
         self.source_hash = source_hash
         self.pelvis_index = None
         self.metadata = dict(plan=plan, scene_config_evaluation_only=scene, action_contract=self.action,
+                             online_label_revision=ONLINE_LABEL_REVISION,
                              runtime_source_sha256=source_hash, record_nominal_hz=50, physics_hz=200,
                              controller_hz=50, evaluation_geometry_hz=10,
                              previous_action_semantics="copied immediately before compute_target, at recorded control_time; current_action is resulting policy action",
@@ -186,9 +208,16 @@ class Recorder:
                                      clearance=clearance,advance_steps=advance_steps,metadata=scene_metadata,action=self.action)
         periods = np.diff([r["time_s"] for r in probe])
         result = dict(trial_id=self.plan["trial_id"],status="G_FIXED_ACTION_FINISHED",runtime_valid=runtime_valid,probe_valid=probe_valid,
-                      label=label,label_valid=label!="LABEL_UNKNOWN",label_reason=reason,label_contract=CONTRACT,
+                      label=label,label_valid=label!="LABEL_UNKNOWN",label_reason=reason,label_contract=self.action['label_contract'],
+                      online_label_revision=ONLINE_LABEL_REVISION,
+                      label_scope='ONLINE_ACTION_EVIDENCE_PENDING_INDEPENDENT_COLLISION_AUDIT',
                       safe_recovery=recovered,whole_body_candidate_clearance=clearance,followup_advance_logged_steps=advance_steps,
                       task_success=bool(label=="PASSABLE_FOR_ACTION"),source_rule_decision_audit_only=rule_decision,
+                      task_success_scope='FROZEN_CANDIDATE_ACTION_ONLY_NOT_POINTGOAL_NAVIGATION',pointgoal_task_success=None,
+                      label_evidence=dict(source=reason,local_forward_corridor_obstructed=local_forward_corridor_obstructed(scene_metadata,self.action),
+                          closed_loop_blocking_proof_supported=False,
+                          g1_body_wall_nonpenetration_verified=wall_crossing_audited(scene_metadata) if scene_metadata.get('wall') else None,
+                          limitation='G1_BODY_WALL_NONPENETRATION_NOT_VERIFIED' if scene_metadata.get('wall') and not wall_crossing_audited(scene_metadata) else None),
                       probe_side=self.action["probe_hand"],followup_hand=self.action["followup_hand"],followup_action=self.action,
                       physics_valid=bool(physics_valid),physics_gate_valid=physics_gate_valid,online_physics_invalid_reason=online_physics_reason,
                       probe_sample_count=len(probe),actual_logged_hz=None if not len(periods) else 1/float(np.median(periods)),
@@ -199,7 +228,8 @@ class Recorder:
                       source_online_rule_sample_period_s=.005,source_online_rule_history_hz=200,
                       source_online_rule_note="deployment_samples append on every physics step; .005 is correct online. Old CSV-only evaluator used .005 on 10Hz rows and was wrong.",
                       measured_control_budget="original 200Hz physics / 50Hz control / 10Hz geometry safety; added 50Hz robot recording only")
-        write_json(self.root/"g_evaluation_truth.json",dict(scene=scene_metadata,physical_probe_result=probe_result,label=label,label_reason=reason))
+        write_json(self.root/"g_evaluation_truth.json",dict(scene=scene_metadata,physical_probe_result=probe_result,label=label,label_reason=reason,
+            online_label_revision=ONLINE_LABEL_REVISION,closed_loop_blocking_proof_supported=False))
         if evaluation_arrays and len(evaluation_arrays.get('nodes_world',[])):
             np.savez_compressed(self.root/'g_environment_audit_only.npz',**{k:np.asarray(v) for k,v in evaluation_arrays.items()})
         write_json(self.root/"events.json", events)
@@ -210,12 +240,13 @@ class Recorder:
         self.stream.flush(); self.stream.close(); self.completed=True
         result["legal_history_sha256"]=hashlib.sha256(self.file_path.read_bytes()).hexdigest()
         write_json(self.root/"g_outcome.json",result); write_json(self.root/"summary.json",result)
-        logger.finalize(status="PASS" if runtime_valid else "FAIL",details={"G_action_contract":CONTRACT,"label":label,"probe_valid":probe_valid})
+        logger.finalize(status="PASS" if runtime_valid else "FAIL",details={"G_action_contract":self.action['label_contract'],"label":label,"probe_valid":probe_valid})
         return 0 if runtime_valid else 2
 
     def close_incomplete(self):
         if not self.stream.closed: self.stream.flush(); self.stream.close()
         if not self.completed:
             write_json(self.root/"g_outcome.json",dict(trial_id=self.plan["trial_id"],status="EXECUTION_INCOMPLETE",runtime_valid=False,
-                       probe_valid=False,label="LABEL_UNKNOWN",label_valid=False,label_contract=CONTRACT,
+                       probe_valid=False,label="LABEL_UNKNOWN",label_valid=False,label_contract=self.action['label_contract'],
+                       online_label_revision=ONLINE_LABEL_REVISION,
                        label_reason="FOLLOWUP_OR_RUNTIME_NOT_FINALIZED",recorded_robot_rows=len(self.rows)))

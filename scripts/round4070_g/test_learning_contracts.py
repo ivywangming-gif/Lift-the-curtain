@@ -9,7 +9,8 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from learning_core import (approved_pairs, apply_label_budget, frozen_label_budget, causal_rows, conformal_decisions, conformal_fit,
+from learning_core import (ACTION_CONTRACT,PRIMARY_PROTOCOL,LABEL_VALIDITY_VERSION,validate_primary_manifest,
+    approved_pairs, apply_label_budget, frozen_label_budget, causal_rows, conformal_decisions, conformal_fit,
     metrics, prepare_features, remap_active_hand, select_thresholds, split_indices)
 from learning_models import METHODS, SmallModel, matched_pair_loss, supcon_loss
 from resource_lock import resource_lock
@@ -19,6 +20,12 @@ torch.set_num_threads(2)
 
 
 def fixture():
+    from g1_action_contract_v2 import draft_contract
+    contract=draft_contract()
+    contract.update(status="VALIDATED_READY_TO_FREEZE")
+    contract["witness"].update(status="VERIFIED",evidence_mode="EXACT_NATIVE",point_body_m=[0.,0.,0.],verified_interior_radius_m=.01,
+        body_name="SYNTHETIC_BODY",body_index=0,native_shape_id="SYNTHETIC_SHAPE",native_geometry_sha256="0"*64,
+        native_library_sha256="0"*64,source_evidence_sha256="0"*64,native_library_path="SYNTHETIC_NO_LIBRARY",source_evidence_path="SYNTHETIC_NO_PROOF")
     names = ["q/left_shoulder_pitch_joint", "q/right_shoulder_pitch_joint",
              "qdot/left_shoulder_pitch_joint", "qdot/right_shoulder_pitch_joint",
              "q_cmd/left_shoulder_pitch_joint", "q_cmd/right_shoulder_pitch_joint",
@@ -29,11 +36,118 @@ def fixture():
     rng = np.random.default_rng(41)
     raw = [rng.normal(size=(len(t), len(names))).astype(np.float32) for _ in range(6)]
     episodes = [dict(trial_id=f"t{i}", y=i % 2, group_id=f"g{i}", side="right" if i % 2 else "left", is_control=i < 2,
-                     action_contract="contract", followup_action_id="action") for i in range(6)]
+                     action_contract=ACTION_CONTRACT, followup_action_id="SYNTHETIC_ACTION",synthetic=True,seed=40700+i,
+                     primary_protocol=PRIMARY_PROTOCOL,label_validity_version=LABEL_VALIDITY_VERSION,
+                     action_contract_v2=contract,action_contract_v2_sha256="0"*64,
+                     primary_admission=True,admission_status="PRIMARY_VERIFIED",response_history_eligible=True,supervision_eligible=True,
+                     body_collision_audit=dict(status="VERIFIED",sample_count=101,scope="SYNTHETIC_FIXTURE_NOT_PHYSICS_EVIDENCE",source_evidence_path="SYNTHETIC_COLLISION_NO_REAL_FILE",source_evidence_sha256="0"*64,
+                        action_contract_audit=dict(status="VERIFIED",all_required_steps_valid=True,guard_violation=None,static_blocking_certificate=dict(status="VERIFIED"))),
+                     reset_randomization_evidence=dict(readback_verified=True,seed=40700+i,source_evidence_path="SYNTHETIC_RNG_NO_REAL_FILE",source_evidence_sha256="0"*64)) for i in range(6)]
     return names, raw, [t.copy() for _ in raw], episodes
 
 
 class LearningContracts(unittest.TestCase):
+    def test_primary_admission_rejects_pilots_pending_and_synthetic_benchmarks(self):
+        import copy
+        _,_,_,episodes = fixture()
+        manifest = dict(schema="round4070-g.causal_episodes.v3",primary_protocol=PRIMARY_PROTOCOL,label_validity_version=LABEL_VALIDITY_VERSION,
+                        data_scope="SYNTHETIC_CONTRACT_TEST",episodes=episodes)
+        validate_primary_manifest(manifest,verify_sources=False,synthetic_test=True)
+        with self.assertRaises(ValueError):
+            validate_primary_manifest(manifest,verify_sources=False)
+        changed = copy.deepcopy(manifest); changed["primary_protocol"] = "V3_PILOT"
+        with self.assertRaises(ValueError):
+            validate_primary_manifest(changed,verify_sources=False,synthetic_test=True)
+        for key,value in (("primary_admission",False),("admission_status","PENDING_BODY_COLLISION_AUDIT"),("response_history_eligible",False)):
+            changed = copy.deepcopy(manifest); changed["episodes"][0][key] = value
+            with self.assertRaises(ValueError):
+                validate_primary_manifest(changed,verify_sources=False,synthetic_test=True)
+        changed = copy.deepcopy(manifest)
+        changed["episodes"][0].update(y=-1,supervision_eligible=False)
+        changed["episodes"][0]["body_collision_audit"]["status"] = "NOT_VERIFIED"
+        with self.assertRaises(ValueError):
+            validate_primary_manifest(changed,verify_sources=False,synthetic_test=True)
+        # Empty primary is valid for a no-training/all-blocked freeze.
+        validate_primary_manifest(dict(schema="round4070-g.causal_episodes.v3",primary_protocol=PRIMARY_PROTOCOL,
+                                       label_validity_version=LABEL_VALIDITY_VERSION,episodes=[]))
+
+    def test_v5_action_violation_is_unknown_only_and_draft_rejected(self):
+        import copy
+        _,_,_,episodes=fixture()
+        manifest=dict(schema="round4070-g.causal_episodes.v3",primary_protocol=PRIMARY_PROTOCOL,label_validity_version=LABEL_VALIDITY_VERSION,
+                      data_scope="SYNTHETIC_CONTRACT_TEST",episodes=episodes)
+        changed=copy.deepcopy(manifest)
+        changed["episodes"][0]["body_collision_audit"]["action_contract_audit"].update(guard_violation="TUBE_EXIT",all_required_steps_valid=False)
+        with self.assertRaises(ValueError):validate_primary_manifest(changed,verify_sources=False,synthetic_test=True)
+        changed["episodes"][0].update(y=-1,supervision_eligible=False)
+        validate_primary_manifest(changed,verify_sources=False,synthetic_test=True)
+        changed["episodes"][0]["action_contract_v2"]["status"]="DRAFT_PENDING_NATIVE_WITNESS"
+        with self.assertRaises(ValueError):validate_primary_manifest(changed,verify_sources=False,synthetic_test=True)
+
+    def test_partial_heldout_scope_retains_full_split_and_method_gates(self):
+        from train_benchmark import partial_heldout_tasks
+        _,_,_,episodes=fixture()
+        split=dict(split_id="s",split_type="configuration",train=["t2","t3"],calibration=["t1"],test=["t4"],status="NOT_EVALUABLE")
+        base=dict(task_id="s__GRU__40700",split_id="s",method="GRU",seed=40700,label_fraction=1.,
+                  status="BLOCKED_WITH_REASON",reasons=["TEST_CORE_BOTH_LABELS_NOT_SUPPORTED","TEST_BOTH_CLASSES_NOT_SUPPORTED"])
+        tasks=partial_heldout_tasks(split,episodes,[base,{**base,"task_id":"residual","method":"ResidualGRU","reasons":base["reasons"]+["NO_TRAIN_EMPTY_CONTROL_FOR_NORMAL_RESPONSE"]}])
+        self.assertEqual(tasks[0]["status"],"PLANNED")
+        self.assertEqual(tasks[0]["evaluation_scope"],"PARTIAL_HELDOUT_SINGLE_CLASS")
+        self.assertEqual(tasks[0]["heldout_supported_class"],0)
+        self.assertEqual(tasks[1]["status"],"BLOCKED_WITH_REASON")
+        self.assertEqual(base["status"],"BLOCKED_WITH_REASON")
+        self.assertEqual(split["status"],"NOT_EVALUABLE")
+        split["test"]=["t4","t5"]
+        self.assertFalse(partial_heldout_tasks(split,episodes,[base]))
+        split["test"]=[]
+        self.assertFalse(partial_heldout_tasks(split,episodes,[base]))
+
+    def test_partial_freeze_and_uncalibrated_prediction_contract(self):
+        import argparse,json
+        from unittest.mock import patch
+        from train_benchmark import freeze,calibrate_and_evaluate
+        from learning_report import generate
+        from learning_core import write_csv,write_json,sha,read_json
+        names,raw,times,episodes=fixture()
+        parent=Path(__file__).resolve().parents[2]/"outputs/round4070_comprehensive_traversability/contract_tests"
+        parent.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=parent) as directory:
+            folder=Path(directory)
+            manifest=folder/"manifest.json";manifest.write_text('{}')
+            split=dict(split_id="synthetic_single_class",split_type="configuration",train=["t2","t3"],calibration=["t1"],test=["t4"],
+                       status="NOT_EVALUABLE",reasons=["TEST_CORE_BOTH_LABELS_NOT_SUPPORTED"])
+            splits=folder/"splits.json";splits.write_text(json.dumps(dict(splits=[split])))
+            args=argparse.Namespace(methods="GRU",seeds=list(range(5)),output=folder/"freeze",manifest=manifest,splits=splits,pairs=None,legacy=False)
+            with patch("train_benchmark.load_dataset",return_value=({},episodes,names,raw,times,{})),patch("builtins.print"):
+                freeze(args)
+                generate(args.output,folder/"report")
+            queue=json.loads((args.output/"task_queue.json").read_text())
+            self.assertEqual(sum(t["status"]=="PLANNED" for t in queue["tasks"]),5)
+            self.assertTrue(all(t["evaluation_scope"]=="PARTIAL_HELDOUT_SINGLE_CLASS" for t in queue["tasks"] if t["status"]=="PLANNED"))
+            # A synthetic completed partial artifact must never increment the
+            # full benchmark or enter its main method/confirmation tables.
+            task=next(t for t in queue["tasks"] if t["status"]=="PLANNED")
+            task["status"]="EVALUATED"
+            fit=args.output/"fits"/task["task_id"];fit.mkdir(parents=True)
+            row=dict(split_id=task["split_id"],method="GRU",seed=task["seed"],mode="forced_raw",subset="all",subset_value="all",
+                     evaluation_scope="PARTIAL_HELDOUT_SINGLE_CLASS",label_fraction=1.,**metrics([0],[.9]))
+            write_csv(fit/"metrics.csv",[row])
+            write_csv(fit/"predictions.csv",[dict(split_id=task["split_id"],method="GRU",seed=task["seed"],mode="forced_raw",
+                evaluation_scope="PARTIAL_HELDOUT_SINGLE_CLASS",trial_id="t4",group_id="g4",side="left",y=0,p=.9,decision=1,is_control=False,label_fraction=1.)])
+            write_json(fit/"completion.json",dict(predictions_sha256=sha(fit/"predictions.csv"),checkpoint_sha256=None))
+            write_json(args.output/"task_queue.json",queue)
+            with patch("builtins.print"):generate(args.output,folder/"report")
+            state=read_json(folder/"report/LEARNING_DELIVERY_STATUS.json")
+            self.assertEqual(state["evaluated_fit_n"],0)
+            self.assertEqual(state["partial_single_class_evaluated_fit_n"],1)
+            self.assertEqual(len((folder/"report/STANDARD_LEARNING_BASELINES.csv").read_text().splitlines()),1)
+            self.assertEqual(len((folder/"report/PARTIAL_HELDOUT_SINGLE_CLASS_RESULTS.csv").read_text().splitlines()),2)
+            calibrated=folder/"uncalibrated";calibrated.mkdir()
+            with patch("torch.optim.LBFGS",side_effect=AssertionError("Single-class calibration must not fit temperature")):
+                rows,predictions,_=calibrate_and_evaluate(np.full(6,.7),dict(train=[2,3],calibration=[5],test=[4]),episodes,
+                    dict(risk_grid=[.05],conformal_alpha=.1),calibrated,dict(split_id="synthetic",method="GRU",seed=0))
+            self.assertEqual({r["mode"] for r in rows},{"forced_raw","fixed_reject_raw"})
+            self.assertTrue(all(r["balanced_accuracy"] is None and r["auroc"] is None for r in rows))
     def test_fixed_prefix_never_reads_future(self):
         x = np.arange(90).reshape(30, 3)
         t = np.arange(30)/10
@@ -204,6 +318,78 @@ class LearningContracts(unittest.TestCase):
         summary = average_rows(rows)
         self.assertEqual(len(summary), 3)
         self.assertTrue(all(r["actual_fits"] == 5 for r in summary))
+
+    def test_confirmation_role_exclusion_and_normalization(self):
+        from train_benchmark import evaluation_subsets
+        names, raw, times, episodes = fixture()
+        episodes[4]["experiment_role"] = "confirmation"
+        split = dict(split_type="anchor", train=["t0","t1"], calibration=["t2"], test=["t3"], confirmation=["t4"])
+        roles = split_indices(split, episodes)
+        self.assertEqual(roles["confirmation"], [4])
+        with self.assertRaises(ValueError):
+            split_indices({**split, "train":["t0","t1","t4"], "confirmation":[]}, episodes)
+        with self.assertRaises(ValueError):
+            split_indices({**split, "test":["t3","t4"]}, episodes)
+        episodes[4]["group_id"] = "g0"
+        with self.assertRaises(ValueError):
+            split_indices(split, episodes)
+        episodes[4]["group_id"] = "g3"
+        split_indices(split, episodes)  # confirmation may share the heldout test domain
+        _, _, _, before = prepare_features(raw, times, names, episodes, roles["train"], "GRU")
+        changed = [x.copy() for x in raw]
+        changed[4] *= 1e6
+        _, _, _, after = prepare_features(changed, times, names, episodes, roles["train"], "GRU")
+        self.assertEqual(before["mean"], after["mean"])
+        self.assertEqual(before["scale"], after["scale"])
+        subsets = evaluation_subsets([0,1,2,3], episodes)
+        self.assertEqual({r[0] for r in subsets}, {"all","side","group_id","condition_family","robot_variant"})
+
+    def test_confirmation_reuses_calibrator_without_any_refit(self):
+        from unittest.mock import patch
+        from train_benchmark import calibrate_and_evaluate
+        from learning_core import read_json
+        p = np.linspace(.03,.97,24)
+        episodes = [dict(trial_id=f"cf{i}", y=i % 2, group_id=f"cfg{i}", side="left", is_control=False) for i in range(24)]
+        roles = dict(train=[], calibration=list(range(20)), test=[20,21], confirmation=[22,23])
+        folder = Path(__file__).resolve().parents[2]/"outputs/round4070_comprehensive_traversability/contract_tests"/uuid.uuid4().hex
+        folder.mkdir(parents=True)
+        protocol = dict(risk_grid=[0.], conformal_alpha=.1)
+        task = dict(split_id="synthetic_confirmation", method="GRU", seed=0)
+        calibrate_and_evaluate(p, roles, episodes, protocol, folder, task)
+        frozen = read_json(folder/"calibration.json")
+        confirm_folder = folder/"confirmation"
+        confirm_folder.mkdir()
+        altered = p.copy(); altered[22:] = [1.,0.]
+        with patch("torch.optim.LBFGS", side_effect=AssertionError("Unexpected temperature refit")), patch("train_benchmark.select_thresholds", side_effect=AssertionError("Unexpected threshold refit")), patch("train_benchmark.conformal_fit", side_effect=AssertionError("Unexpected conformal refit")):
+            _, predictions, _ = calibrate_and_evaluate(altered, {**roles,"test":roles["confirmation"]}, episodes, protocol, confirm_folder, task, fitted_calibration=frozen)
+        reused = read_json(confirm_folder/"calibration.json")
+        for key in ("temperature","thresholds","conformal","calibration_ids"):
+            self.assertEqual(frozen[key], reused[key])
+        self.assertEqual({r["trial_id"] for r in predictions}, {"cf22","cf23"})
+        self.assertEqual(reused["calibration_operation"], "REUSED_FROZEN_MAIN_CALIBRATION")
+
+    def test_cluster_bootstrap_seed_unit_risk_modes_and_confirmation(self):
+        from learning_report import paired_group_bootstrap
+        rows = []
+        for mode in ("forced_raw", "calibration_risk_0.05", "confirmation/calibration_risk_0.05"):
+            for method in ("GRU","GRUResponseAux"):
+                for i in range(6):
+                    truth = i % 2
+                    decision = (0 if truth == 0 else -1) if method == "GRU" else (int(i == 0) if truth == 0 else 1)
+                    for seed in range(5):
+                        rows.append(dict(split_id="s",mode=mode,method=method,trial_id=f"e{i}",seed=str(seed),y=str(truth),group_id=f"g{i//2}",decision=str(decision),is_control="False"))
+        five = paired_group_bootstrap(rows, list(range(5)))
+        one = paired_group_bootstrap(rows, [0])
+        self.assertEqual(len(five), 12)
+        self.assertEqual({r["evaluation_endpoint"] for r in five}, {"main_test","confirmation"})
+        for a,b in zip(five,one):
+            self.assertEqual(a["physical_group_n"], 3)
+            self.assertEqual(a["paired_episode_n"], 6 if a["metric"] == "coverage" else 3)
+            self.assertEqual((a["ci95_low"],a["ci95_high"]),(b["ci95_low"],b["ci95_high"]))
+        cov = next(r for r in five if r["metric"] == "coverage")
+        recall = next(r for r in five if r["metric"] == "passable_recall")
+        self.assertEqual(cov["mean_difference"], .5)
+        self.assertEqual(recall["mean_difference"], 1.)
 
 
 if __name__ == "__main__":

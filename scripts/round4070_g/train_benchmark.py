@@ -31,13 +31,41 @@ DEFAULT_SEEDS = [40700, 40701, 40702, 40703, 40704]
 
 
 def sources():
-    return {p.name: sha(p) for p in [Path(__file__), Path(__file__).with_name("learning_core.py"), Path(__file__).with_name("learning_models.py"), Path(__file__).with_name("resource_lock.py"), Path(__file__).with_name("engineering_rules.py"), Path(__file__).with_name("observation_randomization.py")]}
+    return {p.name: sha(p) for p in [Path(__file__), *[Path(__file__).with_name(n) for n in
+        ("learning_core.py","learning_models.py","resource_lock.py","engineering_rules.py","observation_randomization.py",
+         "physics_history.py","collision_geometry.py","g1_action_contract_v2.py")]]}
 
 
 def method_names():
     # Importing definitions creates no network or training job.
     from learning_models import METHODS, ENGINEERING
     return METHODS, ENGINEERING
+
+
+def partial_heldout_tasks(split, episodes, full_tasks):
+    """Preregistered one-class diagnostic; never changes full split eligibility.
+
+Eligibility uses label support only, before any model predictions. Train core
+must contain both labels. Calibration may be unsupported: fixed final-epoch
+models still report raw forced-.5 outcomes, without fitted risk/calibration.
+"""
+    roles = split_indices(split, episodes)
+    test_classes = {int(episodes[i]["y"]) for i in roles["test"] if int(episodes[i]["y"]) >= 0 and not episodes[i].get("is_control")}
+    if len(test_classes) != 1:
+        return []
+    train_classes = {int(episodes[i]["y"]) for i in roles["train"] if int(episodes[i]["y"]) >= 0 and not episodes[i].get("is_control")}
+    tasks = []
+    for task in full_tasks:
+        if task["split_id"] != split["split_id"] or task.get("label_fraction", 1.) != 1.:
+            continue
+        reasons = [r for r in task["reasons"] if r not in {"TEST_CORE_BOTH_LABELS_NOT_SUPPORTED", "TEST_BOTH_CLASSES_NOT_SUPPORTED"}]
+        if train_classes != {0, 1}:
+            reasons.append("PARTIAL_DIAGNOSTIC_REQUIRES_BOTH_CORE_TRAIN_CLASSES")
+        tasks.append({**task, "task_id":task["task_id"]+"__partial_single_class",
+                      "evaluation_scope":"PARTIAL_HELDOUT_SINGLE_CLASS", "heldout_supported_class":next(iter(test_classes)),
+                      "full_split_status":split.get("status"), "reasons":sorted(set(reasons)),
+                      "status":"BLOCKED_WITH_REASON" if reasons else "PLANNED"})
+    return tasks
 
 
 def window_status(path):
@@ -151,9 +179,16 @@ def freeze(args):
                                       display_method=display, label_fraction=fraction, seed=seed,
                                       status="BLOCKED_WITH_REASON" if reason else "PLANNED", reasons=reason,
                                       train_n=len(train), labelled_train_n=budget["selected_labelled_train_n"], core_test_n=len(core_test)))
+    for task in tasks:
+        task["evaluation_scope"] = "FULL_SPLIT_BENCHMARK"
+    full_tasks = list(tasks)
+    if not args.legacy:
+        for split in split_list:
+            tasks.extend(partial_heldout_tasks(split, episodes, full_tasks))
     protocol = dict(schema="round4070_g.learning.freeze.v1", created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
                     scope="LEGACY_F_CONTRACT_DIAGNOSTIC_NOT_G_BENCHMARK" if args.legacy else "G_ACTION_CONTRACT_BENCHMARK",
                     legacy=args.legacy, action_contract=ACTION_CONTRACT, seeds=args.seeds,
+                    primary_protocol=manifest.get("primary_protocol"),label_validity_version=manifest.get("label_validity_version"),
                     methods=engineering+methods, epochs=80, pretrain_epochs=40, batch_size=32,
                     hidden=64, max_steps=128, cutoff_s=2., optimizer="AdamW", lr=.001, weight_decay=.01,
                     gradient_clip=5., contrastive_weight=.1, response_weight=.1, supcon_temperature=.1,
@@ -162,6 +197,12 @@ def freeze(args):
                     normalization="training valid rows only, including train UNKNOWN; never calibration/test histories",
                     response_pretraining="only training split; target next observed q/qdot; no hidden physical targets",
                     calibration="independent calibration split only; fixed temperature objective and empirical target risk grid",
+                    partial_heldout_policy=dict(scope="PARTIAL_HELDOUT_SINGLE_CLASS",label_fraction=1.,
+                        trigger="exactly one reliable core heldout class; class support only, no fitted predictions",
+                        training="both core train classes; same frozen final epoch; retain method-specific validity requirements",
+                        calibration="unsupported calibration disables fitted temperature/risk/conformal only; raw forced-.5 remains evaluable",
+                        interpretation="class-conditional counts/errors only; BA/AUROC/two-class risk NA; original full split stays NOT_EVALUABLE; no cross-split checkpoint reuse"),
+                    confirmation_policy="reserved fourth role; separate endpoint using each frozen model and main calibration exactly as fitted; no selection or refitting",
                     risk_grid=[0., .01, .025, .05, .1, .2], conformal_alpha=.1,
                     observation_dr=OBSERVATION_DR, observation_test_seed=40706000,
                     observation_protocol="all standard models clean training/clean test; GRUObsDR only train raw observations corrupted; all fitted models additionally clean-calibrated/noisy-test diagnostic; same original labels and split IDs",
@@ -177,7 +218,8 @@ def freeze(args):
     write_json(args.output / "frozen_protocol.json", protocol)
     write_json(args.output / "task_queue.json", dict(status="PENDING", tasks=tasks))
     write_csv(args.output / "TASK_STATUS.csv", [{**t, "reasons": "|".join(t["reasons"])} for t in tasks],
-              fields=["task_id", "split_id", "method", "display_method", "label_fraction", "seed", "status", "reasons", "train_n", "labelled_train_n", "core_test_n"])
+              fields=["task_id", "split_id", "method", "display_method", "label_fraction", "seed", "status", "reasons", "train_n", "labelled_train_n", "core_test_n",
+                      "evaluation_scope", "heldout_supported_class", "full_split_status"])
     print(json.dumps(dict(status="FROZEN_NO_TRAINING", tasks=len(tasks), planned=sum(t["status"] == "PLANNED" for t in tasks), blocked=sum(t["status"] != "PLANNED" for t in tasks), output=str(args.output))), flush=True)
 
 
@@ -379,14 +421,43 @@ def train_fit(method, seed, x, lengths, audit, roles, episodes, pairs, protocol,
                                      parameter_match_target=target, deterministic_algorithm=False)
 
 
-def calibrate_and_evaluate(probabilities, roles, episodes, protocol, folder, task):
+def evaluation_subsets(indices, episodes):
+    subsets = [("all", "all", indices)]
+    for key in ("side", "group_id", "condition_family", "robot_variant"):
+        def value(i):
+            return str(episodes[i].get(key, episodes[i].get("probe_side", "unspecified") if key == "side" else "unspecified"))
+        for category in sorted({value(i) for i in indices}):
+            subsets.append((key, category, [i for i in indices if value(i) == category]))
+    return subsets
+
+
+def confirmation_status(roles, episodes):
+    indices = roles.get("confirmation", [])
+    known = [i for i in indices if int(episodes[i]["y"]) >= 0 and not episodes[i].get("is_control")]
+    classes = {int(episodes[i]["y"]) for i in known}
+    status = ("NOT_APPLICABLE_OR_NOT_YET_COLLECTED" if not indices else
+              "NO_RELIABLE_CORE_CONFIRMATION_LABELS" if not known else
+              "PARTIAL_CONFIRMATION_SINGLE_CLASS" if classes != {0, 1} else "EVALUATED_INDEPENDENT_CONFIRMATION")
+    return dict(status=status, confirmation_ids=[episodes[i]["trial_id"] for i in indices],
+                core_labelled_n=len(known), passable_n=sum(episodes[i]["y"] == 1 for i in known),
+                blocked_n=sum(episodes[i]["y"] == 0 for i in known),
+                scope="separate endpoint; frozen model and main calibration only; never model/threshold selection",
+                observation_diagnostic="clean only; no confirmation observation-DR claim")
+
+
+def calibrate_and_evaluate(probabilities, roles, episodes, protocol, folder, task, fitted_calibration=None):
     import torch
     p = np.asarray(probabilities, dtype=float)
     y = np.asarray([int(e["y"]) for e in episodes])
     calibration = [i for i in roles["calibration"] if y[i] >= 0 and not episodes[i].get("is_control")]
     temperature = 1.
     temperature_status = "UNAVAILABLE_CALIBRATION_REQUIRES_BOTH_CLASSES"
-    if set(y[calibration].tolist()) == {0, 1}:
+    if fitted_calibration is not None:
+        if fitted_calibration["calibration_ids"] != [episodes[i]["trial_id"] for i in calibration]:
+            raise ValueError("Frozen calibrator IDs changed for independent evaluation")
+        temperature = fitted_calibration["temperature"]
+        temperature_status = fitted_calibration["temperature_status"]
+    elif set(y[calibration].tolist()) == {0, 1}:
         logits = torch.tensor(np.log(np.clip(p[calibration], 1e-7, 1-1e-7)/(1-np.clip(p[calibration], 1e-7, 1-1e-7))), dtype=torch.float64)
         target = torch.tensor(y[calibration], dtype=torch.float64)
         log_temperature = torch.zeros(1, dtype=torch.float64, requires_grad=True)
@@ -400,14 +471,15 @@ def calibrate_and_evaluate(probabilities, roles, episodes, protocol, folder, tas
         temperature = float(torch.exp(log_temperature.detach().clamp(-3, 3)))
         temperature_status = "CALIBRATION_ONLY_FIXED_REGULARIZED_TEMPERATURE"
     pp = 1/(1+np.exp(-np.log(np.clip(p, 1e-7, 1-1e-7)/(1-np.clip(p, 1e-7, 1-1e-7)))/temperature))
-    threshold_fits = [select_thresholds(y[calibration], pp[calibration], risk) for risk in protocol["risk_grid"]]
+    threshold_fits = fitted_calibration["thresholds"] if fitted_calibration is not None else [select_thresholds(y[calibration], pp[calibration], risk) for risk in protocol["risk_grid"]]
     # The conformal scoring function must be frozen before calibration labels.
     # Temperature is fitted on this calibration set, so using pp here would
     # silently reuse these labels inside the score function. Use raw p instead.
-    conformal = conformal_fit(y[calibration], p[calibration], protocol["conformal_alpha"])
+    conformal = dict(fitted_calibration["conformal"]) if fitted_calibration is not None else conformal_fit(y[calibration], p[calibration], protocol["conformal_alpha"])
     conformal["score_source"] = "frozen_model_raw_probability; independent of calibration-fitted temperature"
     write_json(folder/"calibration.json", dict(calibration_ids=[episodes[i]["trial_id"] for i in calibration], temperature=temperature,
                temperature_status=temperature_status, thresholds=threshold_fits, conformal=conformal,
+               calibration_operation="REUSED_FROZEN_MAIN_CALIBRATION" if fitted_calibration is not None else "FIT_ON_CALIBRATION_ONLY",
                guarantee="NONE: small selected physical configurations; exchangeability unverified; test never fits thresholds"))
     metrics_rows, prediction_rows, calibration_bins = [], [], []
     modes = [("forced_raw", p, .5, .5, None), ("fixed_reject_raw", p, .2, .8, None)]
@@ -419,12 +491,7 @@ def calibrate_and_evaluate(probabilities, roles, episodes, protocol, folder, tas
     if "q" in conformal:
         modes.append(("label_conditional_conformal", p, None, None, conformal_decisions(p, conformal)))
     test = [i for i in roles["test"] if y[i] >= 0 and not episodes[i].get("is_control")]
-    subsets = [("all", "all", test)]
-    for key in ("side", "group_id", "condition_family", "robot_variant"):
-        values = sorted({str(episodes[i].get(key, episodes[i].get("probe_side", "unspecified") if key == "side" else "unspecified")) for i in test})
-        for value in values:
-            indices = [i for i in test if str(episodes[i].get(key, episodes[i].get("probe_side", "unspecified") if key == "side" else "unspecified")) == value]
-            subsets.append((key, value, indices))
+    subsets = evaluation_subsets(test, episodes)
     for mode, probabilities_used, low, high, decisions in modes:
         d = np.where(probabilities_used >= high, 1, np.where(probabilities_used < low, 0, -1)) if decisions is None else decisions
         for subset, value, indices in subsets:
@@ -528,11 +595,12 @@ def run(args):
         try:
             if task["method"] in engineering:
                 p = np.full(len(episodes), .5)
+                evaluation_indices = roles["test"]+roles["confirmation"]
                 if task["method"] in ("AlwaysPassable", "AlwaysBlocked"):
-                    for i in roles["test"]:
+                    for i in evaluation_indices:
                         p[i] = engineer_probability(episodes[i], task["method"])
                 elif protocol["legacy"]:
-                    for i in roles["test"]:
+                    for i in evaluation_indices:
                         p[i] = engineer_probability(episodes[i], task["method"])
                 else:
                     if task["split_id"] not in rule_cache:
@@ -541,13 +609,19 @@ def run(args):
                     rules, reference_audit = rule_cache[task["split_id"]]
                     write_json(folder/"engineering_reference_audit.json", reference_audit)
                     key = {"E0": "E0", "E1TimeCorrected": "E1", "E2TimeCorrected": "E2"}[task["method"]]
-                    for i in roles["test"]:
+                    for i in evaluation_indices:
                         p[i] = {"PASSABLE": 1., "BLOCKED": 0., "UNCERTAIN": .5}[rules[i][key]]
-                indices = [i for i in roles["test"] if int(episodes[i]["y"]) >= 0 and not episodes[i].get("is_control")]
                 decisions = np.where(p == 1., 1, np.where(p == 0., 0, -1))
-                rows = [dict(split_id=task["split_id"], method=task["method"], seed=None, mode="native_engineering_three_state", subset="all", subset_value="all",
-                             **metrics([episodes[i]["y"] for i in indices], p[indices], decisions=decisions[indices]))]
-                predictions = [dict(split_id=task["split_id"], method=task["method"], seed=None, mode="native_engineering_three_state", trial_id=episodes[i]["trial_id"], group_id=episodes[i]["group_id"], side=episodes[i].get("probe_side", episodes[i].get("side")), y=int(episodes[i]["y"]), p=float(p[i]), decision=int(decisions[i]), is_control=episodes[i].get("is_control", False)) for i in roles["test"]]
+                rows, predictions = [], []
+                for endpoint in ("test", "confirmation"):
+                    if endpoint == "confirmation" and not roles[endpoint]:
+                        continue
+                    mode = ("confirmation/" if endpoint == "confirmation" else "")+"native_engineering_three_state"
+                    indices = [i for i in roles[endpoint] if int(episodes[i]["y"]) >= 0 and not episodes[i].get("is_control")]
+                    for subset, value, selected in evaluation_subsets(indices, episodes):
+                        rows.append(dict(split_id=task["split_id"], method=task["method"], seed=None, mode=mode, subset=subset, subset_value=value,
+                                         **metrics([episodes[i]["y"] for i in selected], p[selected], decisions=decisions[selected])))
+                    predictions.extend(dict(split_id=task["split_id"], method=task["method"], seed=None, mode=mode, trial_id=episodes[i]["trial_id"], group_id=episodes[i]["group_id"], side=episodes[i].get("probe_side", episodes[i].get("side")), y=int(episodes[i]["y"]), p=float(p[i]), decision=int(decisions[i]), is_control=episodes[i].get("is_control", False)) for i in roles[endpoint])
                 for row in rows:
                     # Rule scores encode decisions, not calibrated probabilities.
                     row.update(brier=None, ece=None, auroc=None, auprc=None)
@@ -574,6 +648,17 @@ def run(args):
                 task["status"] = "TRAINED"
                 write_json(args.output/"task_queue.json", queue)
                 rows, predictions, bins = calibrate_and_evaluate(p, roles, fit_episodes, protocol, folder, evaluation_task)
+                if roles["confirmation"]:
+                    confirmation_folder = folder/"confirmation"
+                    confirmation_folder.mkdir(exist_ok=True)
+                    confirmation_roles = {**roles, "test": roles["confirmation"]}
+                    cr, cp, cb = calibrate_and_evaluate(p, confirmation_roles, fit_episodes, protocol, confirmation_folder,
+                                                      evaluation_task, fitted_calibration=read_json(folder/"calibration.json"))
+                    for record in cr+cp:
+                        record["mode"] = "confirmation/"+record["mode"]
+                    for record in cb:
+                        record["probability_kind"] = "confirmation/"+record["probability_kind"]
+                    rows.extend(cr); predictions.extend(cp); bins.extend(cb)
                 if budget:
                     write_json(folder/"label_budget_audit.json", budget)
                 fit_metadata["inference_scope"] = "model_forward_only_excludes_acquisition_preprocessing_residual_and_IO"
@@ -593,7 +678,8 @@ def run(args):
                     noisy_p = checkpoint_predict(folder/"checkpoint.pt", nx, nl, noisy_pre, args.device)
                     hybrid_p = np.asarray(p).copy()
                     hybrid_p[roles["test"]] = noisy_p[roles["test"]]
-                    nr, npred, nb = calibrate_and_evaluate(hybrid_p, roles, fit_episodes, protocol, noisy_folder, evaluation_task)
+                    nr, npred, nb = calibrate_and_evaluate(hybrid_p, roles, fit_episodes, protocol, noisy_folder, evaluation_task,
+                                                         fitted_calibration=read_json(folder/"calibration.json"))
                     for r in nr+npred:
                         r["mode"] = "noisy_test/"+r["mode"]
                     for r in nb:
@@ -605,7 +691,16 @@ def run(args):
                 except ValueError as noise_error:
                     write_json(noisy_folder/"status.json", dict(status="UNAVAILABLE_WITH_REASON", reason=str(noise_error), clean_evaluation_preserved=True))
             for record in rows+predictions+bins:
-                record.update(base_method=task["method"], label_fraction=fraction, supervised_train_n=task["labelled_train_n"])
+                endpoint = "confirmation" if record.get("mode", record.get("probability_kind", "")).startswith("confirmation/") else "main_test"
+                record.update(base_method=task["method"], label_fraction=fraction, supervised_train_n=task["labelled_train_n"], evaluation_endpoint=endpoint,
+                              evaluation_scope=task.get("evaluation_scope", "FULL_SPLIT_BENCHMARK"),
+                              heldout_supported_class=task.get("heldout_supported_class"))
+            if task.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS":
+                for row in rows:
+                    row.update(class_conditional_selective_error=row.get("selective_risk"),selective_risk=None,
+                               balanced_accuracy=None,auroc=None,auprc=None,
+                               metric_scope="single-class heldout descriptive counts and supported class-conditional rates only; no complete OOD comparison")
+            write_json(folder/"confirmation_status.json", confirmation_status(roles, episodes))
             write_csv(folder/"metrics.csv", [{**r, **fit_metadata, "scope": protocol["scope"]} for r in rows])
             write_csv(folder/"predictions.csv", predictions)
             if curve:

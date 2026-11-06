@@ -10,7 +10,9 @@ M3包括真实观测历史、固定seed乱序、删累计手部进展的末观�
 
 M4联合响应辅助使用训练组（含UNKNOWN）的下一已记录q/qdot；分阶段版本40轮响应预训练+80轮监督微调，普通/联合为80轮，因此额外训练预算必须披露，不作纯损失因果结论。任何测试/校准UNKNOWN不进入拟合或归一化。
 
-M5按真实关节名称重排active/opposite手并保留侧别，使用既有body-local FK；它不是经过运动学认证的带符号几何镜像。没有镜像标签或强制左右动作同标签。OldM2去FiLM的残差参照仍通过正常响应预测器间接使用身体状态，不是完全身体信息剥离。
+标签效率另设25/50/100%训练标签预算，三个方法GRU/GRUResponseAux/GRUPretrainFinetune及五seed共享同一固定hash、逐类floor的嵌套训练标签子集；100%复用原任务。预算计入已知训练controls，并单列核心P/B数；核心双类不足明确BLOCKED。未选标签只在训练视图改为UNKNOWN供响应学习，原manifest和校准/测试保持不变。`LABEL_BUDGET_FROZEN_SUBSETS.csv`记录实际IDs/数量，`LABEL_EFFICIENCY_RESULTS.csv`只记录实际完成结果；display method与label_fraction隔离统计，不把25%/50%和100%平均混为多seed。没有结果不能回答提高标签效率；额外预训练计算仍是混杂。
+
+M5按真实关节名称重排active/opposite手并保留侧别，使用既有body-local FK；它不是经过运动学认证的带符号几何镜像。没有镜像标签或强制左右动作同标签。split7包含姿态/动作条件（包括速度），按robot_variant分层，不能把pool结果归因纯姿态。OldM2去FiLM的残差参照仍通过正常响应预测器间接使用身体状态，不是完全身体信息剥离。
 
 观测DR有真实执行入口：GRUObsDR与普通GRU同结构/同clean训练scaler，只对训练原始观察作固定seed扰动；所有模型另用同一固定seed的noisy heldout诊断，校准概率始终保持clean。q=.001rad、qdot=.01rad/s、effort=训练尺度2%噪声/1%每条偏置、IMU角速度=.005rad/s/姿态=.001rad、时钟±.002s、丢样1%；延迟按真实50Hz可实现的0/20ms端点逐episode抽取，严格不插值。真实source年龄不得超过20ms；稀疏日志无法实现时单列不可用。尺度仅训练数据，元数据/标签不变；它是未硬件标定的仿真敏感性，并未耦合重算FK。source/receipt索引、seed、每条偏置与时钟保留audit；实际运行前结果表为空，不以实现代码宣称DR实验已完成。
 

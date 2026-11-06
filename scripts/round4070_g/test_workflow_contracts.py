@@ -1,11 +1,13 @@
 """CPU checks for immutable metadata and no-data training admission."""
 import json
+import hashlib
 from pathlib import Path
 import unittest
 import uuid
 from unittest.mock import patch
 
 import workflow
+import checkpoint
 
 
 class WorkflowContracts(unittest.TestCase):
@@ -37,6 +39,43 @@ class WorkflowContracts(unittest.TestCase):
             workflow.train(run)
             call.assert_not_called()
         self.assertFalse((self.fixture / 'training_window.json').exists())
+
+    def test_g1_admission_pause_prevents_even_planned_training(self):
+        (self.fixture / 'PAUSE_G1.flag').write_text('actual collision validation pending')
+        run = self.fixture / 'learning'
+        run.mkdir()
+        (run / 'task_queue.json').write_text(json.dumps(dict(tasks=[dict(status='PLANNED')])))
+        with patch.object(workflow, 'OUT', self.fixture), patch.object(workflow, 'call') as call:
+            workflow.train(run)
+            call.assert_not_called()
+        self.assertFalse((self.fixture / 'training_window.json').exists())
+
+    def test_current_manifest_hash_is_mandatory(self):
+        document = self.fixture / 'bundled'
+        document.mkdir()
+        source = self.fixture / 'campaign_manifest_v4.json'
+        source.write_bytes(b'{"frozen": true}')
+        (document / 'CURRENT_CAMPAIGN.json').write_text(json.dumps(dict(manifest=source.name,
+            sha256=hashlib.sha256(source.read_bytes()).hexdigest())))
+        with patch.object(workflow, 'OUT', self.fixture), patch.object(workflow, 'DOC', document):
+            self.assertEqual(workflow.current_manifest(), source)
+            source.write_bytes(b'{"frozen": false}')
+            with self.assertRaisesRegex(RuntimeError, 'SHA256 mismatch'):
+                workflow.current_manifest()
+
+    def test_checkpoint_uses_frozen_pointer_not_highest_draft_version(self):
+        document=self.fixture/'bundled';document.mkdir()
+        source=self.fixture/'campaign_manifest_v4.json'
+        source.write_bytes(b'{"version":4}')
+        digest=hashlib.sha256(source.read_bytes()).hexdigest()
+        source.with_suffix('.sha256.json').write_text(json.dumps(dict(sha256=digest)))
+        (self.fixture/'campaign_manifest_v99.json').write_bytes(b'{"unfrozen_draft":true}')
+        (document/'CURRENT_CAMPAIGN.json').write_text(json.dumps(dict(manifest=source.name,sha256=digest)))
+        with patch.object(checkpoint,'OUT',self.fixture),patch.object(checkpoint,'DOC',document):
+            self.assertEqual(checkpoint.current_campaign(),(source,digest))
+            source.write_bytes(b'{"changed":true}')
+            with self.assertRaisesRegex(RuntimeError,'SHA256 mismatch'):
+                checkpoint.current_campaign()
 
 
 if __name__ == '__main__':

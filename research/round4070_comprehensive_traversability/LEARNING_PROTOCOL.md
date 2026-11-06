@@ -25,11 +25,19 @@ GRU、GRUResponseAux 与 GRUPretrainFinetune 预先固定 25%、50%、100% 训�
 
 正式监督只接受 `G_HOLD_PROBE_POSE_FORWARD24_V1`；旧 F 保持原有标签契约，不偷偷混入 G 分类。旧数据若用作单独诊断，必须 `--legacy`，其范围标为 `LEGACY_F_CONTRACT_DIAGNOSTIC_NOT_G_BENCHMARK`。当前管线不会自动把旧 F 预训练到 G，也不会凭映射补造缺失传感器。
 
+正式监督、响应学习、归一化和评价还必须使用 V4 主协议 `G1_RNG_V1_BODY_COLLISION_AUDIT_V1` 及 `G_BODY_COLLISION_VALIDITY_V1`。loader 严格检查 v2 manifest、每条 primary admission/response eligibility、VERIFIED 实际全身体碰撞审计、有效 reset RNG readback，并复核两份原始证据 JSON 的 hash 和状态。旧 V3 pilot、pending/unsupported 碰撞审计，即使 y=UNKNOWN，也不能进入训练；`--legacy` 不能绕过 G 准入。空 V4 primary 数据可冻结成全部阻塞队列。合成合同必须明确 `SYNTHETIC_CONTRACT_TEST`，只在测试辅助函数显式关闭真实证据文件校验；正式 loader 拒绝它们。
+
 每条最多2s、最多128个真实采样点。低频数据不插值；超过128点时按固定物理时间网格取 past 索引并去重。所有基线用同样截止；前缀是单独消融。10/20Hz消融复用同episode和截止、只选已有观测。安全提前停止保留真实长度，不补齐反馈；padding/长度可能成为合法但依赖安全策略的捷径，因此另有点数/时长诊断。
 
 普通 GRU 与 shuffled 的通道相同，都移除显式 elapsed/dt/command_progress；q_cmd 仍可能携带动作阶段，所以 shuffled 不能单独证明顺序无信息。严格末观测进一步移除手部累计进展、stall 和累计命令信息；它依然接收该时刻合法记录的当前/上一控制动作，不冒称只有无记忆传感器读数。
 
 归一化仅训练组真实有效行（可含 UNKNOWN），不对padding或测试历史拟合。残差正常模型只训练空场，0.4s状态排除与暖机零残差；残差分支仍间接使用全身状态。损失中的下一观测仅来自训练历史，不在推理时读取未来反馈。
+
+## 独立确认端点
+
+数据划分有 `train/calibration/test/confirmation` 四种互斥角色。预先声明的 confirmation 不得进入任何 split 的前三种角色；IID 接受其独立确认，其他 split 仅接受落在该 split 原测试域内的确认条目，其余明确排除。配置 OOD 还禁止 confirmation 与 train/calibration 共享物理组，允许它与主测试域共享配置。确认历史及标签均不参与归一化、正常响应拟合、监督或自监督训练。
+
+每个预注册模型、seed 和标签预算按冻结策略评价一次确认端点：只复用已训练模型及主 calibration 拟合的温度、阈值和 conformal 参数，不重拟、不根据确认结果挑模型。结果使用独立 `confirmation/` 模式及 `CONFIRMATION_RESULTS.csv`、`CONFIRMATION_PREDICTIONS.csv`、`CONFIRMATION_MEAN_STD.csv` 等文件，绝不与主测试均值混合。`CONFIRMATION_STATUS.csv` 区分未运行、不适用/未采集、缺可靠标签、单类和可评价双类；当前只做 clean 确认，不宣称已执行确认集观测 DR。工程判断器也复用相同训练参考，按手、家族、物理组和 robot_variant 输出子组。
 
 ## 观测随机化合同
 
@@ -59,9 +67,13 @@ GRU、GRUResponseAux 与 GRUPretrainFinetune 预先固定 25%、50%、100% 训�
 
 checkpoint、curve、校准参数、真实预测、指标和completion分别存在每个fit目录。推理计时仅网络/统计模型前向，不包含采集、预处理、残差计算或I/O；不能称端到端实时保证。报告按完整五seed的共同episode做物理配置聚类分析，初始化不当独立物理样本。
 
+统计配对分别覆盖 forced 和各预注册 calibration 风险模式下的 FPR、FR、coverage、PASSABLE recall 差：先对同一 episode 的五 seed 贡献取均值，再按物理配置组 bootstrap；相应指标少于三个物理组不报告区间。确认端点单列同类分析。区间是描述性且未经多重比较校正，不是“显著新方法”证据；同一校准风险目标不保证两模型实际 heldout 风险相同，覆盖率差必须和 FPR 同时解释。另列的 `false_pass_episode_binomial_wilson_*` 只是在 episode IID 假设下的二项描述区间，不代替配置聚类推断。
+
 ## 当前实现验证
 
-十一项小合成契约检查已实际通过：因果截止、训练归一化隔离/严格瞬时通道、实际采样降频、分组/配对真值、防 UNKNOWN 进入监督/拒判与校准指标、关节重排、各神经模型前反向、资源锁互斥、观测 DR 的训练尺度隔离/因果索引/单调时钟/确定性复现、conformal 分数不复用温度拟合标签，以及标签预算嵌套/原标签与holdout不变/结果分离。全部 31 个学习方法的两 epoch 合成 fit（分阶段方法额外一轮预训练）、checkpoint 读取与数值回放、固定噪声测试推理、校准，以及 GRU partial 恢复一致性也全部通过；最新完整拟合证据位于 `outputs/round4070_comprehensive_traversability/implementation_smoke/92d44ab68cbe47588fe2ab3150b8e723/implementation_test_results.json`。完整拟合 smoke 使用 CPU 两线程，Isaac 已退出且持共享资源锁；结束后关闭训练窗口。随后修正 conformal 的 raw 分数语义并新增标签预算调度，实际通过全部十一项 CPU 合同，未重新运行拟合 smoke。这些均为实现测试，不是物理 G 数据，不进入任何科研分数。
+十五项小合成契约检查已实际通过，覆盖因果截止、训练归一化与严格瞬时通道、真实降频、分组/配对、UNKNOWN/拒判指标、关节重排、模型前反向、资源锁、观测 DR、conformal 冻结分数、标签预算隔离、确认角色/归一化隔离、禁止确认校准重拟、cluster bootstrap 的 seed 单位，以及 V4 准入拒绝旧 pilot/pending/synthetic benchmark。
+
+全部 31 个学习方法的两 epoch 合成 fit（分阶段额外一轮预训练）、checkpoint 回放、噪声测试推理、校准与 GRU partial 恢复一致性此前也全部通过，证据位于 `outputs/round4070_comprehensive_traversability/implementation_smoke/92d44ab68cbe47588fe2ab3150b8e723/implementation_test_results.json`。完整拟合 smoke 使用 CPU 两线程，Isaac 已退出且持共享资源锁，结束后关闭窗口。之后修正 conformal、标签预算、独立确认、分组统计与 V4 准入，实际通过全部十五项 CPU 合同，未重新运行拟合 smoke。合成 fixture 已显式标注，不是实际 physics-verified G 数据，不能进入正式 benchmark，也不进入科研分数。
 
 ## 仍未评价的范围
 

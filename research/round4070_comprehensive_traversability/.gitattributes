@@ -1,3 +1,6 @@
 # Preserve the exact bytes of the preregistered manifest across Git checkouts.
-campaign_manifest_v3.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-campaign_manifest_v3.sha256.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+campaign_manifest_v*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+g1_reset_randomization_v1.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+g1_action_contract_v2.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+g1_native_collision_library_v*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+g1_native_geometry_validation_v*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

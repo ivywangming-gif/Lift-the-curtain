@@ -1,0 +1,12 @@
+{
+  "scope": "DIAGNOSTIC_NATIVE_GEOMETRY_VISUALIZATION_NOT_G1_TASK_RESULT",
+  "source_files": {
+    "outputs\\round4070_comprehensive_traversability\\g1_native_collision_library_v3.json": "03dfddb9dd026ef461130372fc1d59bc499deb7ada4314bdc2b793f8d0067fa8",
+    "outputs\\round4070_comprehensive_traversability\\physics_diagnostics\\collider_native_linkframe_v7_attempt01\\native_link_pose_samples.json": "471dc1eb55a96b10cdaa9b99f840fde0da14f78552e494285bc9dd7dd9353ef1",
+    "scripts\\round4070_g\\plot_native_geometry.py": "c6fa98c15045fa6cd01424ecf9c6bd73e670d462174144a0dcf63eea3e9f388f"
+  },
+  "recorded_simulation_time_s": 0.029999999329447746,
+  "shape_count": 39,
+  "visualization_only": "Projected silhouettes; spheres/cylinders tessellated only for this figure. The independent auditor uses actual analytic primitives.",
+  "image_sha256": "a403842fd22fe7ab1286b92e217f8db061538711e5f42fae8f8ace3a36be9a04"
+}

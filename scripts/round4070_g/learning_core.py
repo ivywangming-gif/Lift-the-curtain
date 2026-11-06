@@ -14,7 +14,9 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-ACTION_CONTRACT = "G_HOLD_PROBE_POSE_FORWARD24_V1"
+ACTION_CONTRACT = "G_HOLD_PROBE_POSE_FORWARD24_TUBE_V2"
+PRIMARY_PROTOCOL = "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2"
+LABEL_VALIDITY_VERSION = "G_BODY_COLLISION_VALIDITY_V1"
 
 
 def sha(path):
@@ -47,8 +49,99 @@ def write_csv(path, rows, fields=None):
     temporary.replace(path)
 
 
+def validate_primary_manifest(manifest, verify_sources=True, synthetic_test=False):
+    """Never admit old pilots/pending collision cases as supervised or response data."""
+    synthetic = manifest.get("data_scope") == "SYNTHETIC_CONTRACT_TEST"
+    if synthetic_test:
+        if not synthetic or verify_sources:
+            raise ValueError("Synthetic contracts require an explicit marker and disabled real-source verification")
+    elif synthetic or any(e.get("synthetic") for e in manifest.get("episodes", [])):
+        raise ValueError("Synthetic fixtures cannot be admitted as a real G benchmark")
+    expected = dict(schema="round4070-g.causal_episodes.v3",primary_protocol=PRIMARY_PROTOCOL,label_validity_version=LABEL_VALIDITY_VERSION)
+    if any(manifest.get(key) != value for key,value in expected.items()):
+        raise ValueError("Primary G manifest requires V5 effective RNG, every-step native collision audit and frozen action tube")
+    for episode in manifest["episodes"]:
+        y = int(episode["y"])
+        if (episode.get("primary_protocol") != PRIMARY_PROTOCOL or episode.get("label_validity_version") != LABEL_VALIDITY_VERSION or
+            episode.get("primary_admission") is not True or episode.get("admission_status") != "PRIMARY_VERIFIED" or
+            episode.get("response_history_eligible") is not True or episode.get("supervision_eligible") is not (y >= 0) or
+            episode.get("action_contract") != ACTION_CONTRACT):
+            raise ValueError(f"Episode is not admitted by the primary G contract: {episode['trial_id']}")
+        collision = episode.get("body_collision_audit", {})
+        reset = episode.get("reset_randomization_evidence", {})
+        contract = episode.get("action_contract_v2")
+        contract_hash = episode.get("action_contract_v2_sha256", "")
+        if not isinstance(contract, dict) or len(contract_hash) != 64:
+            raise ValueError("V5 frozen action contract object/hash missing")
+        from g1_action_contract_v2 import validate_contract
+        validate_contract(contract, verify_files=verify_sources)
+        action_audit = collision.get("action_contract_audit", {})
+        if action_audit.get("status") != "VERIFIED":
+            raise ValueError("V5 action-contract audit incomplete; UNKNOWN is not a bypass")
+        if y >= 0 and (action_audit.get("all_required_steps_valid") is not True or action_audit.get("guard_violation") is not None):
+            raise ValueError("Action-tube violations cannot receive supervised PASSABLE/BLOCKED labels")
+        if y == 0 and action_audit.get("static_blocking_certificate", {}).get("status") != "VERIFIED":
+            raise ValueError("BLOCKED requires an independently verified discrete action impossibility certificate")
+        if collision.get("status") != "VERIFIED" or int(collision.get("sample_count", 0)) < 1:
+            raise ValueError("Missing VERIFIED sampled actual-body collision evidence; UNKNOWN is not an admission bypass")
+        if reset.get("readback_verified") is not True or reset.get("seed") != episode.get("seed"):
+            raise ValueError("Missing actual replayable reset RNG readback evidence")
+        for record,kind in ((collision,"collision"),(reset,"reset RNG")):
+            digest,relative = record.get("source_evidence_sha256", ""),record.get("source_evidence_path", "")
+            if not relative or len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest.lower()):
+                raise ValueError(f"Missing {kind} source evidence path/hash")
+            if verify_sources:
+                source = (ROOT/relative).resolve()
+                if not source.is_relative_to(ROOT) or sha(source) != digest:
+                    raise ValueError(f"Changed/invalid {kind} source evidence")
+                actual = read_json(source)
+                if kind == "collision":
+                    if actual.get("schema") != "round4070-g.body_collision_audit.v1" or actual.get("status") != "VERIFIED":
+                        raise ValueError("Source collision audit does not support admission")
+                    if not all(actual.get(k) is True for k in ("penetration_free","all_robot_collision_bodies","probe_followup_release_complete","finite")):
+                        raise ValueError("Source collision audit lacks required validity evidence")
+                    if actual.get("action_contract_audit") != action_audit:
+                        raise ValueError("Manifest action audit differs from source collision evidence")
+                    if (actual.get("initial_state_collision_audited") is not True or actual.get("initial_state_collision_status") != "VERIFIED"
+                        or actual.get("geometry_checked_state_count") != actual.get("sample_count", -2)+1):
+                        raise ValueError("V5 collision audit must geometrically test reset state plus every executed step")
+                    base = (ROOT/record.get("source_files_base", "")).resolve()
+                    if not record.get("source_files_base") or not base.is_relative_to(ROOT):
+                        raise ValueError("Collision source-file base missing or outside repository")
+                    source_files = actual.get("source_files", {})
+                    required = {"g_body_collision_capture.json", "g_body_collision_history_index.json", "g_body_collision_initial_state.npz",
+                                "g_robot_collision_geometry.json", "g_native_geometry_verified.json", "g_action_tube_runtime.json",
+                                "g_trial_metadata.json", "g_outcome.json", "g_runner_contract.json"}
+                    if not required <= set(source_files):
+                        raise ValueError("V5 native geometry/history/action source hashes incomplete")
+                    for name, digest in source_files.items():
+                        target = (base/name).resolve()
+                        if not target.is_relative_to(base) or sha(target) != digest:
+                            raise ValueError("Collision source changed or escaped trial: " + name)
+                    from physics_history import verify_history
+                    history = verify_history(base, read_json(base/"g_body_collision_capture.json"), read_json(base/"g_robot_collision_geometry.json"))
+                    if history["sample_count"] != actual.get("sample_count") or any(source_files.get(n) != h for n,h in history["source_files"].items()):
+                        raise ValueError("V5 collision audit does not bind complete step/phase/chunk history")
+                    plan = read_json(base/"g_trial_metadata.json")["plan"]
+                    if plan.get("primary_protocol") != PRIMARY_PROTOCOL or plan.get("action_contract_v2") != contract or plan.get("action_contract_v2_sha256") != contract_hash:
+                        raise ValueError("V5 episode action object/hash differs from executed frozen plan")
+                elif actual.get("schema") != "G1_RNG_V1" or actual.get("readback_verified") is not True or actual.get("seed") != episode.get("seed"):
+                    raise ValueError("Source RNG audit does not support admission")
+                else:
+                    base = (ROOT/record.get("source_files_base", "")).resolve()
+                    array = (base/actual.get("arrays_file", "MISSING")).resolve()
+                    if (not record.get("source_files_base") or not base.is_relative_to(ROOT) or not array.is_relative_to(base)
+                        or actual.get("robot_pose_readback_verified") is not True or sha(array) != actual.get("arrays_sha256")
+                        or actual.get("spec_sha256") != plan.get("g1_reset_randomization", {}).get("spec_sha256")):
+                        raise ValueError("RNG raw reset/readback arrays or executed specification are not bound to evidence")
+
+
 def load_dataset(path, legacy=False):
     manifest = read_json(path)
+    if not legacy:
+        validate_primary_manifest(manifest)
+    elif manifest.get("action_contract") == ACTION_CONTRACT or any(e.get("primary_protocol") or e.get("action_contract") == ACTION_CONTRACT for e in manifest["episodes"]):
+        raise ValueError("--legacy is a separate F-contract diagnostic; G pilots/primary cannot bypass admission through it")
     episodes = manifest["episodes"]
     names = list(manifest["feature_names"])
     forbidden = ("material", "anchor", "wall", "cloth_node", "contact_truth", "clearance", "audit_only", "map/", "goal/")
@@ -82,15 +175,18 @@ def load_dataset(path, legacy=False):
 
 def split_indices(split, episodes):
     lookup = {e["trial_id"]: i for i, e in enumerate(episodes)}
-    roles = {role: [lookup[t] for t in split.get(role, [])] for role in ("train", "calibration", "test")}
-    for a, b in (("train", "calibration"), ("train", "test"), ("calibration", "test")):
+    roles = {role: [lookup[t] for t in split.get(role, [])] for role in ("train", "calibration", "test", "confirmation")}
+    for a, b in (("train", "calibration"), ("train", "test"), ("calibration", "test"),
+                 ("train", "confirmation"), ("calibration", "confirmation"), ("test", "confirmation")):
         if set(roles[a]) & set(roles[b]):
             raise ValueError("An episode crosses split roles")
+    if any(episodes[i].get("experiment_role") == "confirmation" for r in ("train", "calibration", "test") for i in roles[r]):
+        raise ValueError("Reserved confirmation cannot enter train/calibration/main test")
     kind = split.get("split_type", split.get("kind", "configuration"))
     # IID new seeds, hand and posture diagnostics may share a physical setting.
     if kind not in ("iid_seed", "cross_hand", "posture", "legacy_side"):
         groups = {r: {episodes[i]["group_id"] for i in ix} for r, ix in roles.items()}
-        if groups["train"] & (groups["calibration"] | groups["test"]) or groups["calibration"] & groups["test"]:
+        if groups["train"] & (groups["calibration"] | groups["test"] | groups["confirmation"]) or groups["calibration"] & (groups["test"] | groups["confirmation"]):
             raise ValueError("Configuration holdout contains shared physical groups")
     return roles
 
@@ -360,7 +456,8 @@ def metrics(y, p, low=.5, high=.5, decisions=None):
                   coverage=1-un/n if n else None, uncertain_rate=un/n if n else None,
                   selective_risk=(fp+fn)/(n-un) if n > un else None,
                   brier=float(np.mean((p-y)**2)) if n else None,
-                  false_pass_wilson_low=low_ci, false_pass_wilson_high=high_ci,
+                  false_pass_episode_binomial_wilson_low=low_ci, false_pass_episode_binomial_wilson_high=high_ci,
+                  interval_scope="descriptive episode-binomial IID assumption; not configuration-cluster inference",
                   auroc=None, auprc=None, ece=None)
     if P and N:
         result["auroc"] = float(np.mean((p[pos, None] > p[None, neg]) + .5*(p[pos, None] == p[None, neg])))

@@ -16,6 +16,9 @@ DOC = ROOT / 'research/round4070_comprehensive_traversability'
 def main():
     source = OUT / 'dataset/manifest.json'
     manifest = json.loads(source.read_text(encoding='utf-8'))
+    pilot_episodes = [e for e in manifest['episodes'] if '_rng1' not in e['trial_id']]
+    if not pilot_episodes and (DOC / 'PROBE_HISTORY_AUDIT.json').exists():
+        pilot_episodes = json.loads((DOC / 'PROBE_HISTORY_AUDIT.json').read_text())['histories']
     selected = []
     fig, axes = plt.subplots(2, 3, figsize=(12.5, 7), sharex=True, constrained_layout=True)
     for row, side in enumerate(('left', 'right')):
@@ -24,7 +27,7 @@ def main():
         if len(joints) != 7:
             raise ValueError('Expected seven named active-arm joints')
         for scene, color in [('EMPTY', '#61717e'), ('A01', '#006fbc')]:
-            candidates = sorted((e for e in manifest['episodes'] if e['scene_id'] == scene and e['side'] == side),
+            candidates = sorted((e for e in pilot_episodes if e['scene_id'] == scene and e['side'] == side),
                                 key=lambda e: e['trial_id'])
             if not candidates:
                 continue
@@ -47,13 +50,14 @@ def main():
             axes[row, column].grid(alpha=.2)
             axes[row, column].set_title(side.capitalize() + ': ' + ('active-hand forward displacement', 'active-arm tracking error', 'active-arm applied torque proxy')[column], fontsize=10)
         axes[row, 0].legend(frameon=False, fontsize=9)
-    fig.suptitle('Actual 50 Hz probe histories: first completed EMPTY and A01 trials per hand\n'
-                 'Descriptive audit only; controls are not obstacle positives; UNKNOWN is not BLOCKED', fontsize=12)
+    fig.suptitle('Superseded v3 pilot histories: real 50 Hz observations\n'
+                 'Diagnostic only; excluded from the primary benchmark; UNKNOWN is not BLOCKED', fontsize=12)
     fig.savefig(DOC / 'PROBE_HISTORY_AUDIT.png', dpi=150)
     plt.close(fig)
     (DOC / 'PROBE_HISTORY_AUDIT.json').write_text(json.dumps(dict(
         status='ACTUAL_DESCRIPTIVE_AUDIT_NOT_MODEL_EVALUATION',
-        source_manifest_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+        protocol_status='SUPERSEDED_V3_PILOTS_NOT_PRIMARY',
+        joint_schema_manifest_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         selection='first lexicographic completed ID per side in EMPTY/A01; no label-based selection',
         interpolation=False, histories=selected,
         limitation='One trial per condition/hand; no uncertainty bands or class-discrimination inference'), indent=2), encoding='utf-8')

@@ -1,0 +1,5 @@
+{
+  "manifest": "campaign_manifest_v5.json",
+  "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+  "sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200"
+}

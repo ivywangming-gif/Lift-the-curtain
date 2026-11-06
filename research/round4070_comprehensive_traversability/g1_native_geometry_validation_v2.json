@@ -1,0 +1,134 @@
+{
+  "schema": "round4070-g.native_geometry_validation.v1",
+  "status": "VERIFIED",
+  "native_library_sha256": "03dfddb9dd026ef461130372fc1d59bc499deb7ada4314bdc2b793f8d0067fa8",
+  "native_library_basename": "g1_native_collision_library_v3.json",
+  "native_actor_count": 39,
+  "native_shape_count": 39,
+  "shape_modes": {
+    "EXACT_NATIVE": 27,
+    "NATIVE_VERTEX_CONSERVATIVE_ENVELOPE": 12
+  },
+  "all_simulation_shape_flags": true,
+  "native_types": {
+    "exact_convex": 15,
+    "conservative_native_vertex_envelope": 12,
+    "sphere": 8,
+    "zero_margin_core_cylinder": 4
+  },
+  "shape_local_pose_source": "raw native PxShape.localPose quaternion norm checked and normalized; display transforms are diagnostics",
+  "actor_frame_source": "raw native actor.globalPose compared to same-tick IsaacLab ArticulationData.body_link_pose_w, not COM",
+  "frame_matches": [
+    {
+      "simulation_time_s": 0.014999999664723873,
+      "actual_physics_step_from_clock": 3,
+      "diagnostic_explicit_capture_counter": 1,
+      "native_time_code": 6.0,
+      "max_position_error_m": 1.4901161193847656e-08,
+      "max_rotation_matrix_error": 2.022434599544579e-08,
+      "max_native_vs_com_position_difference_m": 0.4498690068721771,
+      "display_usd_rotation_error": 0.000972540094665351,
+      "rotation_source": "Raw native globalPose XYZW, norm drift <=1e-4 accepted and normalized exactly as IsaacLab quaternion audit; USD display transform not used as pose truth"
+    },
+    {
+      "simulation_time_s": 0.019999999552965164,
+      "actual_physics_step_from_clock": 4,
+      "diagnostic_explicit_capture_counter": 2,
+      "native_time_code": 8.0,
+      "max_position_error_m": 2.9802322387695312e-08,
+      "max_rotation_matrix_error": 2.022434599544579e-08,
+      "max_native_vs_com_position_difference_m": 0.4498690068721771,
+      "display_usd_rotation_error": 0.000972540094665351,
+      "rotation_source": "Raw native globalPose XYZW, norm drift <=1e-4 accepted and normalized exactly as IsaacLab quaternion audit; USD display transform not used as pose truth"
+    },
+    {
+      "simulation_time_s": 0.024999999441206455,
+      "actual_physics_step_from_clock": 5,
+      "diagnostic_explicit_capture_counter": 3,
+      "native_time_code": 10.0,
+      "max_position_error_m": 1.4901161193847656e-08,
+      "max_rotation_matrix_error": 2.022434599544579e-08,
+      "max_native_vs_com_position_difference_m": 0.4498690068721771,
+      "display_usd_rotation_error": 0.000972540094665351,
+      "rotation_source": "Raw native globalPose XYZW, norm drift <=1e-4 accepted and normalized exactly as IsaacLab quaternion audit; USD display transform not used as pose truth"
+    },
+    {
+      "simulation_time_s": 0.029999999329447746,
+      "actual_physics_step_from_clock": 6,
+      "diagnostic_explicit_capture_counter": 4,
+      "native_time_code": 12.0,
+      "max_position_error_m": 2.9802322387695312e-08,
+      "max_rotation_matrix_error": 2.022434599544579e-08,
+      "max_native_vs_com_position_difference_m": 0.4498690068721771,
+      "display_usd_rotation_error": 0.000972540094665351,
+      "rotation_source": "Raw native globalPose XYZW, norm drift <=1e-4 accepted and normalized exactly as IsaacLab quaternion audit; USD display transform not used as pose truth"
+    }
+  ],
+  "known_compound_validation": [
+    {
+      "source_child": "/World/FrameTestCompoundBody/CollisionOwner/Mesh0",
+      "native_part_index": 0,
+      "bidirectional_hausdorff_error_m": 1.8019934210790794e-08
+    },
+    {
+      "source_child": "/World/FrameTestCompoundBody/CollisionOwner/Mesh1",
+      "native_part_index": 1,
+      "bidirectional_hausdorff_error_m": 3.229449655042644e-08
+    }
+  ],
+  "all_native_mesh_scales_isotropic": true,
+  "native_core_cylinder_axis": "PhysX 5.6.1 native X axis, actual local pose transforms to body frame",
+  "witness": {
+    "body_name": "pelvis_contour_link",
+    "body_index": 2,
+    "part_index": 9,
+    "point_body_m": [
+      0.006593881943248574,
+      -4.0792255637682e-05,
+      -0.07974031678094753
+    ],
+    "actual_inner_ball_radius_m": 0.051885503320795764,
+    "required_minimum_radius_m": 0.006,
+    "exact_native": true,
+    "native_part_geometry_sha256": "7c8483c8ae5bbb356b340c6a2969528c4d847a10ec639d0bc0b531703aeb2712",
+    "status": "VERIFIED",
+    "evidence_mode": "EXACT_NATIVE",
+    "native_shape_id": "/Scenes/PxScene_1/Articulations/PxArticulationReducedCoordinate_1/PxArticulationLink_1_World_envs_env_0_Robot_pelvis/PxArticulationLink_8_World_envs_env_0_Robot_pelvis_contour_link/PxShape_10",
+    "verified_interior_radius_m": 0.051885503320795764,
+    "simulation_shape": true
+  },
+  "source_files": {
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/summary.json": "b9f3cc497c0874d3a4915ab238a5e17d7b9b7a38e235d688dc36c7245d0e8f33",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_link_pose_samples.json": "471dc1eb55a96b10cdaa9b99f840fde0da14f78552e494285bc9dd7dd9353ef1",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/g_robot_collision_geometry.json": "a239f8996c87ad73ef62f3399440ed7832efb3a0c81c32b9e7d417ea4bea90e0",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_pvd_usd_00/native_geometry_parser_v5.json": "38c889e24da2257bf5739353b83530dd4094588228e1d98aa552a2c12d95135a",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_pvd_usd_00/knowncompound_v5.json": "78b3d43765372f4a5e14ab306f31beae4150f2b1643cce608317be343f1c8c0a",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_ovd/2026_11_06_21_48_58_01_rec.ovd": "6e565f0e7b033d53ce4a3e9536cbbb1f4d7eafd897aeae6d91a64449bbeb84e6",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_pvd_usd_00/scene.usda": "ba5a8b50fb50eff813f1a31350f990d9249aeb20e9cccfd7c763ce135ef50071",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_pvd_usd_00/shared.usda": "ebb8c33a0dea8892a141f12bd63bd72c8b8ae3195684cd99bc497151e03ffaad",
+    "outputs/round4070_comprehensive_traversability/physics_diagnostics/collider_native_linkframe_v7_attempt01/native_pvd_usd_00/stage.usda": "999df1ef512710cdf6ba5b9b206abe77b9cf337fbd2fc51def0e169023d0c06b"
+  },
+  "asset_source_sha256": {
+    "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\configuration\\g1_29dof_falcon_rubberhand_sensor.usd": "0b90b3f63782f3978fd8d1a3d043f057d57f665bcf8d5979d1aab7b61f2f85bf",
+    "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\configuration\\g1_29dof_falcon_rubberhand_robot.usd": "5ce0f22b24f12aa054b8fb74f20a217053638ea831a93278f1e5a37cface8a36",
+    "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\g1_29dof_falcon_rubberhand.usd": "7e022955b8be18cd90dd2bbcd05f14d9ae2771ac6abb7dad089eab14efee6f5d",
+    "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\configuration\\g1_29dof_falcon_rubberhand_physics.usd": "26455a852f8e9597b506cf9cd41b1e8160d1573689362c6f4fc72668e7743ad4",
+    "C:\\Robotics\\Lift-the-curtain\\assets\\generated\\configuration\\g1_29dof_falcon_rubberhand_base.usd": "5cecb7f82e80dfbfd8650d35143756a4b32e4bb4ff00c1de05e72d4207eb850a"
+  },
+  "runtime_physx_binding": {
+    "module_path": "c:\\conda_envs\\isaaclab\\lib\\site-packages\\isaacsim\\extscache\\omni.physx-107.3.26+107.3.3.wx64.r.cp311.u353\\omni\\physx\\bindings\\_physx.cp311-win_amd64.pyd",
+    "module_sha256": "7fd515caa211084c1b4b2d57fbaba3fda232c280981ceab122143e4220b0265e",
+    "extension_path": "c:\\conda_envs\\isaaclab\\lib\\site-packages\\isaacsim\\extscache\\omni.physx-107.3.26+107.3.3.wx64.r.cp311.u353\\omni",
+    "api": "PhysXCooking.request_convex_collision_representation",
+    "module_version": null
+  },
+  "articulation_data_source_sha256": "81912d2134656fe0af99d8423bdea154f9dfe309b38519658287c2382f76335d",
+  "verifier_source_snapshot": "outputs/round4070_comprehensive_traversability/native_calibration/physics_native_bind_verifier_v3.py",
+  "verifier_source_sha256": "45ecac9c37d4e350f57bff7aee687a5a0902cac1bac94ab80d592e262b0ce218",
+  "limitations": [
+    "12 native face inconsistencies retained; their full-native-vertex hulls are separation-only outer envelopes, never exact penetration or inside-witness evidence",
+    "Audits certify recorded states at stated sampling rate, not real material calibration or robot safety",
+    "Matching published native writer and core geometry definitions support provenance; no claim that public source is identical to compiled binary"
+  ],
+  "revision_reason": "Use explicit USD display diagnostic transform; raw native frame matching and native parts unchanged"
+}

@@ -1,6 +1,7 @@
 {
   "status": "ACTUAL_DESCRIPTIVE_AUDIT_NOT_MODEL_EVALUATION",
-  "source_manifest_sha256": "f5f7663826ff7b4888390fbf5b3754ff52abe472d9118935d322f1aada46b2e4",
+  "protocol_status": "SUPERSEDED_V3_PILOTS_NOT_PRIMARY",
+  "joint_schema_manifest_sha256": "fd4542f9e056ad343aff91784177ac17921ee394a023bf4a348b3ea78ab89dd3",
   "selection": "first lexicographic completed ID per side in EMPTY/A01; no label-based selection",
   "interpolation": false,
   "histories": [

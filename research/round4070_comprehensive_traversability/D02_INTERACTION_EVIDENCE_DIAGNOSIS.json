@@ -1,0 +1,833 @@
+{
+  "schema": "round4070-g.d02_readonly_interaction_diagnosis.v1",
+  "created_utc": "2026-11-06T16:05:56.135489+00:00",
+  "scope": "POSTHOC_READ_ONLY_PHYSICS_DIAGNOSIS_NOT_NEW_TRIAL_NOT_LABEL_REVISION",
+  "raw_modified": false,
+  "gate_or_scene_or_threshold_modified": false,
+  "isaac_or_gpu_started": false,
+  "recorded_execution_four_file_hashes_match_across_seven_runs": true,
+  "comparison_limit": "Matches the four source hashes captured by the old gate; not a complete dependency-level environment proof. Wall dimensions in these old artifacts are requested scene metadata, without the later actual-wall readback.",
+  "source_files_sha256": {
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40701_attempt01/summary.json": "5a26844852d3473c7a24af3336c14fdf8f082212c3e19312df3531d50b28217f",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40701_attempt01/telemetry.csv": "aa8309204f1f57b72d5ee736f771754a5ed4b874e8c38a9b24b66b6f65a685d4",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40701_attempt01/physics_snapshots.npz": "3f9c5f843ea2866c8edf93386f5b68770226b99ecd897ca2359f47ef99800c64",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40701_attempt01/scene_actual_topology.json": "2a575b228cff0b0e6ee68cecb42b41ada84d0878fc39ffce5099e91042e2e216",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40701_attempt01/campaign_launch.json": "13959f557070705262cd04b578dbf0fd7beab0f037dc5dc6f9a197b14bec8b4c",
+    "outputs/round4070_comprehensive_traversability/configs_v4/D02.json": "561733fb5796e9a6e817df5e3234a3c47b2f6bf596f13acfe111dbee7e7535f8",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40702_attempt01/summary.json": "2780e24da4e796d861aee5003450afbaa5beb2769e31fbb009bef2b428765115",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40702_attempt01/telemetry.csv": "7320e02d58c6533a5d108cd1f304dcfb02d0788568c94888878a0932add007eb",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40702_attempt01/physics_snapshots.npz": "44560f1b4b9c55b2ff393aa7b765f6b8f16e81e8fd278d778e3a8b7ce2059975",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40702_attempt01/scene_actual_topology.json": "6608997332eff1e442b493469b92676936cfdd0e011c15e4adae1ccae4e67b65",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40702_attempt01/campaign_launch.json": "c8e7e32a3a75355d9f32e05fb2a8273032a2a6d0146ec614daa5a058de88d83d",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40703_attempt01/summary.json": "3b66fe2f0001ae671bf449110a32ec7c14f3ee38549291613ea4ec1c0df79eaa",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40703_attempt01/telemetry.csv": "76634089baf72b688a62903a21e32c880c040257ee754e1bff965900288821a9",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40703_attempt01/physics_snapshots.npz": "c0f56f8d939a3e2b5ea7c7ec186b9a53cf405f956c2f320df04a8e3f49335b7b",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40703_attempt01/scene_actual_topology.json": "e97fc542f36eab98616dcdbfccaeaf6367e854892f726520d24dbc1a59ca768c",
+    "outputs/round4070_comprehensive_traversability/physics/D02/seed40703_attempt01/campaign_launch.json": "4ed79433357e55eb04df3c57ca3c8ace30746fb844e87277e5e0d3df13f8ca4f",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40701_attempt02/summary.json": "b9e25c138dc90472eb5fdbf7b49c671fdad4ab5786839db1db628c2f553675c5",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40701_attempt02/telemetry.csv": "718ea5c76340faddc82424db60634ea1c5ef87a6078ba1b295a736985a022c44",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40701_attempt02/physics_snapshots.npz": "fa1b44f5b5597c5230c4e1f79920a662c4b1e7b91773536c40abcbf37b49d0e3",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40701_attempt02/scene_actual_topology.json": "339bbbf8b8946132bf53c8dbb1b270d5d2b31f3e4e0f930708937b1bffe471f0",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40701_attempt02/campaign_launch.json": "95b07bee39b720cfc7bc556d3611d6afe1a2b28f5673fe0b9d2ecd1a1383f092",
+    "outputs/round4070_comprehensive_traversability/configs_v3/A01.json": "c77c5ce70791a8a26a7844599e90e614543e25a255b44ff4b5dc652138047ac5",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40702_attempt01/summary.json": "ce016af4a55b5ff25d26e7613d21e244ed8567e7c38cd64ca20a1de4588229dc",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40702_attempt01/telemetry.csv": "34185a630316df3502e50a322bdc465169aeef972cef1406c2bb67098335bfaa",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40702_attempt01/physics_snapshots.npz": "92dbeb03af05aecf58022e87c63c6c17db19157f9e76d725b60c71dbefa83dc3",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40702_attempt01/scene_actual_topology.json": "524610977f9e70705e3474e690fe8d9dbde507db501492006f429cabedd074ef",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40702_attempt01/campaign_launch.json": "8f0b2fba10676cabe79f0b8e5e539c2d1aed4a11b8c43594dced2b45ecbbb394",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40703_attempt01/summary.json": "795e09890a2ff41cc3145d49c2f30c7f4003f0952c198931d19b5bde83a5949f",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40703_attempt01/telemetry.csv": "7d7e88f6a4db004544e8e45bc6b3713213d1a7372f80412bf3ec1cd31cccdca3",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40703_attempt01/physics_snapshots.npz": "817ea4018351919989cae1781feb5e11fa14719c04e7bc8b061b83f1c15ed734",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40703_attempt01/scene_actual_topology.json": "8fde76531d8cd30267a7867383e4f7e5e8345f5cc532edfdc093319388388f93",
+    "outputs/round4070_comprehensive_traversability/physics/A01/seed40703_attempt01/campaign_launch.json": "c27b080f057b2cafe06ad78f018283ec873307e3291771b2b6a066b1b645f22a",
+    "outputs/round4070_comprehensive_traversability/physics/EMPTY/seed40703_attempt01/summary.json": "6934e774051913549ef7253db27f128fb1b188afc5381035a4bfc4705d7fbd42",
+    "outputs/round4070_comprehensive_traversability/physics/EMPTY/seed40703_attempt01/telemetry.csv": "402a677ac8a4e4f571320ab5dfe0772d5b520a6ea2883e303a1e15744a8806c0",
+    "outputs/round4070_comprehensive_traversability/physics/EMPTY/seed40703_attempt01/physics_snapshots.npz": "88bfe1ef6900cc727f0f752cbf1a28bfbf5d8951defad250b48db3a022bd732f",
+    "outputs/round4070_comprehensive_traversability/physics/EMPTY/seed40703_attempt01/scene_actual_topology.json": "c286e28995f75a524ff4ffa4ff20d67c0db43a43e13e3fbe95d014f746402aa7",
+    "outputs/round4070_comprehensive_traversability/physics/EMPTY/seed40703_attempt01/campaign_launch.json": "3d0de7d1a484d0e68cd186af60ffd25c60a3f90fc5c0f50692ef3bb1bf5c2e4b",
+    "outputs/round4070_comprehensive_traversability/configs_v3/EMPTY.json": "9ac5e38fdf9ec4c704be262051d71c32b05dac9f067601a937f328ad499b7836"
+  },
+  "api_sources": {
+    "rigid_contact_view": {
+      "path": "C:/conda_envs/isaaclab/Lib/site-packages/isaacsim/exts/isaacsim.core.api/isaacsim/core/api/sensors/rigid_contact_view.py",
+      "sha256": "b2797cb8936c165687bc4ff8f1df27a389a35eac27d9ca566d64a8fc94c2de25"
+    },
+    "physx_binding": {
+      "path": "C:/conda_envs/isaaclab/Lib/site-packages/isaacsim/extscache/omni.physx-107.3.26+107.3.3.wx64.r.cp311.u353/omni/physx/bindings/_physx.pyi",
+      "sha256": "23e842ddc41389ef0f14f766737d6b8f36469e3b430fd8fa9ef092c75865d505"
+    },
+    "physics_tensor_api": {
+      "path": "C:/conda_envs/isaaclab/Lib/site-packages/isaacsim/extscache/omni.physics.tensors-107.3.26+107.3.3.wx64.r.cp311.u353/omni/physics/tensors/impl/api.py",
+      "sha256": "34eb58535fe8df7cad2c20fbadf4ecbf22055481194a8a91dd8e737fefab04f7"
+    },
+    "physx_schema": {
+      "path": "C:/conda_envs/isaaclab/Lib/site-packages/isaacsim/extscache/omni.usd.schema.physx-107.3.26+107.3.3.wx64.r.cp311.u353/plugins/PhysxSchema/resources/generatedSchema.usda",
+      "sha256": "d2dd1873e165d280ac302f2b2e6e95cc5c4c1f72580478492990ea0f711e00f8"
+    }
+  },
+  "methods": {
+    "telemetry_rate_hz": 50,
+    "snapshot_rate_hz": 10,
+    "near_region": "12 original nodes with abs(Y-probe_initial_Y)<.1 and abs(Z-probe_initial_Z)<.1 at saved 6s state",
+    "near_response": "max Euclidean displacement from saved 6s state across 8..12s snapshots; posthoc localization diagnostic only",
+    "surface_gap": "minimum uniform enlargement of the oriented cube half-extent .06 before any native recorded cloth triangle intersects; L-infinity dilation, not Euclidean distance or native collision-shell distance",
+    "global_node_delta": "relative to first saved t=0 snapshot, which is after the first extra physics step; not identical to the gate pre-loop initial array",
+    "geometry_scope": "10Hz stored snapshots only; no continuous-time or 200Hz contact certification"
+  },
+  "official_sources": [
+    {
+      "title": "Omni Physics 107.3 Known Physics Limitations",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/guides/current_limitations.html",
+      "claim": "Deformable body contact reports are unsupported."
+    },
+    {
+      "title": "Omni Physics 107.3 Beta Deformable Bodies",
+      "url": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html",
+      "claim": "Surface deformable simulation mesh is used for collision; sample explicit offsets are examples, not proof of runtime default."
+    }
+  ],
+  "runs": [
+    {
+      "record": {
+        "scene_id": "D02",
+        "seed": 40701,
+        "attempt": 1,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/D02/seed40701_attempt01",
+        "physics_valid": true,
+        "failed_checks": "",
+        "duration_s": 24.0,
+        "probe_y_m": -0.007681053940116844,
+        "probe_z_m": 0.9510185503403142,
+        "global_displacement_max_m": 0.034280235119336235,
+        "global_displacement_contact_window_max_m": 0.03319019674689859,
+        "touch_rows": 215,
+        "touch_first_s": 8.22,
+        "touch_last_s": 12.5,
+        "qualifying_rows": 128,
+        "qualifying_first_s": 9.96,
+        "qualifying_last_s": 12.5,
+        "probe_x_max_m": 0.770203173160553,
+        "target_lag_contact_phase_max_m": 0.17982251644134528,
+        "applied_command_force_contact_phase_max_n": 3.0000000000000004,
+        "near_nodes": 12,
+        "near_response_post6_peak_m": 0.0017128248162089274,
+        "near_forward_response_post6_peak_m": 0.0002925395965576172,
+        "cube_wall_min_axis_gap_m": 0.039694957282634835,
+        "t10_cube_triangle_interior_count": 0,
+        "t10_min_cube_dilation_Linf_m": 0.018960040062665953,
+        "t10_near_cloth_wall_gap_min_m": 0.019730980396270748,
+        "t10_near_cloth_wall_gap_max_m": 0.019978220462799068
+      },
+      "geometry": {
+        "global_max_node_snapshot_10s": {
+          "snapshot_time_s": 10.0,
+          "node_id": 697,
+          "position_world_m": [
+            0.8281729221343994,
+            0.4963062107563019,
+            0.3278465270996094
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            -0.02182704210281372,
+            -0.004028588533401489,
+            -0.004078805446624756
+          ],
+          "distance_to_probe_center_m": 0.802763311919701
+        },
+        "global_max_node_snapshot_11s": {
+          "snapshot_time_s": 11.0,
+          "node_id": 749,
+          "position_world_m": [
+            0.8203968405723572,
+            0.5910231471061707,
+            0.19900499284267426
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            -0.029603123664855957,
+            -0.00948178768157959,
+            -0.008069410920143127
+          ],
+          "distance_to_probe_center_m": 0.9616670421800184
+        },
+        "global_max_node_snapshot_12s": {
+          "snapshot_time_s": 12.0,
+          "node_id": 749,
+          "position_world_m": [
+            0.819733738899231,
+            0.5902912020683289,
+            0.1985551416873932
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            -0.030266225337982178,
+            -0.010213732719421387,
+            -0.008519262075424194
+          ],
+          "distance_to_probe_center_m": 0.9615390888993356
+        },
+        "near_node_ids": [
+          410,
+          411,
+          412,
+          413,
+          435,
+          436,
+          437,
+          438,
+          460,
+          461,
+          462,
+          463
+        ],
+        "near_reference_actual_snapshot_time_s": 6.0,
+        "wall_declared_metadata": {
+          "center_xyz": [
+            0.89,
+            0.0,
+            1.0
+          ],
+          "size_xyz": [
+            0.04,
+            1.2,
+            2.0
+          ],
+          "fixed": true,
+          "initial_gap_m": 0.02,
+          "candidate_plane_x": 0.85
+        },
+        "cloth_authored_offsets": [
+          {
+            "path": "/World/GScene/sheet_00/Sheet",
+            "contact_offset_attr": null,
+            "rest_offset_attr": null,
+            "collision_attributes": {
+              "physics:collisionEnabled": "True"
+            }
+          }
+        ],
+        "physical_box_half_extent_m": 0.06
+      },
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "02aba6927d7db0e7",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v4/D02.json"
+    },
+    {
+      "record": {
+        "scene_id": "D02",
+        "seed": 40702,
+        "attempt": 1,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/D02/seed40702_attempt01",
+        "physics_valid": false,
+        "failed_checks": "contact_demonstrated",
+        "duration_s": 24.0,
+        "probe_y_m": 0.0020758658054216127,
+        "probe_z_m": 0.9542369657827622,
+        "global_displacement_max_m": 0.002791967332440236,
+        "global_displacement_contact_window_max_m": 0.002791967332440236,
+        "touch_rows": 211,
+        "touch_first_s": 8.26,
+        "touch_last_s": 12.46,
+        "qualifying_rows": 0,
+        "qualifying_first_s": null,
+        "qualifying_last_s": null,
+        "probe_x_max_m": 0.7701650261878967,
+        "target_lag_contact_phase_max_m": 0.17983646392822272,
+        "applied_command_force_contact_phase_max_n": 3.0000000000000004,
+        "near_nodes": 12,
+        "near_response_post6_peak_m": 0.0002672594906863787,
+        "near_forward_response_post6_peak_m": 0.00018727779388427734,
+        "cube_wall_min_axis_gap_m": 0.03982763499849484,
+        "t10_cube_triangle_interior_count": 0,
+        "t10_min_cube_dilation_Linf_m": 0.019854541122913377,
+        "t10_near_cloth_wall_gap_min_m": 0.019821102619171138,
+        "t10_near_cloth_wall_gap_max_m": 0.01999550580978393
+      },
+      "geometry": {
+        "global_max_node_snapshot_10s": {
+          "snapshot_time_s": 10.0,
+          "node_id": 824,
+          "position_world_m": [
+            0.8499999046325684,
+            0.6028891801834106,
+            0.019999999552965164
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            -1.1920928955078125e-07,
+            0.0027474164962768555,
+            2.785399556159973e-05
+          ],
+          "distance_to_probe_center_m": 1.1135266468467624
+        },
+        "global_max_node_snapshot_11s": {
+          "snapshot_time_s": 11.0,
+          "node_id": 824,
+          "position_world_m": [
+            0.8499999046325684,
+            0.6028891801834106,
+            0.019999999552965164
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            -1.1920928955078125e-07,
+            0.0027474164962768555,
+            2.785399556159973e-05
+          ],
+          "distance_to_probe_center_m": 1.1134082764034594
+        },
+        "global_max_node_snapshot_12s": {
+          "snapshot_time_s": 12.0,
+          "node_id": 824,
+          "position_world_m": [
+            0.8499999046325684,
+            0.6028891801834106,
+            0.019999999552965164
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            -1.1920928955078125e-07,
+            0.0027474164962768555,
+            2.785399556159973e-05
+          ],
+          "distance_to_probe_center_m": 1.1132977777574884
+        },
+        "near_node_ids": [
+          411,
+          412,
+          413,
+          414,
+          436,
+          437,
+          438,
+          439,
+          461,
+          462,
+          463,
+          464
+        ],
+        "near_reference_actual_snapshot_time_s": 6.0,
+        "wall_declared_metadata": {
+          "center_xyz": [
+            0.89,
+            0.0,
+            1.0
+          ],
+          "size_xyz": [
+            0.04,
+            1.2,
+            2.0
+          ],
+          "fixed": true,
+          "initial_gap_m": 0.02,
+          "candidate_plane_x": 0.85
+        },
+        "cloth_authored_offsets": [
+          {
+            "path": "/World/GScene/sheet_00/Sheet",
+            "contact_offset_attr": null,
+            "rest_offset_attr": null,
+            "collision_attributes": {
+              "physics:collisionEnabled": "True"
+            }
+          }
+        ],
+        "physical_box_half_extent_m": 0.06
+      },
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "02aba6927d7db0e7",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v4/D02.json"
+    },
+    {
+      "record": {
+        "scene_id": "D02",
+        "seed": 40703,
+        "attempt": 1,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/D02/seed40703_attempt01",
+        "physics_valid": false,
+        "failed_checks": "contact_demonstrated",
+        "duration_s": 24.0,
+        "probe_y_m": 0.0023008949428917572,
+        "probe_z_m": 0.9505564767112045,
+        "global_displacement_max_m": 0.0028136458897676042,
+        "global_displacement_contact_window_max_m": 0.002811857974281598,
+        "touch_rows": 211,
+        "touch_first_s": 8.26,
+        "touch_last_s": 12.46,
+        "qualifying_rows": 0,
+        "qualifying_first_s": null,
+        "qualifying_last_s": null,
+        "probe_x_max_m": 0.7702027559280396,
+        "target_lag_contact_phase_max_m": 0.1798050522804261,
+        "applied_command_force_contact_phase_max_n": 3.0000000000000004,
+        "near_nodes": 12,
+        "near_response_post6_peak_m": 0.00035094712342352644,
+        "near_forward_response_post6_peak_m": 0.0002955794334411621,
+        "cube_wall_min_axis_gap_m": 0.039715786867640324,
+        "t10_cube_triangle_interior_count": 0,
+        "t10_min_cube_dilation_Linf_m": 0.019730595499277137,
+        "t10_near_cloth_wall_gap_min_m": 0.019706482887268062,
+        "t10_near_cloth_wall_gap_max_m": 0.01999836683273315
+      },
+      "geometry": {
+        "global_max_node_snapshot_10s": {
+          "snapshot_time_s": 10.0,
+          "node_id": 824,
+          "position_world_m": [
+            0.8500000238418579,
+            0.6028704643249512,
+            0.01997220143675804
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.0,
+            0.002728700637817383,
+            5.587935447692871e-08
+          ],
+          "distance_to_probe_center_m": 1.1100792687492198
+        },
+        "global_max_node_snapshot_11s": {
+          "snapshot_time_s": 11.0,
+          "node_id": 824,
+          "position_world_m": [
+            0.8500000238418579,
+            0.6028692722320557,
+            0.019972246140241623
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.0,
+            0.002727508544921875,
+            1.0058283805847168e-07
+          ],
+          "distance_to_probe_center_m": 1.1099196996880532
+        },
+        "global_max_node_snapshot_12s": {
+          "snapshot_time_s": 12.0,
+          "node_id": 824,
+          "position_world_m": [
+            0.8500000238418579,
+            0.6028667092323303,
+            0.019972288981080055
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.0,
+            0.002724945545196533,
+            1.434236764907837e-07
+          ],
+          "distance_to_probe_center_m": 1.1097817589114691
+        },
+        "near_node_ids": [
+          411,
+          412,
+          413,
+          414,
+          436,
+          437,
+          438,
+          439,
+          461,
+          462,
+          463,
+          464
+        ],
+        "near_reference_actual_snapshot_time_s": 6.0,
+        "wall_declared_metadata": {
+          "center_xyz": [
+            0.89,
+            0.0,
+            1.0
+          ],
+          "size_xyz": [
+            0.04,
+            1.2,
+            2.0
+          ],
+          "fixed": true,
+          "initial_gap_m": 0.02,
+          "candidate_plane_x": 0.85
+        },
+        "cloth_authored_offsets": [
+          {
+            "path": "/World/GScene/sheet_00/Sheet",
+            "contact_offset_attr": null,
+            "rest_offset_attr": null,
+            "collision_attributes": {
+              "physics:collisionEnabled": "True"
+            }
+          }
+        ],
+        "physical_box_half_extent_m": 0.06
+      },
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "02aba6927d7db0e7",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v4/D02.json"
+    },
+    {
+      "record": {
+        "scene_id": "A01",
+        "seed": 40701,
+        "attempt": 2,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/A01/seed40701_attempt02",
+        "physics_valid": true,
+        "failed_checks": "",
+        "duration_s": 24.0,
+        "probe_y_m": -0.007681053940116844,
+        "probe_z_m": 0.9510185503403142,
+        "global_displacement_max_m": 0.21649413739699605,
+        "global_displacement_contact_window_max_m": 0.21649413739699605,
+        "touch_rows": 175,
+        "touch_first_s": 8.26,
+        "touch_last_s": 11.74,
+        "qualifying_rows": 139,
+        "qualifying_first_s": 8.52,
+        "qualifying_last_s": 11.28,
+        "probe_x_max_m": 0.9319394826889038,
+        "target_lag_contact_phase_max_m": 0.03351749181747443,
+        "applied_command_force_contact_phase_max_n": 2.277502880958127,
+        "near_nodes": 12,
+        "near_response_post6_peak_m": 0.1751621604403781,
+        "near_forward_response_post6_peak_m": 0.17485833168029785,
+        "cube_wall_min_axis_gap_m": null,
+        "t10_cube_triangle_interior_count": null,
+        "t10_min_cube_dilation_Linf_m": null,
+        "t10_near_cloth_wall_gap_min_m": null,
+        "t10_near_cloth_wall_gap_max_m": null
+      },
+      "geometry": {
+        "global_max_node_snapshot_10s": {
+          "snapshot_time_s": 10.0,
+          "node_id": 461,
+          "position_world_m": [
+            1.0088096857070923,
+            -0.04451371356844902,
+            0.9015510678291321
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.15880966186523438,
+            0.0054887086153030396,
+            0.007397294044494629
+          ],
+          "distance_to_probe_center_m": 0.1112227914040419
+        },
+        "global_max_node_snapshot_11s": {
+          "snapshot_time_s": 11.0,
+          "node_id": 811,
+          "position_world_m": [
+            1.0651936531066895,
+            -0.03843451291322708,
+            0.023821726441383362
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.21519362926483154,
+            0.011565487831830978,
+            0.0038217268884181976
+          ],
+          "distance_to_probe_center_m": 0.9351115993291162
+        },
+        "global_max_node_snapshot_12s": {
+          "snapshot_time_s": 12.0,
+          "node_id": 811,
+          "position_world_m": [
+            1.065751075744629,
+            -0.041429027915000916,
+            0.02415439859032631
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.215751051902771,
+            0.008570972830057144,
+            0.004154399037361145
+          ],
+          "distance_to_probe_center_m": 0.9569710589852377
+        },
+        "near_node_ids": [
+          410,
+          411,
+          412,
+          413,
+          435,
+          436,
+          437,
+          438,
+          460,
+          461,
+          462,
+          463
+        ],
+        "near_reference_actual_snapshot_time_s": 6.0
+      },
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "8788025ce361796d",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v3/A01.json"
+    },
+    {
+      "record": {
+        "scene_id": "A01",
+        "seed": 40702,
+        "attempt": 1,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/A01/seed40702_attempt01",
+        "physics_valid": true,
+        "failed_checks": "",
+        "duration_s": 24.0,
+        "probe_y_m": 0.0020758658054216127,
+        "probe_z_m": 0.9542369657827622,
+        "global_displacement_max_m": 0.20615605912618817,
+        "global_displacement_contact_window_max_m": 0.2058414826352746,
+        "touch_rows": 171,
+        "touch_first_s": 8.26,
+        "touch_last_s": 11.66,
+        "qualifying_rows": 140,
+        "qualifying_first_s": 8.52,
+        "qualifying_last_s": 11.3,
+        "probe_x_max_m": 0.9319663643836975,
+        "target_lag_contact_phase_max_m": 0.034905862808227606,
+        "applied_command_force_contact_phase_max_n": 2.3387634088525373,
+        "near_nodes": 12,
+        "near_response_post6_peak_m": 0.17499277748025188,
+        "near_forward_response_post6_peak_m": 0.1746971607208252,
+        "cube_wall_min_axis_gap_m": null,
+        "t10_cube_triangle_interior_count": null,
+        "t10_min_cube_dilation_Linf_m": null,
+        "t10_near_cloth_wall_gap_min_m": null,
+        "t10_near_cloth_wall_gap_max_m": null
+      },
+      "geometry": {
+        "global_max_node_snapshot_10s": {
+          "snapshot_time_s": 10.0,
+          "node_id": 461,
+          "position_world_m": [
+            1.0068995952606201,
+            -0.0446060448884964,
+            0.9007052779197693
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.1568995714187622,
+            0.005396377295255661,
+            0.006551504135131836
+          ],
+          "distance_to_probe_center_m": 0.1160545312490161
+        },
+        "global_max_node_snapshot_11s": {
+          "snapshot_time_s": 11.0,
+          "node_id": 811,
+          "position_world_m": [
+            1.0508038997650146,
+            -0.04487299919128418,
+            0.023317115381360054
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.20080387592315674,
+            0.00512700155377388,
+            0.00331711582839489
+          ],
+          "distance_to_probe_center_m": 0.9381503226561886
+        },
+        "global_max_node_snapshot_12s": {
+          "snapshot_time_s": 12.0,
+          "node_id": 811,
+          "position_world_m": [
+            1.056004285812378,
+            -0.0440838485956192,
+            0.02369912527501583
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.20600426197052002,
+            0.005916152149438858,
+            0.003699125722050667
+          ],
+          "distance_to_probe_center_m": 0.9587017866138425
+        },
+        "near_node_ids": [
+          411,
+          412,
+          413,
+          414,
+          436,
+          437,
+          438,
+          439,
+          461,
+          462,
+          463,
+          464
+        ],
+        "near_reference_actual_snapshot_time_s": 6.0
+      },
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "8788025ce361796d",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v3/A01.json"
+    },
+    {
+      "record": {
+        "scene_id": "A01",
+        "seed": 40703,
+        "attempt": 1,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/A01/seed40703_attempt01",
+        "physics_valid": true,
+        "failed_checks": "",
+        "duration_s": 24.0,
+        "probe_y_m": 0.0023008949428917572,
+        "probe_z_m": 0.9505564767112045,
+        "global_displacement_max_m": 0.2174954092629417,
+        "global_displacement_contact_window_max_m": 0.21734530329221116,
+        "touch_rows": 172,
+        "touch_first_s": 8.26,
+        "touch_last_s": 11.68,
+        "qualifying_rows": 138,
+        "qualifying_first_s": 8.52,
+        "qualifying_last_s": 11.26,
+        "probe_x_max_m": 0.932404100894928,
+        "target_lag_contact_phase_max_m": 0.03390670728683487,
+        "applied_command_force_contact_phase_max_n": 2.320188447825496,
+        "near_nodes": 12,
+        "near_response_post6_peak_m": 0.17563078362525167,
+        "near_forward_response_post6_peak_m": 0.17533469200134277,
+        "cube_wall_min_axis_gap_m": null,
+        "t10_cube_triangle_interior_count": null,
+        "t10_min_cube_dilation_Linf_m": null,
+        "t10_near_cloth_wall_gap_min_m": null,
+        "t10_near_cloth_wall_gap_max_m": null
+      },
+      "geometry": {
+        "global_max_node_snapshot_10s": {
+          "snapshot_time_s": 10.0,
+          "node_id": 461,
+          "position_world_m": [
+            1.008826494216919,
+            -0.04499567300081253,
+            0.9014716744422913
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.15882647037506104,
+            0.005006749182939529,
+            0.007317900657653809
+          ],
+          "distance_to_probe_center_m": 0.11471823440408746
+        },
+        "global_max_node_snapshot_11s": {
+          "snapshot_time_s": 11.0,
+          "node_id": 811,
+          "position_world_m": [
+            1.0656888484954834,
+            -0.04720662906765938,
+            0.024190930649638176
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.2156888246536255,
+            0.0027933716773986816,
+            0.004190931096673012
+          ],
+          "distance_to_probe_center_m": 0.9356549733859102
+        },
+        "global_max_node_snapshot_12s": {
+          "snapshot_time_s": 12.0,
+          "node_id": 811,
+          "position_world_m": [
+            1.0673820972442627,
+            -0.04923791065812111,
+            0.024742551147937775
+          ],
+          "displacement_from_first_saved_snapshot_m": [
+            0.21738207340240479,
+            0.0007620900869369507,
+            0.0047425515949726105
+          ],
+          "distance_to_probe_center_m": 0.9571508038361153
+        },
+        "near_node_ids": [
+          411,
+          412,
+          413,
+          414,
+          436,
+          437,
+          438,
+          439,
+          461,
+          462,
+          463,
+          464
+        ],
+        "near_reference_actual_snapshot_time_s": 6.0
+      },
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "8788025ce361796d",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v3/A01.json"
+    },
+    {
+      "record": {
+        "scene_id": "EMPTY",
+        "seed": 40703,
+        "attempt": 1,
+        "run_path": "outputs/round4070_comprehensive_traversability/physics/EMPTY/seed40703_attempt01",
+        "physics_valid": true,
+        "failed_checks": "",
+        "duration_s": 24.0,
+        "probe_y_m": 0.0023008949428917572,
+        "probe_z_m": 0.9505564767112045,
+        "global_displacement_max_m": 0.0,
+        "global_displacement_contact_window_max_m": null,
+        "touch_rows": 0,
+        "touch_first_s": null,
+        "touch_last_s": null,
+        "qualifying_rows": 0,
+        "qualifying_first_s": null,
+        "qualifying_last_s": null,
+        "probe_x_max_m": 0.9499995708465576,
+        "target_lag_contact_phase_max_m": 0.009999953269958617,
+        "applied_command_force_contact_phase_max_n": 0.1573328272501726,
+        "near_nodes": 0,
+        "near_response_post6_peak_m": null,
+        "near_forward_response_post6_peak_m": null,
+        "cube_wall_min_axis_gap_m": null,
+        "t10_cube_triangle_interior_count": null,
+        "t10_min_cube_dilation_Linf_m": null,
+        "t10_near_cloth_wall_gap_min_m": null,
+        "t10_near_cloth_wall_gap_max_m": null
+      },
+      "geometry": {},
+      "recorded_execution_source_sha256": {
+        "scripts\\round4070_g\\physics_gate.py": "355feca00f394755ef7f98877d8d037c17b084a642a4b3e06f986263dfbb50e0",
+        "scripts\\round4070_g\\physics_scene_builder.py": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23",
+        "scripts\\round4070_g\\physics_scenes.py": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3",
+        "scripts\\round4070_fixed_probe_benchmark\\run_guarded_with_resources.ps1": "da745c4184bfb2f53558bc7654dd38e4f5fb81f1946ce1a8781014dc104bfa98"
+      },
+      "physical_config_id": "450526391af8cd60",
+      "config_path": "outputs/round4070_comprehensive_traversability/configs_v3/EMPTY.json"
+    }
+  ],
+  "excluded_comparisons": [
+    {
+      "run": "A01/seed40701_attempt01",
+      "reason": "Older apparatus; source hash record absent and contact/release failed. Do not pool as the same-version control."
+    },
+    {
+      "run": "EMPTY/seed40701_attempt01 and seed40702_attempt01",
+      "reason": "Source hash record absent; strongest matched EMPTY comparator is seed40703."
+    }
+  ],
+  "diagnostic_proposal_only": true
+}

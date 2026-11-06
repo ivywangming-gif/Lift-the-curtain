@@ -41,4 +41,6 @@ DR family 明确为 `DR_COMBINATION`，不得因为 ID 以 D 开头而混入刚�
 
 冻结配置只是计划。实际采样数、物理阻塞、输入可用性、标签缺口和最终 OOD 可评价性必须由真实数据汇总，不以这些目标代替完成事实。
 
+V4修订：原V3仅设置随机seed而未实际采样，已运行10条均作为superseded pilot排除。976个新primary trial ID追加 `_rng1`，物理场景和physics gate不变；`G1_RNG_V1`在每次reset后首次physics step前真实注入y/yaw各±.001 m/rad微扰，以及所有自由节点各轴±.001 m/s初速，全部附件节点严格为零。记录完整draw、应用数组、PhysX root pose与节点速度readback及其SHA，不能把seed字段本身当随机性证据。机器人条件配对复用同seed的实际draw。V4冻结时pilot为8条，后旧加载队列自然完成到10条；1000总上限包含这些10条，976正式计划之外实际仅余14次启动空间，原24为最初预算设计。
+
 初始张紧的独立 stress-free rest/prestrain 轴当前 **NOT_IMPLEMENTED_WITH_REASON**：现有已验证 surface 构造没有独立验证的无应力 rest mesh 与锚距分离接口。褶皱已改变真实几何并带来几何松弛，但不能把尺寸变化称为独立初始张紧随机化。需要另建模型与3seed门禁后才能增加这一轴。观测噪声增强当前由学习分支实现中；未执行的增强或 OOD 不标完成。

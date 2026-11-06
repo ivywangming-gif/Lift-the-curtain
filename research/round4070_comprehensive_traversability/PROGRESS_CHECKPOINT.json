@@ -1,31 +1,91 @@
 {
   "status": "IN_PROGRESS_NOT_COMPLETE",
-  "checked_utc": "2026-11-06T11:25:53.819079+00:00",
-  "frozen_manifest": "outputs\\round4070_comprehensive_traversability\\campaign_manifest_v3.json",
-  "manifest_sha256": "5446d638895b61065d2d845ff031de83661b12698b890fb71c0776b6887812bb",
+  "checked_utc": "2026-11-06T16:15:47.255418+00:00",
+  "frozen_manifest": "outputs\\round4070_comprehensive_traversability\\campaign_manifest_v5.json",
+  "manifest_sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
   "planned_g1_trials": 976,
   "max_g1_launches": 1000,
-  "physics_attempts_launched": 6,
-  "physics_summaries": 6,
-  "physics_gates_passed": 5,
-  "physical_configs_with_three_valid_seeds": 1,
-  "g1_attempts_launched": 2,
-  "g1_finalized_trial_ids": 2,
-  "g1_runtime_valid": 2,
-  "g1_probe_valid": 2,
-  "g1_label_valid": 2,
+  "physics_attempts_launched": 72,
+  "physics_summaries": 72,
+  "physics_gates_passed": 64,
+  "physical_configs_with_three_valid_seeds": 17,
+  "g1_attempts_launched": 15,
+  "g1_launch_files_locally_available": 15,
+  "historical_launches_not_present_locally": 0,
+  "primary_g1_attempts_launched": 5,
+  "superseded_pilot_attempts_launched": 10,
+  "primary_g1_finalized_trial_ids": 4,
+  "g1_runtime_valid": 4,
+  "g1_probe_valid": 4,
+  "g1_label_valid": 4,
   "g1_labels": {
+    "PASSABLE_FOR_ACTION": 4
+  },
+  "imported_history_count": 4,
+  "imported_core_labels": {
     "PASSABLE_FOR_ACTION": 2
   },
-  "imported_history_count": 2,
-  "imported_core_labels": {},
   "learning_runs": [
+    {
+      "run": "learning_budget_preflight_44229f3b83d940b19c99eeee9bd7409e",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      }
+    },
+    {
+      "run": "learning_campaign_12ac229296d8078b9d9a",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      },
+      "partial_single_class_task_counts": {
+        "BLOCKED_WITH_REASON": 320
+      },
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1840
+      }
+    },
+    {
+      "run": "learning_campaign_1ac4c6d56c01041f76d1",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      }
+    },
     {
       "run": "learning_campaign_eacea760b27f55f2f55f",
       "scope": "G_ACTION_CONTRACT_BENCHMARK",
       "status": "PENDING",
       "task_counts": {
         "BLOCKED_WITH_REASON": 1280
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1280
+      }
+    },
+    {
+      "run": "learning_confirmation_preflight_661cd7ce9bcd4969bcc6cd44dc45d004",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1520
       }
     },
     {
@@ -34,19 +94,48 @@
       "status": "PENDING",
       "task_counts": {
         "BLOCKED_WITH_REASON": 1240
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1240
+      }
+    },
+    {
+      "run": "learning_v5_contract_preflight_20261106_finalguard",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      }
+    },
+    {
+      "run": "learning_v5_contract_preflight_20261106_native5",
+      "scope": "G_ACTION_CONTRACT_BENCHMARK",
+      "status": "PENDING",
+      "task_counts": {
+        "BLOCKED_WITH_REASON": 1520
+      },
+      "partial_single_class_task_counts": {},
+      "all_scopes_task_counts": {
+        "BLOCKED_WITH_REASON": 1520
       }
     }
   ],
   "active_locks": {
     "workflow_lock.json": {
       "owner": "workflow",
-      "run_id": "workflow-54456",
-      "pid": 54456,
-      "token": "0900ce36d7b54f9a8151cd96f7d9ae61",
-      "created_utc": "2026-11-06T11:25:36.731647+00:00",
+      "run_id": "workflow-93964",
+      "pid": 93964,
+      "token": "a3581ace821147dcb66709a8ecc90ca7",
+      "created_utc": "2026-11-06T16:15:18.492608+00:00",
       "pid_currently_exists": true
     }
   },
+  "g1_admission_paused": true,
   "completion_warning": "No full benchmark or method advantage is claimed. Planned work is not executed evidence.",
   "resume_command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\run_round4070_g.ps1 -Mode all -RetryRuntimeFailures"
 }

@@ -1,0 +1,64 @@
+{
+  "scope": "ACTUAL_LEGAL_HISTORY_DIAGNOSTIC_NOT_MODEL_COMPARISON",
+  "manifest_sha256": "7385a9df0fc095a6094299d297c042a23f7adf417414a4586fcfb1758014b787",
+  "sources": [
+    {
+      "side": "left",
+      "trial_id": "G_C01_left_coverage_00_nominal_s71900_rng1_act2",
+      "legal_samples": 102,
+      "span_s": 1.9899999999999993,
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_C01_left_coverage_00_nominal_s71900_rng1_act2__attempt01.npz",
+      "npz_sha256": "4288bb70ad584c351b7b3562f64723c0e0e943b11af421a62611e0efce0389b5",
+      "audit_path": "outputs/round4070_comprehensive_traversability/trials/G_C01_left_coverage_00_nominal_s71900_rng1_act2/attempt01/g_collision_audit.json",
+      "audit_sha256": "ecb8a5d308581beb24998b35885cb0fcc6db6c410b2a97b960c503862b10f31e",
+      "active_arm_indices": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "active_arm_joint_names": [
+        "left_shoulder_pitch_joint",
+        "left_shoulder_roll_joint",
+        "left_shoulder_yaw_joint",
+        "left_elbow_joint",
+        "left_wrist_roll_joint",
+        "left_wrist_pitch_joint",
+        "left_wrist_yaw_joint"
+      ]
+    },
+    {
+      "side": "right",
+      "trial_id": "G_C01_right_coverage_00_nominal_s71900_rng1_act2",
+      "legal_samples": 102,
+      "span_s": 1.9899999999999993,
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_C01_right_coverage_00_nominal_s71900_rng1_act2__attempt01.npz",
+      "npz_sha256": "d7b305e043985ae6f4f267cbf66f68fa58833df3ccffbe4bbd46c79911c28c07",
+      "audit_path": "outputs/round4070_comprehensive_traversability/trials/G_C01_right_coverage_00_nominal_s71900_rng1_act2/attempt01/g_collision_audit.json",
+      "audit_sha256": "83d29eccc4e2cf513a460d5673656ad0c1464d434f6dc1cd0c0fa9abcea0f475",
+      "active_arm_indices": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "active_arm_joint_names": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_roll_joint",
+        "right_shoulder_yaw_joint",
+        "right_elbow_joint",
+        "right_wrist_roll_joint",
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint"
+      ]
+    }
+  ],
+  "image_sha256": "276f93ed6d55c4dc1daaef075814881dfd2b350bf2b7ed2ae38fbad474391cfb",
+  "plotting_source_sha256": "95cfb61f102d0bbc310d83710d896797939b89fbb727744e94f5f36ef2c67010"
+}

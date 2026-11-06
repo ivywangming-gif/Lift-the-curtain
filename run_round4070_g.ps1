@@ -7,9 +7,11 @@ param(
     [int]$MaxFits=0
 )
 $ErrorActionPreference='Stop'
-$manifest=Join-Path $PSScriptRoot 'outputs\round4070_comprehensive_traversability\campaign_manifest_v3.json'
+$pointerPath=Join-Path $PSScriptRoot 'research\round4070_comprehensive_traversability\CURRENT_CAMPAIGN.json'
+$pointer=Get-Content -LiteralPath $pointerPath -Raw | ConvertFrom-Json
+$manifest=Join-Path (Join-Path $PSScriptRoot 'outputs\round4070_comprehensive_traversability') $pointer.manifest
 if (-not (Test-Path -LiteralPath $manifest)) {
-    & 'C:\conda_envs\isaaclab\python.exe' (Join-Path $PSScriptRoot 'scripts\round4070_g\physics_restore_manifest.py')
+    & 'C:\conda_envs\isaaclab\python.exe' (Join-Path $PSScriptRoot 'scripts\round4070_g\restore_campaign.py')
     if ($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
 }
 if ($Mode -in @('all','analyze','train')) {
@@ -18,7 +20,7 @@ if ($Mode -in @('all','analyze','train')) {
     if ($MaxFits -gt 0) {$arguments+=@('--max-fits',[string]$MaxFits)}
 } else {
     $runner=Join-Path $PSScriptRoot 'scripts\round4070_g\physics_campaign.py'
-    $arguments=@($runner,'--mode',$Mode,'--max-jobs',[string]$MaxJobs)
+    $arguments=@($runner,'--manifest',$manifest,'--mode',$Mode,'--max-jobs',[string]$MaxJobs)
 }
 if ($Scene) {$arguments+=@('--scene',$Scene)}
 if ($RetryRuntimeFailures) {$arguments+='--retry-runtime-failures'}

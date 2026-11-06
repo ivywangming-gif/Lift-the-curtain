@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import time
 import uuid
 
 import psutil
@@ -27,7 +28,8 @@ OUT = ROOT / 'outputs/round4070_comprehensive_traversability'
 DOC = ROOT / 'research/round4070_comprehensive_traversability'
 DATA_FILES = ('manifest.json', 'split_manifest.json', 'matched_pairs.json', 'dataset_status.json')
 LEARNING_FILES = ('train_benchmark.py', 'learning_core.py', 'learning_models.py',
-                  'engineering_rules.py', 'observation_randomization.py', 'resource_lock.py')
+                  'engineering_rules.py', 'observation_randomization.py', 'resource_lock.py',
+                  'physics_history.py', 'collision_geometry.py', 'g1_action_contract_v2.py')
 
 
 def read(path, default=None):
@@ -72,6 +74,18 @@ def launch_count():
     return sum(1 for kind in ('physics', 'trials') for _ in (OUT / kind).glob('*/*/campaign_launch.json'))
 
 
+def current_manifest():
+    pointer = read(DOC / 'CURRENT_CAMPAIGN.json')
+    if not pointer or Path(pointer['manifest']).name != pointer['manifest']:
+        raise RuntimeError('Missing or invalid frozen campaign pointer')
+    path = OUT / pointer['manifest']
+    if not path.exists():
+        call('restore_campaign.py')
+    if sha(path) != pointer['sha256']:
+        raise RuntimeError('Current campaign SHA256 mismatch')
+    return path
+
+
 def snapshot_dataset():
     """Copy immutable metadata; NPZ remain in the read-only, hash-checked exporter."""
     hashes = {name: sha(OUT / 'dataset' / name) for name in DATA_FILES}
@@ -99,24 +113,40 @@ def snapshot_dataset():
 
 def audit():
     call('build_dataset.py')
+    from physics_campaign import summarize
+    summary = summarize(read(current_manifest()))
+    event('SCENE_COVERAGE_REFRESHED', named_rows=len(summary['scene_states']), actual_g1_launches=summary['g1_launches'])
     call('checkpoint.py')
     call('report_status.py')
     event('ACTUAL_DATA_AUDITED', **read(OUT / 'dataset/dataset_status.json', {}))
 
 
+def learning_source_hashes():
+    """Use the trainer's freeze contract, failing closed on registry drift."""
+    from train_benchmark import sources
+    code = sources()
+    if set(code) != set(LEARNING_FILES):
+        raise RuntimeError('Workflow learning-source registry differs from trainer freeze contract')
+    if code != {name: sha(SCRIPTS / name) for name in LEARNING_FILES}:
+        raise RuntimeError('Learning source changed while computing orchestration identity')
+    return code
+
+
 def freeze_learning(snapshot, identity):
-    code = {name: sha(SCRIPTS / name) for name in LEARNING_FILES}
+    code = learning_source_hashes()
     protocol_id = hashlib.sha256(json.dumps(dict(dataset=identity, code=code), sort_keys=True).encode()).hexdigest()
     run = OUT / ('learning_campaign_' + protocol_id[:20])
     if not (run / 'frozen_protocol.json').exists():
         call('train_benchmark.py', 'freeze', '--manifest', snapshot / 'manifest.json',
              '--splits', snapshot / 'split_manifest.json', '--pairs', snapshot / 'matched_pairs.json', '--output', run)
-    else:
-        protocol = read(run / 'frozen_protocol.json')
-        if protocol['manifest_sha256'] != sha(snapshot / 'manifest.json') or protocol['code_sha256'] != code:
-            raise RuntimeError('Frozen learning protocol mismatch; never overwrite a prior protocol')
-        if not (run / 'task_queue.json').exists():
-            raise RuntimeError('Interrupted freeze is incomplete; inspect this run before creating a new one')
+    # Verify both newly created and reused protocols. A source edit during the
+    # child freeze must not publish a run under an identity computed earlier.
+    protocol = read(run / 'frozen_protocol.json')
+    if (protocol['manifest_sha256'] != sha(snapshot / 'manifest.json') or protocol['code_sha256'] != code
+        or learning_source_hashes() != code):
+        raise RuntimeError('Frozen learning protocol mismatch; never overwrite a prior protocol')
+    if not (run / 'task_queue.json').exists():
+        raise RuntimeError('Interrupted freeze is incomplete; inspect this run before creating a new one')
     atomic(OUT / 'latest_learning_run.json', dict(run=str(run.relative_to(ROOT)), dataset_snapshot=identity,
         scientific_status='IN_PROGRESS_NOT_COMPLETE'))
     return run
@@ -137,6 +167,9 @@ def active_simulations():
 
 
 def train(run, max_fits=None, hours=24.):
+    if (OUT / 'PAUSE_G1.flag').exists():
+        event('TRAINING_WITHHELD_G1_ADMISSION_PENDING', run=str(run))
+        return
     queue = read(run / 'task_queue.json')
     eligible = [task for task in queue['tasks'] if task['status'] in ('PLANNED', 'TRAINED', 'FAILED_WITH_REASON')]
     if not eligible:
@@ -177,17 +210,18 @@ def main():
     if args.chunk_jobs < 1 or args.max_jobs < 0 or args.training_hours <= 0:
         parser.error('Positive chunk size/training hours and nonnegative job limit required')
     with resource_lock('workflow', f'workflow-{os.getpid()}', OUT / 'workflow_lock.json'):
-        if not (OUT / 'campaign_manifest_v3.json').exists():
-            call('physics_restore_manifest.py')
+        manifest = current_manifest()
         initial = launch_count()
         collection = 'NOT_REQUESTED'
         if args.mode == 'all':
             while True:
+                if current_manifest()!=manifest:
+                    raise RuntimeError('Current frozen campaign changed; checkpoint and restart under the new explicit contract')
                 before = launch_count()
                 remaining = args.max_jobs - (before - initial) if args.max_jobs else args.chunk_jobs
                 if remaining <= 0:
                     collection = 'INVOCATION_LIMIT_CHECKPOINTED'; break
-                extra = ['--mode', 'all', '--max-jobs', min(args.chunk_jobs, remaining)]
+                extra = ['--manifest', manifest, '--mode', 'all', '--max-jobs', min(args.chunk_jobs, remaining)]
                 if args.scene:
                     extra.extend(['--scene', args.scene])
                 if args.retry_runtime_failures:
@@ -202,6 +236,12 @@ def main():
                 if any(row['event'] == 'GLOBAL_IMPLEMENTATION_ERROR_PAUSE' for row in events):
                     collection = 'BLOCKED_WITH_REASON_GLOBAL_IMPLEMENTATION_ERROR'; break
                 if launch_count() == before:
+                    if (OUT / 'PAUSE_G1.flag').exists() or any(row['event'] == 'G1_ADMISSION_PAUSED' for row in events):
+                        event('WAIT_G1_ADMISSION', training_permitted=False, physics_queue_currently_exhausted=True)
+                        atomic(OUT / 'workflow_wait_checkpoint.json', dict(status='IN_PROGRESS_NOT_COMPLETE', reason='G1_ADMISSION_PAUSED', training_permitted=False, pid=os.getpid()))
+                        while (OUT / 'PAUSE_G1.flag').exists():
+                            time.sleep(15)
+                        continue
                     collection = 'NO_REMAINING_ELIGIBLE_COLLECTION_JOBS'; break
         audit()
         snapshot, identity = snapshot_dataset()

@@ -1,0 +1,1 @@
+evaluation_endpoint,split_id,method,reference,mode,metric,label_fraction,paired_episode_n,physical_group_n,paired_seed_n,mean_difference,ci95_low,ci95_high

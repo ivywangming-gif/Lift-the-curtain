@@ -1,20 +1,20 @@
 # Round 4070-G 阶段报告：研究未完成
 
-实际检查时间：`2026-11-06T11:25:53.819079+00:00`。当前状态 **IN_PROGRESS_NOT_COMPLETE**。这不是终局完成报告，未满足用户定义的任何完整 benchmark 完成条件。计划、实现、合成代码验证、真实仿真、正式学习评价分开记录。
+实际检查时间：`2026-11-06T16:15:47.255418+00:00`。当前状态 **IN_PROGRESS_NOT_COMPLETE**。这不是终局完成报告，未满足用户定义的任何完整 benchmark 完成条件。计划、实现、合成代码验证、真实仿真、正式学习评价分开记录。当前冻结 manifest 为 `campaign_manifest_v5.json`，primary protocol 为 `G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2`。没有明确 seed 随机化、完整 G1 碰撞证据及匹配动作契约的旧 pilot 排除出主实验；原始 C01 PASSABLE 不再作为主监督正例。V1 有限墙标签缺口见 ACTION_LABEL_GAP_REPORT.md；实际新版动作范围以当前冻结 sidecar 为准，不能追溯改写旧试验。
 
-已实际启动 physics 6 次、G1 2 次；三独立 seed 门禁通过配置 1 个（含控制/组合）。指定 48 个命名场景中有 0 个具备三 seed 门禁证据；相同物理配置的别名不算独立验证。
+已实际启动 physics 72 次、G1 15 次；三独立 seed 门禁通过配置 17 个（含控制/组合）。指定 48 个命名场景中有 21 个具备三 seed 门禁证据；相同物理配置的别名不算独立验证。
 
-导入 2 条有效探测历史，其中空场控制 2 条，核心标签 `{}`。当前冻结学习状态 `{'BLOCKED_WITH_REASON': 1280}`，实际 EVALUATED 任务 0 个。合成 smoke 不进入这些计数。
+主实验导入 4 条有效探测历史，其中空场控制 2 条，核心标签 `{'PASSABLE_FOR_ACTION': 2}`。另有 10 次已启动旧 pilot，仅保留诊断，不进入主训练或统计。当前冻结主学习状态 `{'BLOCKED_WITH_REASON': 1520}`，实际主 EVALUATED 任务 0 个；独立单类诊断 EVALUATED 0 个。合成 smoke 不进入这些计数。
 
-1. **全部场景家族物理验证**：尚未完成。三 seed 通过的指定命名场景为 无；逐项状态及失败证据见 SCENE_COVERAGE_MATRIX.csv 和 PHYSICAL_VALIDITY_REPORT.md。
+1. **全部场景家族物理验证**：尚未完成。三 seed 通过的指定命名场景为 A01, A02, A04, A05, B01, B02, B04, B05, C01, C02, C03, D01, D03, D04, D05, E01, E02, F01, F02, F03, F04；逐项状态及失败证据见 SCENE_COVERAGE_MATRIX.csv 和 PHYSICAL_VALIDITY_REPORT.md。
 
-2. **产生 G1 有效通行标签的场景**：核心场景：暂无。控制样本单列；超时、安全撤回、PointGoal 不作为核心通过标签。
+2. **产生 G1 有效通行标签的场景**：核心场景：C01。控制样本单列；超时、安全撤回、PointGoal 不作为核心通过标签。
 
 3. **材料可信度**：布、网孔和 PVC/条带均为当前求解器中的物理代理；真实材料参数、碰撞接触厚度、弯折/塑性尚未经过实物校准。数值门禁不证明材料保真，材料 OOD 不据此宣称实物泛化。
 
-4. **左右手正负覆盖**：尚需按 LEFT_RIGHT_COVERAGE.csv 核对 50 P/50 B、每手正负及至少三个独立正例家族，当前核心总数 0。不以重试或物理别名扩充独立家族。
+4. **左右手正负覆盖**：尚需按 LEFT_RIGHT_COVERAGE.csv 核对 50 P/50 B、每手正负及至少三个独立正例家族，当前核心总数 2。不以重试或物理别名扩充独立家族。
 
-5. **Domain randomization 范围**：已冻结几何/约束/动力学、机器人偏移/姿态/动作时长与观测扰动。数值范围、12 个 LHS 组合及实际运行状态分别见 DOMAIN_RANDOMIZATION_SPEC.md、manifest v3 和执行表。独立初始预张力尚未实现；观测扰动为未硬件标定的敏感性试验。
+5. **Domain randomization 范围**：已冻结几何/约束/动力学、机器人偏移/姿态/动作时长与观测扰动。数值范围、12 个 LHS 组合、实际逐 seed 初态注入及运行状态见 DOMAIN_RANDOMIZATION_SPEC.md、CURRENT_CAMPAIGN.json 指向的冻结 manifest 和执行表。独立初始预张力尚未实现；观测扰动为未硬件标定的敏感性试验。
 
 6. **普通 GRU 是否最强**：尚无完整 G 独立评价支持该排序；F 的结果不可替代新动作合同。
 
@@ -26,7 +26,7 @@
 
 10. **无标签响应预测与标签效率**：仅训练物理组的 UNKNOWN 可参与；需同标签预算独立测试。分阶段预训练额外 40 epoch 必须单列成本，目前不能声称提高效率。
 
-11. **跨手与姿态稳定性**：双手空场 smoke 证明日志与动作可执行，不证明跨手分类泛化。按 active/opposite 关节重排不是已认证的带符号运动学镜像；需双向跨手和姿态 OOD 评价。
+11. **跨手与姿态稳定性**：双手空场 smoke 用于验证日志与动作执行，不能代替跨手分类泛化。按 active/opposite 关节重排不是已认证的带符号运动学镜像；需双向跨手和姿态 OOD 评价。
 
 12. **同误放行风险下覆盖提升**：仅用独立 calibration 选择阈值，在未触碰的 test 统计风险与覆盖；有限样本经验风险不等于保证。尚无可重复优势结论。
 
@@ -37,5 +37,7 @@
 15. **RA-L/T-RO 方法贡献**：现阶段证据不足。标准 GRU、残差、对比学习和选择性分类不是原创；潜在价值在可信干预标签、约束/动作条件化和独立泛化证据，必须由后续结果支持。
 
 完整待办仍包括未通过或未执行的物理门禁、核心 G1 双手覆盖、确认集、正式五 seed 方法比较、消融及独立 OOD/校准。当前材料保真与独立预张力限制不能靠更换 GPU 消除。
+
+仅单类有支持的留出集可另列 PARTIAL_HELDOUT_SINGLE_CLASS 诊断，报告该类实际计数；它不替代双类 benchmark，不支持 balanced accuracy、AUROC 或完整 OOD 优势结论。
 
 恢复命令：`powershell -NoProfile -ExecutionPolicy Bypass -File .\run_round4070_g.ps1 -Mode all -RetryRuntimeFailures`。它从持久队列继续实际执行，不代表聊天结束后代理会自动继续审查。详细操作见 RUN_INSTRUCTIONS.md；Git 记录见 GIT_DELIVERY_REPORT.md。

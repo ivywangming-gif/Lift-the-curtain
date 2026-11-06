@@ -1,6 +1,10 @@
 # Round4070-G actual dataset audit
 
-Current importer view: **2** accepted real G histories, **0** excluded/unfinalized source directories. This is a partial dataset status, not benchmark completion.
+Current importer view: **4** primary accepted real G histories, **10** superseded pilots, **0** pending body collision audit, **0** excluded/unfinalized source directories. This is a partial dataset status, not benchmark completion.
+
+Actual launch inventory separately records **15** starts, including **1** without episode metadata and **1** without a finalized outcome. The metadata-import excluded count does not imply all starts succeeded. Original attempt paths, terminal/open state and available errors remain in actual_launch_inventory.json; these rows do not create model episodes or labels.
+
+Primary protocol `G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2` and validity rule `G_BODY_COLLISION_VALIDITY_V1` require actual replayable seed injection and an independent VERIFIED whole-robot sampled collision audit. Missing/unsupported collision geometry is pending, not usable UNKNOWN response data. Confirmed penetration is physics-invalid and excluded. Superseded protocols remain separate with original outcomes. This instrumentation/validity repair follows the requested physical-validity standard, not observed model performance. V5 adds the exact versioned 200 Hz discrete action tube described in V5_DISCRETE_ACTION_CONTRACT_REVIEW.md; V1/V4 labels are never retroactively reinterpreted as V5.
 
 Raw G files remain read-only. The model array contains only robot q/qdot/actually sent q_cmd/applied torque, actual previous control action, current policy action, body-local dual-hand FK and causal displacement, robot IMU/state, known commanded action and true observation intervals. All geometry, material, constraint node indices, contact truth, scene IDs, labels and followup outcomes remain in separate metadata. No absolute world position, map or goal channel is exported. Missing acceleration is explicitly zero-plus-availability-mask, never presented as an observed zero.
 

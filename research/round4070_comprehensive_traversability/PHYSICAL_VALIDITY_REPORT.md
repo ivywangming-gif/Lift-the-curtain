@@ -2,7 +2,29 @@
 
 本报告不把配置生成等同于实际验证；实际完成状态由 `outputs/round4070_comprehensive_traversability/campaign_progress.json` 与每条原始 `summary.json` 更新。当前完整研究尚未完成。
 
-2026-11-06 11:28 UTC阶段事实：EMPTY三seed完整门禁通过且左右手G1 smoke各一条50Hz有效控制历史；A01在保留原装置失败attempt之后，新仪器版本三seed40701/40702/40703均24s全部门禁通过。其他物理配置仍待持续队列实际验证。这些结果不代表已有柔性通行正例。
+## 当前已核实状态（2026-11-06 15:57 UTC）
+
+V5 已冻结并激活，manifest SHA256 为 `c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200`。主数据已正式导入 **2 条 EMPTY 控制 PASSABLE（左右各1）**；原 10 条 V3 pilots 继续排除，不能混作主监督数据。累计13次实际G1启动，包括原10pilots、1次App前失败及2次有效控制；未启动条目不计预算。
+
+EMPTY-left 首次启动因冻结计划 `physics_valid=False` 与合法运行门禁 `True` 的接口比较冲突，在 App 之前退出，无物理样本。原始失败与恢复后的精确旧源码字节保留；修复只允许经过真实三seed门禁的该证据字段转换，seed/机器人/动作等冻结条件不变。唯一受控 attempt02 完成，并通过全部独立审计：6068 个实际 200Hz 步及 reset/RNG 的 step0，共6069个几何状态；39个原生碰撞形状绑定、有限性、探测和安全恢复均有效。最终 hold 的实际碰撞后缘下界为1.15323471m，超过固定0.95m阈值；3416个动作约束状态无违例，最大逐步x位移1.00215mm。离线复算与已保存审计JSON完全一致。这仍是空场控制验证，不是障碍物通行性能。
+
+EMPTY-right也完成5698个真实200Hz步及step0，共5699个几何状态，actual clearance、动作约束和安全恢复均经独立审核。新墙证据模块接入后的旧左右EMPTY全量只读复核仍为VERIFIED，原始文件未改写。RIGHT同时实际验证G1的post-finalize清理修复：127.739s自然退出，无cleanup timeout。
+
+实际 native 几何提取已完成：27个 exact 形状与12个仅能证明分离的 native-vertex outer envelope；39个形状包括27 convex meshes、8 spheres、4 native zero-margin core cylinders。4个真实同tick link-pose样本及独立已知compound验证坐标与缩放。当前使用 `g1_native_collision_library_v3.json` 和 `g1_native_geometry_validation_v2.json`，详见 `BODY_COLLISION_AUDIT_PROTOCOL_V2.md`。12个外包络交叠只能NOT_VERIFIED，不伪称exact，也不能据此给无效穿透标签。
+
+56个不同物理配置中已有17个通过三seed门禁（含B05）。A03/40703、B03/40702、C04/40701、E03/40701、E04/40703各只在late_stability未通过；D02/40702及40703只在contact_demonstrated未通过，其余checks全部通过。剩余覆盖依持久队列继续。CSV分别记录未执行、seed不足、门禁失败、装置/执行异常及各attempt证据路径，不把接触代理证据不足写成材料不稳定。
+
+B05后续门禁实际验证了仅在FINALIZE后禁用交互式STOP渲染回调的清理修复：首两次为80.52s及70.963s正常退出，无30s清理超时，物理时序和门槛未变。每次启动现在先保存实际脚本、关键依赖及guard原始字节与SHA，因此pre-App失败也具可复现实证。
+
+墙场景的实际Cube变换/尺寸/CollisionAPI/static属性、原生overlap精确碰撞路径，以及六轴原生进入面position/normal/distance对解析Box边界的闭环已实现并通过CPU反例测试。真实墙场景上的首次API执行仍待完成；缺失/禁用/动态/动画/变换或原生面不符都会在first-step前拒绝，不将请求参数metadata冒称实际墙证据。离线audit独立复查wall原始JSON、归档源码SHA与实际native二进制身份，只有通过才可审计body-wall和V5 BLOCKED证书。没有墙的EMPTY证据不受此额外证据要求影响。
+
+## 历史检查点（13:24 UTC；不代表当前状态）
+
+当时全seed聚合事实：EMPTY、A01、A02、B02、C01、D01、E02、F02 已各有三seed的24s有效门禁；A03完成1个seed。D02仅seed40701通过，另外两个seed的 `contact_demonstrated=false`（其余checks通过），因此尚不符合三seed门禁；不得仅看首seed概括全场景通过，也不把交互证据不足扩大成真实材料失效。原A01装置失败attempt完整保留。既有10条G1均为V3 pilot：缺少实际seed随机注入和完整机器人非穿透证据，不进入主学习，也不把其online正/负标签计作正式真值。V4主试验当时为0条。
+
+V4新增实际seeded微扰与独立50Hz机器人/布节点记录；G1 admission暂因真实native collider几何审核装置未验证而暂停，环境physics-only队列持续运行。见 `BODY_COLLISION_AUDIT_PROTOCOL_V1.md`。原USD27个mesh碰撞位于父Xform；直接cooking API不支持该构造，故不能用子visual mesh或旧fallback bbox替代。property-query确实返回39个collider条目，native shape统计也非空，不能将API导出失败称为资产缺失。独立OmniPVD实际mesh提取仍在诊断。
+
+有限宽墙覆盖固定局部corridor只证明局部直线路径阻挡；当前V4闭环动作允许横向/转向，不能据此直接证明完整动作BLOCKED。旧raw BLOCKED只保留诊断；formal标签由独立数据审核决定。
 
 ## 冻结范围与旧成功配置
 

@@ -7,7 +7,9 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 from pathlib import Path
+import time
 import uuid
 
 import numpy as np
@@ -22,9 +24,16 @@ from observation_randomization import fit_scale, transform_indices
 
 
 def main(device="cpu"):
+    started_utc = dt.datetime.now(dt.timezone.utc).isoformat()
+    started_wall = time.monotonic()
     torch.set_num_threads(2)
     root = ROOT/"outputs/round4070_comprehensive_traversability/implementation_smoke"/uuid.uuid4().hex
     root.mkdir(parents=True)
+    source_hashes = {name:hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
+                     for name in ("smoke_learning.py","learning_core.py","learning_models.py","train_benchmark.py",
+                                  "observation_randomization.py","test_learning_contracts.py","resource_lock.py")}
+    write_json(root/"implementation_test_started.json", dict(scope="SYNTHETIC_ONLY_NOT_G_DATA_NOT_BENCHMARK", device=device,
+               cpu_threads=2, started_utc=started_utc, source_sha256=source_hashes))
     permit = root/"synthetic_only_window.json"
     write_json(permit, dict(allow_training=True, isaac_stopped_confirmed=True,
                            expires_utc=(dt.datetime.now(dt.timezone.utc)+dt.timedelta(minutes=5)).isoformat(),
@@ -36,7 +45,9 @@ def main(device="cpu"):
         for i in range(6, 10):
             raw.append(rng.normal(size=raw[0].shape).astype(np.float32))
             times.append(times[0].copy())
-            episodes.append(dict(trial_id=f"t{i}", y=i % 2, group_id=f"g{i}", side="right" if i % 2 else "left", is_control=False, action_contract="contract", followup_action_id="action"))
+            episodes.append({**episodes[0],"trial_id":f"t{i}","y":i % 2,"group_id":f"g{i}","side":"right" if i % 2 else "left",
+                             "is_control":False,"synthetic":True,"seed":40700+i,
+                             "reset_randomization_evidence":{**episodes[0]["reset_randomization_evidence"],"seed":40700+i}})
         episodes[4]["y"] = -1
         roles = dict(train=[0,1,2,3,4], calibration=[5,6], test=[7,8,9])
         protocol = dict(epochs=2, pretrain_epochs=1, batch_size=4, hidden=16, max_steps=12, cutoff_s=2.,
@@ -76,7 +87,9 @@ def main(device="cpu"):
                 assert resumed_meta["resumed_from_epoch"] == 2
             results.append(dict(method=method, status="SYNTHETIC_FIT_CHECKPOINT_CALIBRATION_PASS", parameters=meta["parameters"]))
             print(method, "PASS", flush=True)
-        write_json(root/"implementation_test_results.json", dict(status="PASSED", scope="SYNTHETIC_ONLY_NOT_G_DATA_NOT_BENCHMARK", device=device, results=results))
+        write_json(root/"implementation_test_results.json", dict(status="PASSED", scope="SYNTHETIC_ONLY_NOT_G_DATA_NOT_BENCHMARK", device=device, cpu_threads=2,
+                   source_sha256=source_hashes, started_utc=started_utc, finished_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
+                   elapsed_wall_s=time.monotonic()-started_wall, results=results))
     window = dict(allow_training=False, isaac_stopped_confirmed=True, expires_utc=dt.datetime.now(dt.timezone.utc).isoformat(), scope="SYNTHETIC_TEST_ENDED")
     write_json(permit, window)
     print("SYNTHETIC_IMPLEMENTATION_TEST_COMPLETE", root, flush=True)

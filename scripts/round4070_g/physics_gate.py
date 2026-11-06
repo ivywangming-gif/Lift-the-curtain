@@ -174,6 +174,14 @@ def main():
         write_json(run/'summary.json',report)
         LOGGER.finalize(status='PASS' if report['physics_valid'] else 'FAIL',details={'physics_valid':report['physics_valid'],'failure_reason':report.get('failure_reason')})
         print('G_PHYSICS_FINALIZED',report['scene_id'],report['physics_valid'],report.get('failure_reason'),flush=True)
+        # Post-rollout cleanup only. IsaacLab's STOP callback otherwise enters
+        # its interactive render loop while App.close is shutting down. The
+        # same official flag is used by SimulationContext.reset; independent
+        # native-collider diagnostic v7 verified normal stop/flush with it.
+        if 'sim' in locals():
+            sim._disable_app_control_on_stop_handle=True
+            write_json(run/'post_finalize_cleanup.json',dict(protocol='G_POST_FINALIZE_DISABLE_INTERACTIVE_STOP_RENDER_V1',
+                applied_after_summary_and_finalize=True,rollout_or_thresholds_changed=False))
         APP.close()
 
 

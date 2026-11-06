@@ -1,1 +1,1 @@
-split_id,method,seed,mode,n,passable_n,blocked_n,true_pass_n,true_block_n,false_pass_n,false_reject_n,uncertain_n,coverage
+split_id,method,base_method,label_fraction,supervised_train_n,seed,mode,n,passable_n,blocked_n,true_pass_n,true_block_n,false_pass_n,false_reject_n,uncertain_n,coverage

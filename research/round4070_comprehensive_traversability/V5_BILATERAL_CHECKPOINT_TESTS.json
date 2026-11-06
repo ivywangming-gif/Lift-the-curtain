@@ -1,0 +1,10 @@
+{
+  "scope": "CPU_CONTRACTS_NOT_PHYSICAL_EXPERIMENTS_OR_MODEL_PERFORMANCE",
+  "utc": "2026-11-06T16:30:20.750006+00:00",
+  "test_count": 131,
+  "status": "PASS",
+  "elapsed_seconds": 22.358,
+  "command": "python -m unittest discover -s scripts/round4070_g -p test_*.py",
+  "log_path": "outputs/round4070_comprehensive_traversability/handovers/v5_activation_20261106/v5_bilateral_checkpoint_tests.log",
+  "log_sha256": "1e3645273385eaa5a5838b095b14aa6e2367f73169ed3025e38f1f5bed1af3b6"
+}
