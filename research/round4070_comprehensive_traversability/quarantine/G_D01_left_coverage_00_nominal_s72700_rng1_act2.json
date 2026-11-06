@@ -1,0 +1,144 @@
+{
+  "schema": "round4070-g.exact_plan_quarantine.v1",
+  "status": "ACTIVE_WITHHOLD_ONLY",
+  "scope": "EXACT_PLAN",
+  "authorization": {
+    "authorized_by": "/root",
+    "scope": "EXACT_PLAN",
+    "trial_id": "G_D01_left_coverage_00_nominal_s72700_rng1_act2",
+    "authorized_instruction_received_utc": "2026-11-06",
+    "instruction": "ROOT authorizes only D01-left current exact trial quarantine: preserve frozen V5 NOT_VERIFIED; verified local conservative envelope/wall overlap with exact 5mm penetration count zero and valid complete history, wall/native/query/RNG evidence. Do not block D01-right or other independent scenes. Do not relabel, retry, change counts or use diagnostic support proofs as admission.",
+    "diagnostic_only_context": "The separate 1/5mm support calculation does not override frozen V5 envelope-overlap NOT_VERIFIED semantics."
+  },
+  "created_utc": "2026-11-06T17:07:27.738203+00:00",
+  "evidence": {
+    "run_path": "outputs/round4070_comprehensive_traversability/trials/G_D01_left_coverage_00_nominal_s72700_rng1_act2/attempt01",
+    "trial_id": "G_D01_left_coverage_00_nominal_s72700_rng1_act2",
+    "attempt_id": "attempt01",
+    "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+    "physical_config_id": "63b80486f73ac370",
+    "probe_side": "left",
+    "seed": 72700,
+    "frozen_campaign_path": "outputs/round4070_comprehensive_traversability/campaign_manifest_v5.json",
+    "frozen_campaign_sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+    "frozen_plan_sha256": "6dc1137512c49363370ad4d41b22e271aedb9085c96841bf2c18732bfeebe466",
+    "immutable_audit_path": "outputs/round4070_comprehensive_traversability/trials/G_D01_left_coverage_00_nominal_s72700_rng1_act2/attempt01/g_collision_audit_494e6ea74ea63418c136aa01cd65907d678cf8876f96ee8a3dafb7fb54667dea.json",
+    "immutable_audit_sha256": "494e6ea74ea63418c136aa01cd65907d678cf8876f96ee8a3dafb7fb54667dea",
+    "auditor_source_sha256": {
+      "physics_g1_collision_audit.py": "1e0971d1e82a35826fc10ac6cc80e743b6a38cae6ae36a09c439f06608ef267e",
+      "collision_geometry.py": "526396ba7623e7e35af743ab0f8bf4729ecaefa613850864d7d87d5ad19005d0",
+      "collision_clearance.py": "4847643f51f56edc4bb57a7a0e542dd6e0c5a9aa03d09d73bb68ce69fa6b9728",
+      "physics_history.py": "7c680e666a53c9144746927a51492551eb8d8c779f2a5a443c061ebb1224666b",
+      "physics_native_bind.py": "380611275b63937ba16140bd10f9d998d00586821f3e936841add24a5b9f3d31",
+      "g1_action_contract_v2.py": "7ddf6acc9ff21957844758f8b909ee5a15be7ae488d006a43c8673a19d4b3ed3",
+      "physics_wall_evidence.py": "b9933fabf07e5bb932a366c3f47f02ad943c94cafb6fe7af9499067acf9834ad"
+    },
+    "raw_source_sha256": {
+      "g_robot_collision_geometry.json": "a2cb44e12077ce5caec9c8ca2c5d68976f2d4ae2cfd2295fd4941537639460b5",
+      "g_outcome.json": "b7c95d6e86340034c13d860bedfa79395fc5ee68a7cd724eaad535a8010fa3b2",
+      "g_body_collision_capture.json": "52a7fb593073cc3f08cf6740130f2917405e6608bc0cf08c9b5a5dbf5b1827de",
+      "g_trial_metadata.json": "4ceb65f56f72f06ab81464cf3ce85a4da81dec7325650b3b003e14ad118483a1",
+      "g_native_geometry_verified.json": "c15bcb417261fe749cb7e12718970cecb6e89dc93cea03a15e5a88c51b57bc0d",
+      "g_action_tube_runtime.json": "3714396fbbb3529e53db2ef61df0c50d79759651af4a0d1e72fde69139adc717",
+      "g_runner_contract.json": "28dc124accfe3bdc050ac08e2289e8c87e0fed6a4d5673a5bcccee6e4443edad",
+      "g_scene_query_configuration.json": "bd3273e62f47c71938a44be1c373a52c8da79eac782e68d6969c84998863e6ee",
+      "g_wall_collision_evidence.json": "d0dfa7b32985e6fe23d46fd250e8b4827b7acf834ba09359e1cfaf3c778159bf",
+      "g_body_collision_history_index.json": "829178a974c285e4f938d0e9518635748ee14e7dac6a08062d85743284e33722",
+      "g_body_collision_initial_state.npz": "9516519002a709d073a69c4a52a15bb1eb43f9cb8bde72297e9927fc075ffdb6",
+      "g_body_collision_history_chunks/chunk_000000.npz": "4df340892e6e2f8f37152692d2a1b1506cacda9fb564ab2d225b97a20f1f1b1b",
+      "g_body_collision_history_chunks/chunk_000001.npz": "7bb2ed8436dbfe98fa0a2f9571df6b1b586e6e5abe0b2c885a70d40ddd065340",
+      "g_body_collision_history_chunks/chunk_000002.npz": "a3197220b5e5b5d0f35b156d373a7044bba731cc0ad0e30b650426550c502c61",
+      "g_body_collision_history_chunks/chunk_000003.npz": "759f13438b856e6fbd6a910a6853c009711fa80e795e829085ea0b91b45cc2fa",
+      "g_body_collision_history_chunks/chunk_000004.npz": "b94ec8f2cbc74a0d6247126470bb1bc90b4468b982b566934cbd3edaaf6184d6",
+      "g_body_collision_history_chunks/chunk_000005.npz": "0908942bdcefed0039592796d2ce366864c266e0412b9b6a861e625d6b347bb9",
+      "g_reset_randomization.json": "84a468c52530e02646681cb1b9be8b5f477e391fbe2b842e2409fcd5779d3c82",
+      "g_reset_randomization_arrays_audit_only.npz": "a682fe0f32e77a2ee0f45e60b88c4e31c8b246b82eb9e5d41650dce68193d4fa",
+      "proprioception_50hz.jsonl": "6b003c3493f11ecb0a6e33b5168d6545effdc6884d35e26844bd3c146cc8fe6d",
+      "campaign_launch.json": "6563b9fedf299ce7583ef7dd214fbac5b189aadd9d1b88eaf762a40c34f9b02a"
+    },
+    "runtime_source_archive": {
+      "g1_trial.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\g1_trial_d632b8ff62ee2a756094fe3bc9304b51dac574ffc8ea1b40628b25e0bae71564.py",
+        "sha256": "d632b8ff62ee2a756094fe3bc9304b51dac574ffc8ea1b40628b25e0bae71564"
+      },
+      "g1_recording.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\g1_recording_a91fab0a507d177474f435c3e78f12f2d26b16f4d5530fcd790519c2908b615d.py",
+        "sha256": "a91fab0a507d177474f435c3e78f12f2d26b16f4d5530fcd790519c2908b615d"
+      },
+      "g1_audit.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\g1_audit_1856dfa71f10abd62c9d3989255d4d75c79ee06dff8f21b7ee3069a76de0dc26.py",
+        "sha256": "1856dfa71f10abd62c9d3989255d4d75c79ee06dff8f21b7ee3069a76de0dc26"
+      },
+      "g1_randomization.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\g1_randomization_1319e047139da23cd20a93089115eaf70b28e1cbcfbffbc5ca3b7213e8d801a1.py",
+        "sha256": "1319e047139da23cd20a93089115eaf70b28e1cbcfbffbc5ca3b7213e8d801a1"
+      },
+      "g1_action_contract_v2.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\g1_action_contract_v2_7ddf6acc9ff21957844758f8b909ee5a15be7ae488d006a43c8673a19d4b3ed3.py",
+        "sha256": "7ddf6acc9ff21957844758f8b909ee5a15be7ae488d006a43c8673a19d4b3ed3"
+      },
+      "physics_native_bind.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\physics_native_bind_380611275b63937ba16140bd10f9d998d00586821f3e936841add24a5b9f3d31.py",
+        "sha256": "380611275b63937ba16140bd10f9d998d00586821f3e936841add24a5b9f3d31"
+      },
+      "physics_history.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\physics_history_7c680e666a53c9144746927a51492551eb8d8c779f2a5a443c061ebb1224666b.py",
+        "sha256": "7c680e666a53c9144746927a51492551eb8d8c779f2a5a443c061ebb1224666b"
+      },
+      "collision_geometry.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\collision_geometry_526396ba7623e7e35af743ab0f8bf4729ecaefa613850864d7d87d5ad19005d0.py",
+        "sha256": "526396ba7623e7e35af743ab0f8bf4729ecaefa613850864d7d87d5ad19005d0"
+      },
+      "collision_clearance.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\collision_clearance_4847643f51f56edc4bb57a7a0e542dd6e0c5a9aa03d09d73bb68ce69fa6b9728.py",
+        "sha256": "4847643f51f56edc4bb57a7a0e542dd6e0c5a9aa03d09d73bb68ce69fa6b9728"
+      },
+      "physics_scene_builder.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\physics_scene_builder_82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23.py",
+        "sha256": "82cae209759c64231d38ec8078552def1e42c417cba33bd15870084eee353a23"
+      },
+      "physics_scenes.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\physics_scenes_878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3.py",
+        "sha256": "878d5e6d23c53ff39a2890d738729d6d03c0df6b1fd7029c0c1af9821ef763c3"
+      },
+      "physics_admission.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\physics_admission_3aa93b4cba4c6f49c63c7a72dcd64b0f9c8d39af680eb300f0d3c74111a5310e.py",
+        "sha256": "3aa93b4cba4c6f49c63c7a72dcd64b0f9c8d39af680eb300f0d3c74111a5310e"
+      },
+      "physics_wall_evidence.py": {
+        "path": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\runtime_sources\\physics_wall_evidence_b9933fabf07e5bb932a366c3f47f02ad943c94cafb6fe7af9499067acf9834ad.py",
+        "sha256": "b9933fabf07e5bb932a366c3f47f02ad943c94cafb6fe7af9499067acf9834ad"
+      }
+    },
+    "rng_readback_verified": true,
+    "existing_attempt_directories": [
+      "attempt01"
+    ],
+    "classification_evidence": {
+      "classification": "ROOT_REVIEWED_CONSERVATIVE_NATIVE_ENVELOPE_WALL_OVERLAP",
+      "recorded_uncertainty_count": 50,
+      "affected_parts": [
+        {
+          "part_index": 28,
+          "body_name": "left_rubber_hand",
+          "evidence_mode": "NATIVE_VERTEX_CONSERVATIVE_ENVELOPE"
+        }
+      ],
+      "exact_5mm_penetration_count": 0,
+      "history_sample_count": 2633,
+      "geometry_checked_state_count": 2634,
+      "interpretation": "Scheduling-only root classification of this exact audit; conservative overlap remains NOT_VERIFIED under frozen V5",
+      "diagnostic_limit": "Stored uncertainty witnesses are capped; this classification does not assert that the finite witness list exhausts every overlap, and does not promote any label"
+    }
+  },
+  "automatic_retry_permitted": false,
+  "changes_labels": false,
+  "changes_campaign_or_budget": false,
+  "formal_status_retained": "NOT_VERIFIED",
+  "supervision_or_response_admission": false,
+  "release_conditions": [
+    "Explicit root reclassification tied to any new raw/audit/source evidence; never automatic expiry",
+    "A new exact geometry/protocol version requires separate frozen admission; 5mm support diagnostics cannot upgrade current V5",
+    "Any new attempt, changed source hash, identity, RNG, history or audit requires global pause until reviewed"
+  ]
+}

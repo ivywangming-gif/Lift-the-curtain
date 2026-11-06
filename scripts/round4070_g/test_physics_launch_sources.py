@@ -18,7 +18,7 @@ class LaunchSourceTests(unittest.TestCase):
         paths=launch_source_paths(ROOT/'scripts/round4070_g/g1_trial.py',invocation);names={p.name for p in paths}
         for name in ['g1_trial.py','g1_recording.py','g1_audit.py','g1_randomization.py','g1_action_contract_v2.py','physics_native_bind.py',
                      'physics_history.py','physics_scenes.py','physics_scene_builder.py','physics_admission.py','physics_campaign.py',
-                     'collision_geometry.py','collision_clearance.py','resource_lock.py','run_episode.py','launch_guard.ps1',GUARD.name]:
+                     'collision_geometry.py','collision_clearance.py','resource_lock.py','budget_ledger.py','g1_quarantine.py','run_episode.py','launch_guard.ps1',GUARD.name]:
             self.assertIn(name,names)
 
 

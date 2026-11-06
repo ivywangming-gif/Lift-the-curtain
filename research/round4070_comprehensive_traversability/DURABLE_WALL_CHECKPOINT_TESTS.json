@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-11-06T17:37:20.362130+00:00",
+  "finished_utc": "2026-11-06T17:37:57.691221+00:00",
+  "exit_code": 0,
+  "log_path": "outputs/round4070_comprehensive_traversability/handovers/v5_activation_20261106/durable_wall_checkpoint_tests.log",
+  "command": "python -m unittest discover -s scripts/round4070_g -p test_*.py",
+  "cuda_visible_devices": "-1",
+  "scientific_trials_or_model_fits": false,
+  "tests_passed": 154,
+  "reported_duration_s": 31.235,
+  "log_sha256": "e9f32a1b85f8cea9ee16cd3a69bcb823db4c8aa2d6885254eb914f96e8094fbf"
+}

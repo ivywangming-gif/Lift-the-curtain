@@ -1,0 +1,680 @@
+{
+  "schema": "round4070-g.descriptive_probe_plot.v1",
+  "scope": "ACTUAL_LEGAL_HISTORY_DIAGNOSTIC_NOT_MODEL_COMPARISON",
+  "manifest_path": "outputs/round4070_comprehensive_traversability/dataset_snapshots/eda1ec55fcdff03a1544a45764ab6d3fa199452ca88c76efd5285f9940294574/manifest.json",
+  "manifest_sha256": "21eab3af2cb3b666c8057548a54a1df87cdf0f2b2228bba928388aeacc3d116d",
+  "immutable_snapshot": {
+    "identity": "eda1ec55fcdff03a1544a45764ab6d3fa199452ca88c76efd5285f9940294574",
+    "path": "outputs/round4070_comprehensive_traversability/dataset_snapshots/eda1ec55fcdff03a1544a45764ab6d3fa199452ca88c76efd5285f9940294574/snapshot.json",
+    "sha256": "4e202f78df9bd0c103b0da246177a15dd3af2df828af041ca4ca67c93484036e"
+  },
+  "reproduction_command": "C:/conda_envs/isaaclab/python.exe scripts/round4070_g/plot_c01_d03_probe.py --manifest outputs/round4070_comprehensive_traversability/dataset_snapshots/eda1ec55fcdff03a1544a45764ab6d3fa199452ca88c76efd5285f9940294574/manifest.json",
+  "admitted_count_at_snapshot": 6,
+  "selected_core_episode_count": 4,
+  "physical_configurations": 2,
+  "full_policy_joint_order": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "sources": [
+    {
+      "scene_id": "C01",
+      "probe_side": "left",
+      "seed": 71900,
+      "trial_id": "G_C01_left_coverage_00_nominal_s71900_rng1_act2__attempt01",
+      "planned_trial_id": "G_C01_left_coverage_00_nominal_s71900_rng1_act2",
+      "physical_config_id": "47ef0b84e422c3d9",
+      "formal_label_metadata_only": "PASSABLE_FOR_ACTION",
+      "primary_admission": true,
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_C01_left_coverage_00_nominal_s71900_rng1_act2__attempt01.npz",
+      "npz_sha256": "4288bb70ad584c351b7b3562f64723c0e0e943b11af421a62611e0efce0389b5",
+      "legal_seq_array_sha256": "d31e61d48c8af24a677fee7d53b4d543a3620359934d48493cae9a74d6d9fc10",
+      "raw_source_base": "outputs/round4070_comprehensive_traversability/trials/G_C01_left_coverage_00_nominal_s71900_rng1_act2/attempt01",
+      "raw_source_sha256": {
+        "proprioception_50hz.jsonl": "8338b3aaac4538d53dff0bffd442805b4e378910ebc70847f9dca8643d0dba7c",
+        "g_outcome.json": "5422cf854c56aadee0346f08bfadf4098295e56998075b179ef60b2d7ac56cea",
+        "g_trial_metadata.json": "0504bedca0ba8a1f9789dcc9e3fdb19e6c8c9e993af57f81977e710e0c8b60e3"
+      },
+      "immutable_audit_path": "outputs/round4070_comprehensive_traversability/dataset/evidence/g_collision_audit_ecb8a5d308581beb24998b35885cb0fcc6db6c410b2a97b960c503862b10f31e.json",
+      "immutable_audit_sha256": "ecb8a5d308581beb24998b35885cb0fcc6db6c410b2a97b960c503862b10f31e",
+      "active_arm_indices_zero_based": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "active_arm_joint_names": [
+        "left_shoulder_pitch_joint",
+        "left_shoulder_roll_joint",
+        "left_shoulder_yaw_joint",
+        "left_elbow_joint",
+        "left_wrist_roll_joint",
+        "left_wrist_pitch_joint",
+        "left_wrist_yaw_joint"
+      ],
+      "plotted_seq_feature_indices": {
+        "q": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "q_cmd": [
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        "effort": [
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "fk_x": [
+          174
+        ],
+        "pitch": [
+          193
+        ]
+      },
+      "plotted_seq_feature_names": {
+        "q": [
+          "q/left_shoulder_pitch_joint",
+          "q/left_shoulder_roll_joint",
+          "q/left_shoulder_yaw_joint",
+          "q/left_elbow_joint",
+          "q/left_wrist_roll_joint",
+          "q/left_wrist_pitch_joint",
+          "q/left_wrist_yaw_joint"
+        ],
+        "q_cmd": [
+          "q_cmd/left_shoulder_pitch_joint",
+          "q_cmd/left_shoulder_roll_joint",
+          "q_cmd/left_shoulder_yaw_joint",
+          "q_cmd/left_elbow_joint",
+          "q_cmd/left_wrist_roll_joint",
+          "q_cmd/left_wrist_pitch_joint",
+          "q_cmd/left_wrist_yaw_joint"
+        ],
+        "effort": [
+          "effort/left_shoulder_pitch_joint",
+          "effort/left_shoulder_roll_joint",
+          "effort/left_shoulder_yaw_joint",
+          "effort/left_elbow_joint",
+          "effort/left_wrist_roll_joint",
+          "effort/left_wrist_pitch_joint",
+          "effort/left_wrist_yaw_joint"
+        ],
+        "fk_x": [
+          "left_hand_fk_b/x"
+        ],
+        "pitch": [
+          "imu_rpy/pitch"
+        ]
+      },
+      "sample_count": 102,
+      "span_s": 1.9899999999999993,
+      "actual_timestamp_first_s": 6.815,
+      "actual_timestamp_last_s": 8.805,
+      "time_dt_min_median_max_s": [
+        0.009999999999999787,
+        0.019999999999999574,
+        0.02000000000000135
+      ],
+      "phases": {
+        "physical_probe": 76,
+        "physical_probe_hold": 26
+      },
+      "metrics": {
+        "hand_forward_fk_delta_mm": {
+          "min": -0.00014901161193847656,
+          "max": 90.30857682228088,
+          "first": 0.0,
+          "last": 89.96719121932983
+        },
+        "active_arm_tracking_error_rms_rad": {
+          "min": 0.04169257460024915,
+          "max": 0.05659795108754531,
+          "first": 0.0416936271475895,
+          "last": 0.04831142841944221
+        },
+        "active_arm_applied_torque_rms_nm": {
+          "min": 1.5824286657393931,
+          "max": 2.6804958660081635,
+          "first": 1.5824286657393931,
+          "last": 2.480356672829292
+        },
+        "body_pitch_deg": {
+          "min": 1.3531606862612549,
+          "max": 1.5821591066069167,
+          "first": 1.5536527784973397,
+          "last": 1.3531606862612549
+        }
+      }
+    },
+    {
+      "scene_id": "D03",
+      "probe_side": "left",
+      "seed": 72900,
+      "trial_id": "G_D03_left_coverage_00_nominal_s72900_rng1_act2__attempt01",
+      "planned_trial_id": "G_D03_left_coverage_00_nominal_s72900_rng1_act2",
+      "physical_config_id": "b524c675bce62908",
+      "formal_label_metadata_only": "BLOCKED",
+      "primary_admission": true,
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_D03_left_coverage_00_nominal_s72900_rng1_act2__attempt01.npz",
+      "npz_sha256": "fc2d8c5d6ed0bbe3338e74aa021cf300982de70619ee3d04e16d6e0d50f42279",
+      "legal_seq_array_sha256": "6134e4e66b56796d211d09a9a1a374caf5f54eaf375d9f8b238a03ece9f4a130",
+      "raw_source_base": "outputs/round4070_comprehensive_traversability/trials/G_D03_left_coverage_00_nominal_s72900_rng1_act2/attempt01",
+      "raw_source_sha256": {
+        "proprioception_50hz.jsonl": "1799a742bd489d9e540d68036e600ee17f5ed445175b23104df1f72220efe303",
+        "g_outcome.json": "d96f1460ffb720c71a5c02afc3fab487d14dd6cd5f3400709c794ab733efc7f4",
+        "g_trial_metadata.json": "802d1b24a08d2e528831eb0e63f45467e9f1a135b97240b0474e2ac3e2d26850"
+      },
+      "immutable_audit_path": "outputs/round4070_comprehensive_traversability/dataset/evidence/g_collision_audit_221304a153b3454e45e4f43e0d94ccd0449bb9243866aaec3ccb29a93c58f166.json",
+      "immutable_audit_sha256": "221304a153b3454e45e4f43e0d94ccd0449bb9243866aaec3ccb29a93c58f166",
+      "active_arm_indices_zero_based": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "active_arm_joint_names": [
+        "left_shoulder_pitch_joint",
+        "left_shoulder_roll_joint",
+        "left_shoulder_yaw_joint",
+        "left_elbow_joint",
+        "left_wrist_roll_joint",
+        "left_wrist_pitch_joint",
+        "left_wrist_yaw_joint"
+      ],
+      "plotted_seq_feature_indices": {
+        "q": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "q_cmd": [
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        "effort": [
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "fk_x": [
+          174
+        ],
+        "pitch": [
+          193
+        ]
+      },
+      "plotted_seq_feature_names": {
+        "q": [
+          "q/left_shoulder_pitch_joint",
+          "q/left_shoulder_roll_joint",
+          "q/left_shoulder_yaw_joint",
+          "q/left_elbow_joint",
+          "q/left_wrist_roll_joint",
+          "q/left_wrist_pitch_joint",
+          "q/left_wrist_yaw_joint"
+        ],
+        "q_cmd": [
+          "q_cmd/left_shoulder_pitch_joint",
+          "q_cmd/left_shoulder_roll_joint",
+          "q_cmd/left_shoulder_yaw_joint",
+          "q_cmd/left_elbow_joint",
+          "q_cmd/left_wrist_roll_joint",
+          "q_cmd/left_wrist_pitch_joint",
+          "q_cmd/left_wrist_yaw_joint"
+        ],
+        "effort": [
+          "effort/left_shoulder_pitch_joint",
+          "effort/left_shoulder_roll_joint",
+          "effort/left_shoulder_yaw_joint",
+          "effort/left_elbow_joint",
+          "effort/left_wrist_roll_joint",
+          "effort/left_wrist_pitch_joint",
+          "effort/left_wrist_yaw_joint"
+        ],
+        "fk_x": [
+          "left_hand_fk_b/x"
+        ],
+        "pitch": [
+          "imu_rpy/pitch"
+        ]
+      },
+      "sample_count": 102,
+      "span_s": 1.9949999999999992,
+      "actual_timestamp_first_s": 6.8100000000000005,
+      "actual_timestamp_last_s": 8.805,
+      "time_dt_min_median_max_s": [
+        0.005000000000000782,
+        0.019999999999999574,
+        0.02000000000000135
+      ],
+      "phases": {
+        "physical_probe": 76,
+        "physical_probe_hold": 26
+      },
+      "metrics": {
+        "hand_forward_fk_delta_mm": {
+          "min": 0.0,
+          "max": 87.35719323158264,
+          "first": 0.0,
+          "last": 87.33102679252625
+        },
+        "active_arm_tracking_error_rms_rad": {
+          "min": 0.04150127236910778,
+          "max": 0.1286183494496954,
+          "first": 0.04150289545851591,
+          "last": 0.04502527774728056
+        },
+        "active_arm_applied_torque_rms_nm": {
+          "min": 1.5808158731768573,
+          "max": 3.764295557093328,
+          "first": 1.5808158731768573,
+          "last": 2.395429376397108
+        },
+        "body_pitch_deg": {
+          "min": -2.020531533152325,
+          "max": 1.5429129463577294,
+          "first": 1.5427277841981986,
+          "last": -2.020531533152325
+        }
+      }
+    },
+    {
+      "scene_id": "C01",
+      "probe_side": "right",
+      "seed": 71900,
+      "trial_id": "G_C01_right_coverage_00_nominal_s71900_rng1_act2__attempt01",
+      "planned_trial_id": "G_C01_right_coverage_00_nominal_s71900_rng1_act2",
+      "physical_config_id": "47ef0b84e422c3d9",
+      "formal_label_metadata_only": "PASSABLE_FOR_ACTION",
+      "primary_admission": true,
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_C01_right_coverage_00_nominal_s71900_rng1_act2__attempt01.npz",
+      "npz_sha256": "d7b305e043985ae6f4f267cbf66f68fa58833df3ccffbe4bbd46c79911c28c07",
+      "legal_seq_array_sha256": "b657f0054ced7304abdba7760ad8504df8ffef23ee0901dc40227a0917a198df",
+      "raw_source_base": "outputs/round4070_comprehensive_traversability/trials/G_C01_right_coverage_00_nominal_s71900_rng1_act2/attempt01",
+      "raw_source_sha256": {
+        "proprioception_50hz.jsonl": "10b8d8afe854be41f3dcbd46c3ccc836050bded0892a067818cb38fb173721f2",
+        "g_outcome.json": "9963414aea2f400d8c17cb2bcbfff9b0f731ed41c00942b9b5f6e62550307187",
+        "g_trial_metadata.json": "f848786efd672956f66400a151b32b989b875c56103e94c0f4ac4397e58b9109"
+      },
+      "immutable_audit_path": "outputs/round4070_comprehensive_traversability/dataset/evidence/g_collision_audit_83d29eccc4e2cf513a460d5673656ad0c1464d434f6dc1cd0c0fa9abcea0f475.json",
+      "immutable_audit_sha256": "83d29eccc4e2cf513a460d5673656ad0c1464d434f6dc1cd0c0fa9abcea0f475",
+      "active_arm_indices_zero_based": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "active_arm_joint_names": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_roll_joint",
+        "right_shoulder_yaw_joint",
+        "right_elbow_joint",
+        "right_wrist_roll_joint",
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint"
+      ],
+      "plotted_seq_feature_indices": {
+        "q": [
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "q_cmd": [
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86
+        ],
+        "effort": [
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115
+        ],
+        "fk_x": [
+          177
+        ],
+        "pitch": [
+          193
+        ]
+      },
+      "plotted_seq_feature_names": {
+        "q": [
+          "q/right_shoulder_pitch_joint",
+          "q/right_shoulder_roll_joint",
+          "q/right_shoulder_yaw_joint",
+          "q/right_elbow_joint",
+          "q/right_wrist_roll_joint",
+          "q/right_wrist_pitch_joint",
+          "q/right_wrist_yaw_joint"
+        ],
+        "q_cmd": [
+          "q_cmd/right_shoulder_pitch_joint",
+          "q_cmd/right_shoulder_roll_joint",
+          "q_cmd/right_shoulder_yaw_joint",
+          "q_cmd/right_elbow_joint",
+          "q_cmd/right_wrist_roll_joint",
+          "q_cmd/right_wrist_pitch_joint",
+          "q_cmd/right_wrist_yaw_joint"
+        ],
+        "effort": [
+          "effort/right_shoulder_pitch_joint",
+          "effort/right_shoulder_roll_joint",
+          "effort/right_shoulder_yaw_joint",
+          "effort/right_elbow_joint",
+          "effort/right_wrist_roll_joint",
+          "effort/right_wrist_pitch_joint",
+          "effort/right_wrist_yaw_joint"
+        ],
+        "fk_x": [
+          "right_hand_fk_b/x"
+        ],
+        "pitch": [
+          "imu_rpy/pitch"
+        ]
+      },
+      "sample_count": 102,
+      "span_s": 1.9899999999999993,
+      "actual_timestamp_first_s": 6.815,
+      "actual_timestamp_last_s": 8.805,
+      "time_dt_min_median_max_s": [
+        0.009999999999999787,
+        0.019999999999999574,
+        0.02000000000000135
+      ],
+      "phases": {
+        "physical_probe": 76,
+        "physical_probe_hold": 26
+      },
+      "metrics": {
+        "hand_forward_fk_delta_mm": {
+          "min": 0.0,
+          "max": 91.90011024475098,
+          "first": 0.0,
+          "last": 91.90011024475098
+        },
+        "active_arm_tracking_error_rms_rad": {
+          "min": 0.041643430830958644,
+          "max": 0.05734904665042659,
+          "first": 0.04164409248531328,
+          "last": 0.04810952650054785
+        },
+        "active_arm_applied_torque_rms_nm": {
+          "min": 1.5879176057842188,
+          "max": 2.7323561036541624,
+          "first": 1.5879176057842188,
+          "last": 2.4665794717326284
+        },
+        "body_pitch_deg": {
+          "min": 1.1002110336521793,
+          "max": 1.9404526877758028,
+          "first": 1.1627143081903777,
+          "last": 1.9404526877758028
+        }
+      }
+    },
+    {
+      "scene_id": "D03",
+      "probe_side": "right",
+      "seed": 72900,
+      "trial_id": "G_D03_right_coverage_00_nominal_s72900_rng1_act2__attempt01",
+      "planned_trial_id": "G_D03_right_coverage_00_nominal_s72900_rng1_act2",
+      "physical_config_id": "b524c675bce62908",
+      "formal_label_metadata_only": "BLOCKED",
+      "primary_admission": true,
+      "npz_path": "outputs/round4070_comprehensive_traversability/dataset/episodes/G_D03_right_coverage_00_nominal_s72900_rng1_act2__attempt01.npz",
+      "npz_sha256": "70179dfb243cad8e94fb01577fca3a186795923591788f4bdc36c277b61cc235",
+      "legal_seq_array_sha256": "7fa40da3cce2f57b1f90112c40e20832d3389c7fa2d6011ccd42a4fd3235a3da",
+      "raw_source_base": "outputs/round4070_comprehensive_traversability/trials/G_D03_right_coverage_00_nominal_s72900_rng1_act2/attempt01",
+      "raw_source_sha256": {
+        "proprioception_50hz.jsonl": "5ada78a0013f7fb14fc41ccbe0e34be515d40f75f9a5c322d84f8f42c217bd7e",
+        "g_outcome.json": "16786c5ec1aa2890b0d49f10da5950a294418cf920f48333796694d67de6f333",
+        "g_trial_metadata.json": "0324a809b7626845aa794d60b6e420ac83c783277f89dd200da722b8edb6f467"
+      },
+      "immutable_audit_path": "outputs/round4070_comprehensive_traversability/dataset/evidence/g_collision_audit_9b1465053e0e5c5cc4fb9d336e489deff2ca7c36e2d00d37284b5b9ae34fb672.json",
+      "immutable_audit_sha256": "9b1465053e0e5c5cc4fb9d336e489deff2ca7c36e2d00d37284b5b9ae34fb672",
+      "active_arm_indices_zero_based": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "active_arm_joint_names": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_roll_joint",
+        "right_shoulder_yaw_joint",
+        "right_elbow_joint",
+        "right_wrist_roll_joint",
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint"
+      ],
+      "plotted_seq_feature_indices": {
+        "q": [
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "q_cmd": [
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86
+        ],
+        "effort": [
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115
+        ],
+        "fk_x": [
+          177
+        ],
+        "pitch": [
+          193
+        ]
+      },
+      "plotted_seq_feature_names": {
+        "q": [
+          "q/right_shoulder_pitch_joint",
+          "q/right_shoulder_roll_joint",
+          "q/right_shoulder_yaw_joint",
+          "q/right_elbow_joint",
+          "q/right_wrist_roll_joint",
+          "q/right_wrist_pitch_joint",
+          "q/right_wrist_yaw_joint"
+        ],
+        "q_cmd": [
+          "q_cmd/right_shoulder_pitch_joint",
+          "q_cmd/right_shoulder_roll_joint",
+          "q_cmd/right_shoulder_yaw_joint",
+          "q_cmd/right_elbow_joint",
+          "q_cmd/right_wrist_roll_joint",
+          "q_cmd/right_wrist_pitch_joint",
+          "q_cmd/right_wrist_yaw_joint"
+        ],
+        "effort": [
+          "effort/right_shoulder_pitch_joint",
+          "effort/right_shoulder_roll_joint",
+          "effort/right_shoulder_yaw_joint",
+          "effort/right_elbow_joint",
+          "effort/right_wrist_roll_joint",
+          "effort/right_wrist_pitch_joint",
+          "effort/right_wrist_yaw_joint"
+        ],
+        "fk_x": [
+          "right_hand_fk_b/x"
+        ],
+        "pitch": [
+          "imu_rpy/pitch"
+        ]
+      },
+      "sample_count": 102,
+      "span_s": 1.9949999999999992,
+      "actual_timestamp_first_s": 6.8100000000000005,
+      "actual_timestamp_last_s": 8.805,
+      "time_dt_min_median_max_s": [
+        0.005000000000000782,
+        0.019999999999999574,
+        0.02000000000000135
+      ],
+      "phases": {
+        "physical_probe": 76,
+        "physical_probe_hold": 26
+      },
+      "metrics": {
+        "hand_forward_fk_delta_mm": {
+          "min": -0.0012814998626708984,
+          "max": 74.41604137420654,
+          "first": 0.0,
+          "last": 74.41604137420654
+        },
+        "active_arm_tracking_error_rms_rad": {
+          "min": 0.04143282910577885,
+          "max": 0.1524505087471679,
+          "first": 0.04143282910577885,
+          "last": 0.14930319063025024
+        },
+        "active_arm_applied_torque_rms_nm": {
+          "min": 1.586497331443881,
+          "max": 3.9234131476625502,
+          "first": 1.586497331443881,
+          "last": 3.7493568159932145
+        },
+        "body_pitch_deg": {
+          "min": -0.3599719133944316,
+          "max": 1.1494841250463572,
+          "first": 1.1464292162183631,
+          "last": -0.02758285184923702
+        }
+      }
+    }
+  ],
+  "transformations": {
+    "time": "actual_timestamp - first_actual_timestamp",
+    "hand_fk": "1000 * (active_hand_body_FK_x - first_sample_body_FK_x)",
+    "tracking": "sqrt(mean((q_cmd - q)^2)) over seven named active-arm joints",
+    "effort": "sqrt(mean(applied_torque_proxy^2)) over the same seven joints",
+    "pitch": "radians_to_degrees(legal imu_rpy/pitch)",
+    "resampling": false,
+    "smoothing": false,
+    "fitted_model": false
+  },
+  "caption": "Markers are actual pre-followup samples; lines only guide the eye. No resampling or smoothing.\nTorque is an applied-actuator proxy, not contact force. No world geometry or followup truth is plotted.\nEach configuration has one seed; C01 and D03 use different seeds, so configuration and seed are confounded.\nDescriptive traces only: no classification accuracy, statistical significance, repeatability or generalization claim.",
+  "image_sha256": "bc2d5f3d12642e9a2d094a8985f596eb3729fa8cf3ea674a2eceea27d8d28626",
+  "plotting_source_sha256": "38d3839cd076ba67a9017cb81dc8a528e85f4e200ebca8c1ced4feb02e1758e3",
+  "library_versions": {
+    "numpy": "1.26.0",
+    "matplotlib": "3.10.3"
+  },
+  "visual_qa": {
+    "status": "PASS_MANUALLY_VIEWED_RENDERED_PNG",
+    "checked": [
+      "all eight panels visible without overlapping titles, tick labels or footer",
+      "same metric axis limits shared between hands",
+      "four series sourced from exactly four admitted core episodes",
+      "actual sample markers visible and no resampling/smoothing",
+      "caption discloses different seeds and no accuracy/significance/generalization claim"
+    ],
+    "image_sha256": "bc2d5f3d12642e9a2d094a8985f596eb3729fa8cf3ea674a2eceea27d8d28626",
+    "reproduction_validation": "Identical PNG bytes to the manually viewed archived render"
+  },
+  "reproduction_validation": {
+    "before_archive": "outputs/round4070_comprehensive_traversability/implementation_smoke/probe_plot_snapshot_binding_20261106T180611484002Z",
+    "checks": {
+      "exact_four_source_records_equal": true,
+      "all_transformations_equal": true,
+      "caption_equal": true,
+      "manifest_bytes_hash_equal": true,
+      "rendered_png_byte_identical": true,
+      "snapshot_binding_present": true
+    }
+  }
+}

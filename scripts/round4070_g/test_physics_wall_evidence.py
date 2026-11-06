@@ -1,14 +1,15 @@
 """Pure actual-wall evidence counterexamples; no USD/Isaac imports or launch."""
-import copy,unittest
+import copy,unittest,hashlib,json,tempfile
+from pathlib import Path
 import numpy as np
 from collision_geometry import GeometryNotVerified
-from physics_wall_evidence import SCHEMA,validate_wall_snapshot
+from physics_wall_evidence import SCHEMA,validate_wall_snapshot,verify_query_configuration
 
 
 def fixture():
     expected={'center_xyz':[.85,0,1.],'size_xyz':[.04,1.2,2.],'fixed':True,'candidate_plane_x':.85,'initial_gap_m':0.}
     matrix=np.diag([.02,.6,1.,1.]);matrix[:3,3]=expected['center_xyz'];path='/World/GScene/RigidBarrier/geometry/mesh'
-    evidence=dict(schema=SCHEMA,wall_requested=True,barrier_root_exists=True,stage_meters_per_unit=1.,
+    evidence=dict(schema=SCHEMA,wall_requested=True,barrier_root_exists=True,stage_meters_per_unit=1.,scene_query_support=[{'prim_path':'/physicsScene','enabled':True}],
         collision_prims=[dict(prim_path=path,type='Cube',has_collision_api=True,collision_enabled=True,trigger_api=False,
             enabled_rigid_body_ancestors=[],time_varying_transform_attributes=[],cube_size=2.,local_to_world_matrix4=matrix.tolist())],
         native_presence_query=dict(api='IPhysxSceneQuery.overlap_box',completed=True,any_hit=False,center_world_m=expected['center_xyz'],
@@ -32,6 +33,7 @@ class ActualWallEvidenceTests(unittest.TestCase):
     def test_missing_disabled_trigger_dynamic_animated_collider_rejected(self):
         expected,original=fixture()
         changes=[lambda e:e.__setitem__('barrier_root_exists',False),lambda e:e.__setitem__('collision_prims',[]),
+            lambda e:e['scene_query_support'][0].__setitem__('enabled',False),
             lambda e:e['collision_prims'][0].__setitem__('collision_enabled',False),lambda e:e['collision_prims'][0].__setitem__('trigger_api',True),
             lambda e:e['collision_prims'][0].__setitem__('enabled_rigid_body_ancestors',['/World/GScene/RigidBarrier']),
             lambda e:e['collision_prims'][0].__setitem__('time_varying_transform_attributes',['wall.xformOp:translate'])]
@@ -70,6 +72,54 @@ class ActualWallEvidenceTests(unittest.TestCase):
         self.assertIsNotNone(validate_wall_snapshot(evidence,expected))
         ray['returned_hit']=False
         with self.assertRaises(GeometryNotVerified):validate_wall_snapshot(evidence,expected)
+
+
+class QueryConfigurationEvidenceTests(unittest.TestCase):
+    def fixture(self,root,required=True,mutate=None):
+        root=Path(root);source=root/'g1_trial_archived.py';source.write_bytes(b'# test source\n')
+        digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+        value=dict(schema='round4070-g.scene_query_configuration.v1',required_for_actual_wall_evidence=required,
+            configuration_before={'enable_scene_query_support':False,'dt':.005,'gravity':[0,0,-9.81]},
+            configuration_after={'enable_scene_query_support':required,'dt':.005,'gravity':[0,0,-9.81]},
+            changed_configuration_fields=['enable_scene_query_support'] if required else [],
+            actual_native_readback_enabled=required,configured_before_simulation_context=True,model_input=False,
+            readback_api='SimulationContext.get_physics_context().get_enable_scene_query_support',
+            readback_stage='AFTER_SIMULATION_CONTEXT_BEFORE_SCENE_CONSTRUCTION',source_sha256=digest(source))
+        if mutate:mutate(value)
+        path=root/'g_scene_query_configuration.json';path.write_text(json.dumps(value),encoding='utf-8')
+        binding={'path':path.name,'sha256':digest(path)}
+        runner=dict(scene_query_configuration_evidence={**binding,'requested_enabled':required,'actual_enabled':required},
+            runtime_source_archive={'g1_trial.py':{'path':str(source),'sha256':digest(source)}})
+        (root/'g_runner_contract.json').write_text(json.dumps(runner),encoding='utf-8')
+        return {'scene_query_configuration':binding},{'wall':{'requested':True}} if required else {},source
+
+    def test_actual_configuration_bound_to_source_and_no_wall_legacy_compatible(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parents[2]/"outputs") as root:
+            for required in [True,False]:
+                capture,geom,_=self.fixture(root,required);sources={}
+                result=verify_query_configuration(root,capture,geom,sources)
+                self.assertEqual(result['status'],'VERIFIED');self.assertEqual(result['actual_native_readback_enabled'],required)
+                self.assertIn('g_scene_query_configuration.json',sources)
+            self.assertIsNone(verify_query_configuration(root,{}, {},{}))
+            with self.assertRaises(GeometryNotVerified):verify_query_configuration(root,{}, {'wall':{}},{})
+
+    def test_query_only_proof_rejects_solver_changes_and_false_getter(self):
+        mutations=[lambda x:x['configuration_after'].__setitem__('dt',.01),
+                   lambda x:x.__setitem__('actual_native_readback_enabled',False),
+                   lambda x:x.__setitem__('configured_before_simulation_context',False),
+                   lambda x:x.__setitem__('changed_configuration_fields',['enable_scene_query_support','dt'])]
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parents[2]/"outputs") as root:
+            for mutate in mutations:
+                capture,geom,_=self.fixture(root,mutate=mutate)
+                with self.subTest(mutate=mutate),self.assertRaises(GeometryNotVerified):verify_query_configuration(root,capture,geom,{})
+
+    def test_source_or_query_bytes_changed_cannot_replay(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parents[2]/"outputs") as root:
+            capture,geom,source=self.fixture(root);source.write_bytes(b'# changed\n')
+            with self.assertRaises(GeometryNotVerified):verify_query_configuration(root,capture,geom,{})
+            capture,geom,_=self.fixture(root)
+            (Path(root)/capture['scene_query_configuration']['path']).write_text('{}',encoding='utf-8')
+            with self.assertRaises(GeometryNotVerified):verify_query_configuration(root,capture,geom,{})
 
 
 if __name__=='__main__':unittest.main(verbosity=2)

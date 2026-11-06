@@ -39,6 +39,8 @@ def validate_wall_snapshot(value,expected):
         return None
     if value.get('wall_requested') is not True or value.get('barrier_root_exists') is not True or value.get('stage_meters_per_unit')!=1.:
         raise GeometryNotVerified('ACTUAL_WALL_MISSING_OR_UNITS_UNVERIFIED')
+    scenes=value.get('scene_query_support',[])
+    if len(scenes)!=1 or scenes[0].get('enabled') is not True:raise GeometryNotVerified('NATIVE_SCENE_QUERY_MANAGER_NOT_ENABLED')
     colliders=value.get('collision_prims',[])
     if len(colliders)!=1:raise GeometryNotVerified('ACTUAL_WALL_COLLIDER_INVENTORY_NOT_ONE')
     wall=colliders[0]
@@ -97,6 +99,8 @@ def capture_wall_evidence(stage,expected,root):
     value=dict(schema=SCHEMA,status='NOT_VERIFIED',evaluation_only=True,model_input=False,wall_requested=expected is not None,
         barrier_root_exists=bool(barrier),barrier_root_path='/World/GScene/RigidBarrier',stage_meters_per_unit=float(UsdGeom.GetStageMetersPerUnit(stage)),
         source_sha256=SOURCE_SHA,native_binding_sha256=sha(_physx.__file__),expected_wall_evaluation_only=expected,collision_prims=[])
+    value['scene_query_support']=[dict(prim_path=str(prim.GetPath()),enabled=bool(PhysxSchema.PhysxSceneAPI(prim).GetEnableSceneQuerySupportAttr().Get()))
+                                  for prim in stage.Traverse() if prim.IsA(UsdPhysics.Scene)]
     try:
         if barrier:
             cache=UsdGeom.XformCache(Usd.TimeCode.Default())
@@ -166,3 +170,34 @@ def verified_wall_for_audit(run,geom,sources):
     if value.get('native_binding_sha256')!=geom.get('runtime_physx_binding',{}).get('module_sha256'):
         raise GeometryNotVerified('WALL_NATIVE_QUERY_BINARY_MISMATCH')
     return validate_wall_snapshot(value,expected)
+
+
+def verify_query_configuration(run,capture,geom,sources):
+    """Bind the before/after/query-manager readback without changing raw."""
+    run=Path(run).resolve();binding=capture.get('scene_query_configuration');required=geom.get('wall') is not None
+    if binding is None:
+        if required:raise GeometryNotVerified('WALL_QUERY_CONFIGURATION_EVIDENCE_MISSING')
+        return None  # Existing no-wall V5 raw is unchanged and still valid.
+    path=(run/binding['path']).resolve()
+    if not path.is_relative_to(run) or not path.is_file() or sha(path)!=binding.get('sha256'):
+        raise GeometryNotVerified('SCENE_QUERY_CONFIGURATION_SHA_MISMATCH')
+    evidence=json.loads(path.read_text(encoding='utf-8-sig'));runner=json.loads((run/'g_runner_contract.json').read_text(encoding='utf-8-sig'))
+    claim=runner.get('scene_query_configuration_evidence',{})
+    if claim!={**binding,'requested_enabled':required,'actual_enabled':required}:
+        raise GeometryNotVerified('RUNNER_QUERY_CONFIGURATION_BINDING_MISMATCH')
+    if (evidence.get('schema')!='round4070-g.scene_query_configuration.v1' or evidence.get('required_for_actual_wall_evidence') is not required
+            or evidence.get('actual_native_readback_enabled') is not required or evidence.get('configured_before_simulation_context') is not True
+            or evidence.get('model_input') is not False or evidence.get('readback_api')!='SimulationContext.get_physics_context().get_enable_scene_query_support'
+            or evidence.get('readback_stage')!='AFTER_SIMULATION_CONTEXT_BEFORE_SCENE_CONSTRUCTION'):
+        raise GeometryNotVerified('SCENE_QUERY_CONFIGURATION_READBACK_CONTRACT_INVALID')
+    before=evidence['configuration_before'];after=evidence['configuration_after'];key='enable_scene_query_support'
+    if before.get(key) is not False or after.get(key) is not required or evidence.get('changed_configuration_fields')!=([key] if required else []):
+        raise GeometryNotVerified('SCENE_QUERY_CONFIGURATION_FLAG_DIFFERENCE_INVALID')
+    if {k:v for k,v in before.items() if k!=key}!={k:v for k,v in after.items() if k!=key}:
+        raise GeometryNotVerified('SCENE_QUERY_CONFIGURATION_CHANGED_OTHER_PHYSICS_SETTINGS')
+    source=runner.get('runtime_source_archive',{}).get('g1_trial.py',{});archive=Path(source.get('path','MISSING'))
+    if evidence.get('source_sha256')!=source.get('sha256') or not archive.is_file() or sha(archive)!=source['sha256']:
+        raise GeometryNotVerified('SCENE_QUERY_CONFIGURATION_SOURCE_ARCHIVE_MISMATCH')
+    sources[path.relative_to(run).as_posix()]=sha(path)
+    return dict(status='VERIFIED',required_for_actual_wall_evidence=required,actual_native_readback_enabled=required,
+        changed_configuration_fields=evidence['changed_configuration_fields'],only_query_infrastructure_changed=True)

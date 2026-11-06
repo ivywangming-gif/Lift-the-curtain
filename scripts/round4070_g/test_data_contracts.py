@@ -9,7 +9,7 @@ import unittest
 import numpy as np
 
 from g1_recording import Recorder, action_spec, assign_label, online_physics_invalid, ONLINE_LABEL_REVISION, local_forward_corridor_obstructed
-from g1_trial import patch_source, frozen_args, SOURCE,verify_gate_evidence,verify_empty_evidence,assert_runtime_plan_matches,post_finalize_cleanup
+from g1_trial import patch_source, frozen_args, SOURCE,verify_gate_evidence,verify_empty_evidence,assert_runtime_plan_matches,post_finalize_cleanup,scene_query_required,configure_scene_query,record_scene_query_configuration
 from build_dataset import legal_sequence, make_splits, schema, collision_admission, actual_collider_clearance, conservative_action_label, original_online_label,matched_pairs,frozen_evidence,actual_launch_inventory,independently_verify_wall_evidence
 from g1_randomization import ResetRandomization, ROOT
 from g1_audit import BodyCollisionRecorder
@@ -87,6 +87,8 @@ class Contracts(unittest.TestCase):
         self.assertIn('active_history, baseline=baseline_history, thresholds=thresholds, sample_period_s=DT',p)
         self.assertLess(p.index('deployment_samples.setdefault(phase, []).append(deployment_sample)'),p.index('            if telemetry_sample:\n                observation = decode_last_observation'))
         self.assertIn('retain_accelerations=True',p)
+        self.assertLess(p.index('_G_CONFIGURE_SCENE_QUERY(_g_sim_cfg)'),p.index('sim = SimulationContext(_g_sim_cfg)'))
+        self.assertLess(p.index('_G_RECORD_SCENE_QUERY(sim, _g_sim_cfg)'),p.index('        ground = sim_utils.CuboidCfg('))
         self.assertLess(p.index('_G_RANDOMIZATION.apply_nodes('),p.index('LOGGER.mark("FIRST_PHYSICS_STEP")'))
         self.assertIn('if _G_AUDIT.should_sample(sim_step,local_step):\n                if not telemetry_sample:',p)
         self.assertIn('_g_capture_boundary("responsive_traverse_stand")',p)
@@ -95,6 +97,33 @@ class Contracts(unittest.TestCase):
         self.assertLess(p.index('_G_POST_FINALIZE_CLEANUP(sim)'),p.index('        return _g_finished_result'))
         self.assertNotIn('zero_runtime_velocity(curtain_deformable, curtain_positions.shape[0])',p)
         with self.assertRaises(RuntimeError):patch_source('unexpected version')
+
+    def test_scene_query_facility_only_for_v5_wall_without_physics_changes(self):
+        from g1_action_contract_v2 import PRIMARY_PROTOCOL
+        specs=scene_specs();plan=dict(primary_protocol=PRIMARY_PROTOCOL)
+        self.assertTrue(scene_query_required(plan,specs['D01']))
+        self.assertTrue(scene_query_required(plan,specs['D02']))
+        self.assertFalse(scene_query_required(plan,specs['C01']))
+        self.assertFalse(scene_query_required(plan,dict(geometry=dict(kind='empty'),wall=None)))
+        self.assertFalse(scene_query_required(dict(primary_protocol='legacy'),specs['D01']))
+        class Config:
+            def __init__(self):self.enable_scene_query_support=False
+            def to_dict(self):return dict(dt=.005,render_interval=4,device='cuda:0',enable_scene_query_support=self.enable_scene_query_support,physx=dict(solver_type=1,contact_offset=.005))
+        for required in [False,True]:
+            cfg=Config();record=configure_scene_query(cfg,required)
+            self.assertEqual(record['changed_configuration_fields'],['enable_scene_query_support'] if required else [])
+            before=record['configuration_before'];after=record['configuration_after']
+            self.assertEqual(before['physx'],after['physx']);self.assertEqual(before['dt'],after['dt'])
+            with tempfile.TemporaryDirectory(dir=OUTPUT/'contract_tests') as folder:
+                sim=SimpleNamespace(get_physics_context=lambda:SimpleNamespace(get_enable_scene_query_support=lambda:required))
+                proof=dict(runtime_source_archive={'g1_trial.py':dict(sha256='SYNTHETIC_TEST_ONLY')})
+                evidence=record_scene_query_configuration(sim,cfg,record,proof,folder)
+                self.assertEqual(evidence['actual_native_readback_enabled'],required)
+                path=Path(folder)/'g_scene_query_configuration.json'
+                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),proof['scene_query_configuration_evidence']['sha256'])
+                with self.assertRaises(FileExistsError):record_scene_query_configuration(sim,cfg,record,proof,folder)
+                bad=SimpleNamespace(get_physics_context=lambda:SimpleNamespace(get_enable_scene_query_support=lambda:not required))
+                with self.assertRaisesRegex(RuntimeError,'differs from the requested'):record_scene_query_configuration(bad,cfg,record,proof,folder)
 
     def test_label_causality(self):
         action=action_spec({'probe_side':'left'});wall=dict(wall=dict(fixed=True,center_xyz=[.92,0,1],size_xyz=[.04,1.2,2]),candidate_plane_x=.85,initial_gap_m=.05)
@@ -398,6 +427,7 @@ class Contracts(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=test_root) as folder:
             folder=Path(folder);recorder=BodyCollisionRecorder(folder,nominal_hz=200)
             recorder.names=['pelvis'];recorder.node_count=0
+            query_path=folder/'g_scene_query_configuration.json';query_path.write_text('{"synthetic_test_only":true}')
             geom=dict(synthetic_fixture=True,body_names=['pelvis'],sheets=[])
             path=folder/'g_robot_collision_geometry.json';path.write_text(json.dumps(geom))
             recorder.geometry=dict(path=path.name,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
@@ -417,6 +447,7 @@ class Contracts(unittest.TestCase):
                     recorder.observe(**common,physics_step=end,time_s=end*.005,actual_simulation_time_s=7.+end*.005,phase=phase,boundary=True)
             recorder.finish(True,expected_total_steps=503,final_actual_simulation_time_s=7.+503*.005)
             capture=json.loads((folder/'g_body_collision_capture.json').read_text())
+            self.assertEqual(capture['scene_query_configuration'],dict(path=query_path.name,sha256=hashlib.sha256(query_path.read_bytes()).hexdigest()))
             result=verify_history(folder,capture,geom)
             self.assertEqual(result['status'],'VERIFIED_HISTORY');self.assertEqual(result['sample_count'],503)
 

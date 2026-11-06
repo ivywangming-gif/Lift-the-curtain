@@ -25,6 +25,7 @@ import numpy as np
 from learning_core import (ROOT, ACTION_CONTRACT, approved_pairs, apply_label_budget, frozen_label_budget, conformal_decisions,
     conformal_fit, load_dataset, metrics, prepare_features, read_json, select_thresholds,
     sha, split_indices, statistics_features, write_csv, write_json)
+from simulation_process import is_simulation_process
 
 OUT = ROOT / "outputs/round4070_comprehensive_traversability"
 DEFAULT_SEEDS = [40700, 40701, 40702, 40703, 40704]
@@ -33,7 +34,7 @@ DEFAULT_SEEDS = [40700, 40701, 40702, 40703, 40704]
 def sources():
     return {p.name: sha(p) for p in [Path(__file__), *[Path(__file__).with_name(n) for n in
         ("learning_core.py","learning_models.py","resource_lock.py","engineering_rules.py","observation_randomization.py",
-         "physics_history.py","collision_geometry.py","g1_action_contract_v2.py")]]}
+         "physics_history.py","collision_geometry.py","g1_action_contract_v2.py","simulation_process.py")]]}
 
 
 def method_names():
@@ -77,17 +78,17 @@ def window_status(path):
     expiry = dt.datetime.fromisoformat(window["expires_utc"].replace("Z", "+00:00"))
     if expiry.tzinfo is None or dt.datetime.now(dt.timezone.utc) >= expiry:
         return False, "TRAINING_WINDOW_EXPIRED"
-    # Only process arguments identify simulation; the Python environment path may
-    # legitimately contain 'isaaclab' for both learning and simulation.
+    # Recognize the actual Python entrypoint, not G1 filenames in Git, grep,
+    # compilation or read-only script arguments. The environment name is not
+    # evidence that a process is running simulation.
     if importlib.util.find_spec("psutil"):
         import psutil
-        simulation_scripts = {"run_episode.py", "physics_p1_asset.py", "run_physics_scene.py", "physics_scene.py", "physics_gate.py", "g1_trial.py"}
         for process in psutil.process_iter(["pid", "name", "cmdline"]):
             try:
                 command = process.info["cmdline"] or []
                 if process.info["pid"] == os.getpid():
                     continue
-                if (process.info["name"] or "").lower() in ("kit.exe", "isaac-sim.exe") or any(Path(x).name.lower() in simulation_scripts for x in command[1:]):
+                if is_simulation_process(process.info["name"], command):
                     return False, f"SIMULATION_PROCESS_ACTIVE:{process.info['pid']}"
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
@@ -445,6 +446,42 @@ def confirmation_status(roles, episodes):
                 observation_diagnostic="clean only; no confirmation observation-DR claim")
 
 
+def annotate_evaluation_scope(rows, predictions, bins, task, roles, episodes):
+    """Keep task/report isolation separate from each endpoint's actual support.
+
+    A single-class main test does not imply single-class confirmation. Retain
+    evaluation_scope as the task's report partition, even if its independent
+    confirmation supports both classes; this never promotes a partial fit into
+    a completed full benchmark or changes preflight eligibility.
+    """
+    support = {}
+    for endpoint, role in (("main_test", "test"), ("confirmation", "confirmation")):
+        classes = {int(episodes[i]["y"]) for i in roles.get(role, [])
+                   if int(episodes[i]["y"]) >= 0 and not episodes[i].get("is_control")}
+        label_support = "BOTH_CLASSES" if classes == {0, 1} else "SINGLE_CLASS" if classes else "NO_RELIABLE_CORE_LABELS"
+        endpoint_scope = ("INDEPENDENT_CONFIRMATION_"+label_support if endpoint == "confirmation" else
+                          "PARTIAL_HELDOUT_SINGLE_CLASS" if len(classes) == 1 else
+                          "FULL_SPLIT_BENCHMARK" if classes == {0, 1} else "NO_RELIABLE_CORE_TEST_LABELS")
+        support[endpoint] = dict(endpoint_label_support=label_support, endpoint_evaluation_scope=endpoint_scope,
+                                 heldout_supported_class=next(iter(classes)) if len(classes) == 1 else None)
+    for record in rows+predictions+bins:
+        endpoint = "confirmation" if record.get("mode", record.get("probability_kind", "")).startswith("confirmation/") else "main_test"
+        record.update(base_method=task["method"], label_fraction=task.get("label_fraction", 1.),
+                      supervised_train_n=task["labelled_train_n"], evaluation_endpoint=endpoint,
+                      evaluation_scope=task.get("evaluation_scope", "FULL_SPLIT_BENCHMARK"), **support[endpoint])
+    for row in rows:
+        if row["endpoint_label_support"] == "SINGLE_CLASS":
+            row.update(class_conditional_selective_error=row.get("selective_risk"), selective_risk=None,
+                       balanced_accuracy=None, auroc=None, auprc=None,
+                       metric_scope="single-class endpoint descriptive counts and supported class-conditional rates only; no complete OOD comparison")
+        elif row["endpoint_label_support"] == "BOTH_CLASSES":
+            row.update(class_conditional_selective_error=None,
+                       metric_scope="two-class independent confirmation; frozen model and main calibrator; no promotion of originating task scope"
+                       if row["evaluation_endpoint"] == "confirmation" else "two-class main-test endpoint; subgroup metrics require their own class support")
+        else:
+            row.update(class_conditional_selective_error=None, metric_scope="no reliable core labels at this endpoint")
+
+
 def calibrate_and_evaluate(probabilities, roles, episodes, protocol, folder, task, fitted_calibration=None):
     import torch
     p = np.asarray(probabilities, dtype=float)
@@ -690,16 +727,7 @@ def run(args):
                                calibration="identical clean calibration probabilities; no noisy holdout calibration", independent_new_episodes=0))
                 except ValueError as noise_error:
                     write_json(noisy_folder/"status.json", dict(status="UNAVAILABLE_WITH_REASON", reason=str(noise_error), clean_evaluation_preserved=True))
-            for record in rows+predictions+bins:
-                endpoint = "confirmation" if record.get("mode", record.get("probability_kind", "")).startswith("confirmation/") else "main_test"
-                record.update(base_method=task["method"], label_fraction=fraction, supervised_train_n=task["labelled_train_n"], evaluation_endpoint=endpoint,
-                              evaluation_scope=task.get("evaluation_scope", "FULL_SPLIT_BENCHMARK"),
-                              heldout_supported_class=task.get("heldout_supported_class"))
-            if task.get("evaluation_scope") == "PARTIAL_HELDOUT_SINGLE_CLASS":
-                for row in rows:
-                    row.update(class_conditional_selective_error=row.get("selective_risk"),selective_risk=None,
-                               balanced_accuracy=None,auroc=None,auprc=None,
-                               metric_scope="single-class heldout descriptive counts and supported class-conditional rates only; no complete OOD comparison")
+            annotate_evaluation_scope(rows, predictions, bins, task, roles, fit_episodes)
             write_json(folder/"confirmation_status.json", confirmation_status(roles, episodes))
             write_csv(folder/"metrics.csv", [{**r, **fit_metadata, "scope": protocol["scope"]} for r in rows])
             write_csv(folder/"predictions.csv", predictions)

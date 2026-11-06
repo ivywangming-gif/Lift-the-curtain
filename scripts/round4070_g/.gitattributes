@@ -1,0 +1,2 @@
+# Protocols bind exact source bytes; preserve them across Git checkouts.
+*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -315,12 +315,15 @@ class BodyCollisionRecorder:
                 if path.exists():raise FileExistsError('Never replace actual synchronized collision history')
                 np.savez_compressed(path,**payload)
                 history=dict(history_layout='SINGLE_NPZ_V1',history_path=path.name,history_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            query_path=self.root/'g_scene_query_configuration.json'
+            query_binding={} if not query_path.exists() else dict(scene_query_configuration=dict(
+                path=query_path.name,sha256=hashlib.sha256(query_path.read_bytes()).hexdigest()))
             write_json(self.root/'g_body_collision_capture.json',dict(schema='round4070-g.body_collision_capture.v1',
                 evaluation_only=True,model_input=False,nominal_hz=self.nominal_hz,additional_phase_first_samples=True,additional_phase_final_samples=True,
                 synchronized_poststep=True,pose_source='body_link_pose_w',quaternion_order='WXYZ',
                 recorder_time_origin='absolute executed physics step from reset; first initialization step=1; original E model clock unchanged',
                 sample_count=self.total_samples,body_count=len(self.names),phase_names=sorted(self.phase_names),
-                episode_finalized=bool(complete),geometry=self.geometry,native_geometry=self.native_geometry,**history,
+                episode_finalized=bool(complete),geometry=self.geometry,native_geometry=self.native_geometry,**history,**query_binding,
                 phase_execution_ledger=self.phase_execution_ledger,phase_boundary_requests=self.boundary_requests,
                 initial_state=self.initial_state,
                 execution_anchors=dict(first_physics_step=self.first_executed_step,last_physics_step=self.last_executed_step,

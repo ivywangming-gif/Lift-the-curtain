@@ -1,0 +1,105 @@
+{
+  "checked_utc": "2026-11-06T18:22:46.694605+00:00",
+  "scoped_staged_files": 46,
+  "diff_check_exit_code": 0,
+  "protected_user_file_sha256": "223908babf0fe72bd83d9a5f6801d85ed5d1a693e59ed0ea450f1b5da7207ffe",
+  "learning_run": "learning_campaign_3e48cd09d5df3559fdb6",
+  "exact_byte_checks": [
+    {
+      "path": "scripts/round4070_g/train_benchmark.py",
+      "sha256": "40f640e33af1dac17026bc9afdd9c768cc1095dc03616eb67da39fb53902fa6a",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/learning_core.py",
+      "sha256": "29a5b2769f9cd955e0624fdaa92fd9985398275270ac5f88abd1db2b1bf68e2d",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/learning_models.py",
+      "sha256": "5633a1f8daf0df40085233569fce246b1d59449fb9fb6946c914b41c282a75a0",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/resource_lock.py",
+      "sha256": "fdf32ec931d5e83328827675fa62c3e786c3e39173509c38214c4b2aa0c66256",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/engineering_rules.py",
+      "sha256": "be495dffe9b9e30aa44d417a1505bb2ecf39d753d35aa26f73fdd6921750f0f7",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/observation_randomization.py",
+      "sha256": "cd93f2dbd53a71176d00020d4ff426956dbdba6a4b1c92d35f560eb4072e04b5",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/physics_history.py",
+      "sha256": "7c680e666a53c9144746927a51492551eb8d8c779f2a5a443c061ebb1224666b",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/collision_geometry.py",
+      "sha256": "526396ba7623e7e35af743ab0f8bf4729ecaefa613850864d7d87d5ad19005d0",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/g1_action_contract_v2.py",
+      "sha256": "7ddf6acc9ff21957844758f8b909ee5a15be7ae488d006a43c8673a19d4b3ed3",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "scripts/round4070_g/simulation_process.py",
+      "sha256": "a149af84fe485b08276e745a6c51d70074102a8694c16dd8dc12f9daa7747370",
+      "staged_worktree_protocol_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/campaign_manifest_v5.json",
+      "sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/g1_reset_randomization_v1.json",
+      "sha256": "ece03e333aaebe83d4072e27c1b64eecee6494ef3d91f49c3cf55ba3e2a373ec",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/g1_action_contract_v2.json",
+      "sha256": "c4182e3ec33f0e7c60b9074c1f37bdef3e0dc22e5c86b28d6d43c4679ec01329",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/g1_native_collision_library_v3.json",
+      "sha256": "03dfddb9dd026ef461130372fc1d59bc499deb7ada4314bdc2b793f8d0067fa8",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/g1_native_geometry_validation_v2.json",
+      "sha256": "a276297dd4f5d3e37312aeb37b074e2e7e69b435495bc5749db7a7a578ee4782",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/quarantine/G_D01_left_coverage_00_nominal_s72700_rng1_act2.json",
+      "sha256": "b28b0a6f87547828d9864feb1137a690fa2861129db93219e643f33d4d821655",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/quarantine/G_D01_left_coverage_00_nominal_s72700_rng1_act2.sha256",
+      "sha256": "518461333ffd6fc4d70e11a7dd8761681392453f5a8e0ba48a6ffc18f333889b",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/quarantine/G_D01_right_coverage_00_nominal_s72700_rng1_act2.json",
+      "sha256": "2f772f2cee8ec4319876a4cedbfd231a92a07cab246996d163d7138c0ad8ec41",
+      "staged_worktree_exact_match": true
+    },
+    {
+      "path": "research/round4070_comprehensive_traversability/quarantine/G_D01_right_coverage_00_nominal_s72700_rng1_act2.sha256",
+      "sha256": "00492d2f1f6d4b14eaeabe5b643d1b5df0329893751faea0fb021f8cf6f73ef0",
+      "staged_worktree_exact_match": true
+    }
+  ],
+  "notes": "Source gitattributes preserve exact frozen code bytes on fresh checkout; no source/parameter byte was rewritten. Current learning result tables are not part of this source checkpoint."
+}

@@ -1,0 +1,197 @@
+{
+  "schema": "round4070-g.g1_launch_ledger.v1",
+  "budget_rule": "Union frozen historical, durable, and local attempt paths; same path requires identical original SHA; missing raw never refunds budget or permits replay.",
+  "entries": [
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D01_left_coverage_00_nominal_s72700/attempt01/campaign_launch.json",
+      "sha256": "166c5d53855934d871ef9a09855f07cda7998a62512da9c3893026ff307a8c53",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_D01_left_coverage_00_nominal_s72700",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:59:15.994078+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_A01_left_coverage_00_nominal_s70000/attempt01/campaign_launch.json",
+      "sha256": "bd4d1984ea4d78068636c64ca3b12fffea2d0a0751942cafe985346443fdfd30",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_A01_left_coverage_00_nominal_s70000",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:28:24.497046+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_C01_left_coverage_00_nominal_s71900/attempt01/campaign_launch.json",
+      "sha256": "d011f7635a5e0dfeeccf96d6236497da4f12f668e5cca8d0d9d03c6a466d2886",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_C01_left_coverage_00_nominal_s71900",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:43:54.894182+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_EMPTY_left_empty_control_00_nominal_s74800/attempt01/campaign_launch.json",
+      "sha256": "cd5303ec4da89e323a39e02d4ad625ee70e6fba223629600a67e6b8b2a9c94dd",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_EMPTY_left_empty_control_00_nominal_s74800",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:09:03.411639+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_A02_left_coverage_00_nominal_s70100/attempt01/campaign_launch.json",
+      "sha256": "a63171349aa5284d49eab06c629ff039bf2f9d1d93100fe19218b212cf6249f6",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_A02_left_coverage_00_nominal_s70100",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T12:08:55.125025+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_EMPTY_right_empty_control_00_nominal_s74800/attempt01/campaign_launch.json",
+      "sha256": "a5241fe5d7be34dc1e3a0a127e115fb0f7cb91b0a448949c5891472ddcd5849f",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_EMPTY_right_empty_control_00_nominal_s74800",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:11:37.233124+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D01_right_coverage_00_nominal_s72700/attempt01/campaign_launch.json",
+      "sha256": "7b895478a4153e09d6ac0f4e1de2086bfc854ac1c2a4f70b2091d7484131c76c",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_D01_right_coverage_00_nominal_s72700",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T12:01:03.274438+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_C01_right_coverage_00_nominal_s71900/attempt01/campaign_launch.json",
+      "sha256": "7a02e74b4aab9798bb665d8ddce9ee429d08620d0255792a41dd7f18888a22b3",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_C01_right_coverage_00_nominal_s71900",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:48:04.024282+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_A01_right_coverage_00_nominal_s70000/attempt01/campaign_launch.json",
+      "sha256": "d4139cdaa770d910a9b869fb0f330f8bbf630a1c3c2b184d36e720669bc4395e",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_A01_right_coverage_00_nominal_s70000",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T11:33:43.629241+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_A02_right_coverage_00_nominal_s70100/attempt01/campaign_launch.json",
+      "sha256": "a93bf1576e73b8f7b37fbe21af25b57a092185a075e4988f08079f6ec0d0b98e",
+      "primary_protocol": "LEGACY_FROZEN_PRIOR_UNSPECIFIED",
+      "trial_id": "G_A02_right_coverage_00_nominal_s70100",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T12:12:32.884464+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_C01_left_coverage_00_nominal_s71900_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "483036174df07ed148b3b4b5a21898fd58a183553cf3df6caf5fff5c00aee963",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_C01_left_coverage_00_nominal_s71900_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T16:01:02.402454+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_C01_right_coverage_00_nominal_s71900_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "5dc67376546db4cf1744d919418133b5e0f7982acd2c2583da2b601e64b9f8b7",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_C01_right_coverage_00_nominal_s71900_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T16:09:32.964034+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D01_left_coverage_00_nominal_s72700_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "6563b9fedf299ce7583ef7dd214fbac5b189aadd9d1b88eaf762a40c34f9b02a",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_D01_left_coverage_00_nominal_s72700_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T16:41:36.200969+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_EMPTY_left_empty_control_00_nominal_s74800_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "07a49d96788176ca00502b8119f4922284a1f30686ec42587aa88aaf5893a686",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_EMPTY_left_empty_control_00_nominal_s74800_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T15:06:45.014637+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_EMPTY_left_empty_control_00_nominal_s74800_rng1_act2/attempt02/campaign_launch.json",
+      "sha256": "25633b627a5475a7f9882357ea8ac10aa72268878a73e0c6bb4f02e6ffa74154",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_EMPTY_left_empty_control_00_nominal_s74800_rng1_act2",
+      "attempt_id": "attempt02",
+      "launch_utc": "2026-11-06T15:28:06.698053+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_EMPTY_right_empty_control_00_nominal_s74800_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "ed586c7fe60c94f35cadb8bef4994e69965f5d4a12b22fad3d4fc3c55539302a",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_EMPTY_right_empty_control_00_nominal_s74800_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T15:45:34.057436+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D01_right_coverage_00_nominal_s72700_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "ee6d5cb1ad51132feb6d52ffb0f0e9faade0157c0e566b9479499446be9ad977",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_D01_right_coverage_00_nominal_s72700_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T17:20:26.517482+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D03_left_coverage_00_nominal_s72900_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "45aa53f4a860f751a6e180106b2d203bddb16a742f8839e62ad6a2169e8c5206",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_D03_left_coverage_00_nominal_s72900_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T17:24:50.118123+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D03_right_coverage_00_nominal_s72900_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "aae85b3de961afd25959b41adaac971d436ab7ed803cbf2f63e737683b2f2bd4",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_D03_right_coverage_00_nominal_s72900_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T17:27:31.413472+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D03_left_coverage_01_nominal_s72901_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "809c1366183c1600f3769f85b56311b8f2d013300e0da3082d258c011ff7226e",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_D03_left_coverage_01_nominal_s72901_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T18:01:10.637610+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    },
+    {
+      "launch_file": "outputs/round4070_comprehensive_traversability/trials/G_D03_right_coverage_01_nominal_s72901_rng1_act2/attempt01/campaign_launch.json",
+      "sha256": "45c20d38c76f0f55978465f2edae6bb3327eab381481e987ebe244454001b527",
+      "primary_protocol": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+      "trial_id": "G_D03_right_coverage_01_nominal_s72901_rng1_act2",
+      "attempt_id": "attempt01",
+      "launch_utc": "2026-11-06T18:03:42.532096+00:00",
+      "evidence_origin": "LOCAL_LAUNCH_JSON"
+    }
+  ],
+  "entry_count": 21,
+  "entries_sha256": "55ab105fc9ad8ee0cba2981dfeb56342dd729bf80e07c43d89520d57a882ca78"
+}

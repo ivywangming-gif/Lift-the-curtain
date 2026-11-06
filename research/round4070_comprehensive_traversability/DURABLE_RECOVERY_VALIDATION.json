@@ -1,0 +1,63 @@
+{
+  "schema": "round4070-g.quarantine_restore_independent_validation.v2",
+  "created_utc": "2026-11-06T17:28:20.515194+00:00",
+  "fixture_root": "C:\\Robotics\\Lift-the-curtain\\outputs\\round4070_comprehensive_traversability\\implementation_smoke\\restore_quarantine_preflight_20261106T172753005870Z",
+  "source_sha256": "6a7e9d5e16d388e28bce279b41fbfc13b775002e46b4e3a20247988d40b7e069",
+  "frozen_source_files_sha256": {
+    "CURRENT_CAMPAIGN.json": "195c9e8a6ad34e289943badb088ea227cdfef056a222f29cc6661e6e083ee49d",
+    "campaign_manifest_v5.json": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+    "campaign_manifest_v5.sha256.json": "fd5eda56bea1b1263975a4b68c4bf391a4b39b8efe187faf3a1446d735f5ac2f",
+    "G1_LAUNCH_LEDGER.json": "5038069dc21bd69d97eae8559c7fb1128e1b430aa425aaf42ab68cad4ce64ec6",
+    "g1_reset_randomization_v1.json": "ece03e333aaebe83d4072e27c1b64eecee6494ef3d91f49c3cf55ba3e2a373ec",
+    "g1_action_contract_v2.json": "c4182e3ec33f0e7c60b9074c1f37bdef3e0dc22e5c86b28d6d43c4679ec01329",
+    "g1_native_collision_library_v3.json": "03dfddb9dd026ef461130372fc1d59bc499deb7ada4314bdc2b793f8d0067fa8",
+    "g1_native_geometry_validation_v2.json": "a276297dd4f5d3e37312aeb37b074e2e7e69b435495bc5749db7a7a578ee4782",
+    "quarantine/G_D01_left_coverage_00_nominal_s72700_rng1_act2.json": "b28b0a6f87547828d9864feb1137a690fa2861129db93219e643f33d4d821655",
+    "quarantine/G_D01_left_coverage_00_nominal_s72700_rng1_act2.sha256": "518461333ffd6fc4d70e11a7dd8761681392453f5a8e0ba48a6ffc18f333889b",
+    "quarantine/G_D01_right_coverage_00_nominal_s72700_rng1_act2.json": "2f772f2cee8ec4319876a4cedbfd231a92a07cab246996d163d7138c0ad8ec41",
+    "quarantine/G_D01_right_coverage_00_nominal_s72700_rng1_act2.sha256": "00492d2f1f6d4b14eaeabe5b643d1b5df0329893751faea0fb021f8cf6f73ef0"
+  },
+  "results": [
+    {
+      "case": "fresh_and_idempotent",
+      "status": "PASS",
+      "restored_files": 1047,
+      "same_bytes_on_second_restore": true,
+      "quarantine_artifact_count": 4,
+      "spent_budget": 19,
+      "missing_raw_launches": 19,
+      "stdout": "CURRENT_FROZEN_CAMPAIGN_RESTORED campaign_manifest_v5.json c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200 976\nDURABLE_G1_BUDGET_PRESERVED 19 MISSING_RAW_WITHHELD 19\nEXACT_QUARANTINE_ARTIFACTS_RESTORED 4\n"
+    },
+    {
+      "case": "bad_left_quarantine_sha",
+      "status": "PASS",
+      "rejected": true,
+      "output_files_written_before_rejection": 0,
+      "error": "RuntimeError: Bundled quarantine record SHA256 mismatch: G_D01_left_coverage_00_nominal_s72700_rng1_act2.json"
+    },
+    {
+      "case": "bad_right_quarantine_sha",
+      "status": "PASS",
+      "rejected": true,
+      "output_files_written_before_rejection": 0,
+      "error": "RuntimeError: Bundled quarantine record SHA256 mismatch: G_D01_right_coverage_00_nominal_s72700_rng1_act2.json"
+    },
+    {
+      "case": "bad_action_sha",
+      "status": "PASS",
+      "rejected": true,
+      "output_files_written_before_rejection": 0,
+      "error": "RuntimeError: Frozen artifact SHA256 mismatch: g1_action_contract_v2.json"
+    },
+    {
+      "case": "bad_rng_sha",
+      "status": "PASS",
+      "rejected": true,
+      "output_files_written_before_rejection": 0,
+      "error": "RuntimeError: Frozen reset randomization SHA256 mismatch"
+    }
+  ],
+  "earlier_gap_receipt": "implementation_smoke/restore_quarantine_20261106T172056609905Z/receipt.json",
+  "production_frozen_files_written": false,
+  "simulator_launched": false
+}

@@ -13,6 +13,8 @@ import time
 import psutil
 from resource_lock import resource_lock
 from physics_admission import trial_state, retry_authorized, empty_dependency, auditor_source_hashes
+from budget_ledger import launch_ledger_summary,trial_budget_state,append_actual_launch
+from g1_quarantine import quarantine_state
 
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'outputs/round4070_comprehensive_traversability'
@@ -53,16 +55,22 @@ def resource_ready():
 
 
 def g1_launch_count(manifest):
-    # A fresh checkout may omit old raw directories. Frozen historical launch
-    # identities still consume the budget; present raw is counted only once.
-    identities={str(p.resolve()).casefold() for p in (OUT/'trials').glob('*/*/campaign_launch.json')}
-    for entry in manifest.get('prior_actual_g1_launches',[]):
-        path=(ROOT/entry['launch_file']).resolve()
-        if not path.is_relative_to(ROOT):raise RuntimeError('Historical G1 launch ledger escapes repository')
-        if path.exists() and hashlib.sha256(path.read_bytes()).hexdigest()!=entry['sha256']:
-            raise RuntimeError('Historical G1 launch ledger SHA mismatch: '+str(path))
-        identities.add(str(path).casefold())
-    return len(identities)
+    # This tracked ledger survives a fresh checkout even when newer raw does
+    # not. Missing known raw never refunds budget or permits the same replay.
+    return launch_ledger_summary(manifest)['count']
+
+
+def g1_budget_admission(manifest,trial_id,run):
+    summary=launch_ledger_summary(manifest)
+    state=trial_budget_state(trial_id,summary)
+    if summary['budget_exhausted']:
+        return dict(ready=False,reason='G1_BUDGET_EXHAUSTED',launches=summary['count'])
+    if state['withhold']:
+        return dict(ready=False,reason=state['reason'],budget_state=state)
+    requested=int(Path(run).name.removeprefix('attempt'))
+    if requested<state['minimum_next_attempt_number']:
+        return dict(ready=False,reason='KNOWN_ATTEMPT_PATH_REUSE_FORBIDDEN',budget_state=state)
+    return dict(ready=True,budget_state=state,launches=summary['count'])
 
 
 def archive_source_files(paths,run):
@@ -84,14 +92,14 @@ def archive_source_files(paths,run):
 def launch_source_paths(script,invocation):
     folder=ROOT/'scripts/round4070_g'
     required=['physics_campaign.py','physics_scene_builder.py','physics_scenes.py','physics_admission.py','resource_lock.py',
-        'physics_native_bind.py','physics_history.py','physics_g1_collision_audit.py','collision_geometry.py','collision_clearance.py','physics_wall_evidence.py']
+        'physics_native_bind.py','physics_history.py','physics_g1_collision_audit.py','collision_geometry.py','collision_clearance.py','physics_wall_evidence.py','budget_ledger.py']
     # The plan contract helper lives in g1_trial.py. Preserve every G1 module
     # so later pre-App failures cannot omit a newly factored G1 helper.
     return [script,GUARD,ROOT/'scripts/round4070_fixed_probe_benchmark/run_episode.py',invocation,
             *[folder/name for name in required],*sorted(folder.glob('g1_*.py'))]
 
 
-def launch(script,run,args,kind,trial_id):
+def launch(script,run,args,kind,trial_id,*,manifest=None):
     while True:
         if (OUT/'PAUSE.flag').exists() or training_active():event('WAIT_TRAINING_OR_PAUSE',trial_id=trial_id);time.sleep(15);continue
         try:
@@ -100,6 +108,12 @@ def launch(script,run,args,kind,trial_id):
                 if kind=='G1' and (OUT/'PAUSE_G1.flag').exists():
                     event('G1_ADMISSION_WITHHELD_BEFORE_LAUNCH',trial_id=trial_id,reason='PAUSE_G1.flag',g1_budget_consumed=0)
                     return None
+                if kind=='G1':
+                    if manifest is None:raise RuntimeError('FROZEN_MANIFEST_REQUIRED_FOR_G1_BUDGET')
+                    budget=g1_budget_admission(manifest,trial_id,run)
+                    if not budget['ready']:
+                        event('G1_DURABLE_BUDGET_WITHHELD_BEFORE_LAUNCH',trial_id=trial_id,budget=budget,g1_budget_consumed=0)
+                        return None
                 ready,resources=resource_ready()
                 if not ready:event('WAIT_RESOURCE',trial_id=trial_id,**resources)
                 else:
@@ -115,6 +129,11 @@ def launch(script,run,args,kind,trial_id):
                     source_hashes,source_archive=archive_source_files(launch_source_paths(script,invocation),run)
                     atomic(run/'campaign_launch.json',dict(kind=kind,trial_id=trial_id,queue_pid=os.getpid(),utc=dt.datetime.now(dt.timezone.utc).isoformat(),guard=str(GUARD),script=str(script),args=args,resources=resources,
                         source_sha256=source_hashes,launch_source_archive=source_archive,source_archive_complete_before_guard=True))
+                    if kind=='G1':
+                        # Failure here aborts before guard/App startup. The
+                        # immutable local launch intent still costs budget.
+                        ledger=append_actual_launch(run/'campaign_launch.json',manifest=manifest)
+                        event('G1_LAUNCH_DURABLY_RECORDED',trial_id=trial_id,g1_launches=ledger['count'])
                     event(kind+'_LAUNCHED',trial_id=trial_id,run_root=str(run),**resources)
                     with (run/'guard_console.log').open('w',encoding='utf-8') as console:
                         result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(invocation)],cwd=ROOT,stdout=console,stderr=subprocess.STDOUT)
@@ -226,7 +245,22 @@ def main():
                 sid=plan['scene_id']
                 if a.scene and sid!=a.scene:continue
                 if budget_stop():break
+                known_budget=trial_budget_state(plan['trial_id'],launch_ledger_summary(manifest))
+                if known_budget['withhold']:
+                    event('G1_KNOWN_RAW_MISSING_WITHHELD',trial_id=plan['trial_id'],budget_state=known_budget,g1_budget_consumed=0)
+                    continue
                 root=OUT/'trials'/plan['trial_id'];previous=sorted(root.glob('attempt*'))
+                # An explicitly reviewed local uncertainty can withhold this
+                # exact plan only. Validate before automatic derived re-audit
+                # so no source change silently replaces its bound evidence.
+                quarantine=quarantine_state(previous[-1] if previous else root/'attempt01',plan)
+                if quarantine['status']=='GLOBAL_PAUSE_REQUIRED':
+                    (OUT/'PAUSE_G1.flag').write_text('Quarantine evidence requires explicit review: '+quarantine['reason'],encoding='utf-8')
+                    event('G1_QUARANTINE_EVIDENCE_GLOBAL_PAUSE',trial_id=plan['trial_id'],quarantine=quarantine,g1_budget_consumed=0)
+                    g1_admission_paused=True;break
+                if quarantine['status']=='VALIDATED_WITHHOLD':
+                    event('G1_EXACT_PLAN_QUARANTINE_WITHHELD',trial_id=plan['trial_id'],quarantine=quarantine,g1_budget_consumed=0)
+                    continue
                 auditor=ROOT/'scripts/round4070_g/physics_g1_collision_audit.py'
                 if auditor.exists():
                     for old in previous:
@@ -261,9 +295,10 @@ def main():
                 evidence=[dict(path=str(x.relative_to(ROOT)),sha256=hashlib.sha256(x.read_bytes()).hexdigest(),physical_config_id=plan['physical_config_id']) for x in (OUT/'physics'/sid).glob('*/summary.json') if read(x,{}).get('physics_valid')]
                 assert len({read(ROOT/e['path'],{}).get('seed') for e in evidence})>=3
                 assert all(read(ROOT/e['path'],{}).get('physical_config_id')==plan['physical_config_id'] for e in evidence)
-                run=root/f'attempt{len(previous)+1:02d}';runtime_plan=dict(plan,physics_valid=True,physics_gate_status='THREE_DISTINCT_SEEDS_VALID',physics_gate_evidence=evidence,empty_control_admission=dependency)
-                plan_path=OUT/'runtime_plans'/f'{plan["trial_id"]}_attempt{len(previous)+1:02d}.json';atomic(plan_path,runtime_plan)
-                result=launch(ROOT/'scripts/round4070_g/g1_trial.py',run,['--scene-config-json',str(config_dir/f'{sid}.json'),'--trial-config-json',str(plan_path),'--run-root',str(run),'--headless'],'G1',plan['trial_id'])
+                next_attempt=max(known_budget['minimum_next_attempt_number'],1+max((int(p.name.removeprefix('attempt')) for p in previous),default=0))
+                run=root/f'attempt{next_attempt:02d}';runtime_plan=dict(plan,physics_valid=True,physics_gate_status='THREE_DISTINCT_SEEDS_VALID',physics_gate_evidence=evidence,empty_control_admission=dependency)
+                plan_path=OUT/'runtime_plans'/f'{plan["trial_id"]}_attempt{next_attempt:02d}.json';atomic(plan_path,runtime_plan)
+                result=launch(ROOT/'scripts/round4070_g/g1_trial.py',run,['--scene-config-json',str(config_dir/f'{sid}.json'),'--trial-config-json',str(plan_path),'--run-root',str(run),'--headless'],'G1',plan['trial_id'],manifest=manifest)
                 if result is None:g1_admission_paused=True;break
                 jobs+=1;summarize(manifest)
                 if plan.get('body_collision_audit_required'):

@@ -6,6 +6,7 @@ import csv
 import hashlib
 import json
 import psutil
+from budget_ledger import launch_ledger_summary, trial_budget_state
 
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'outputs/round4070_comprehensive_traversability'
@@ -32,6 +33,7 @@ def current_campaign():
 def main():
     source,actual_hash=current_campaign()
     manifest=read(source)
+    budget=launch_ledger_summary(manifest,repo_root=ROOT,ledger_path=DOC/'G1_LAUNCH_LEDGER.json')
     primary_ids={p['trial_id'] for p in manifest['trial_plans']}
     dataset=read(OUT/'dataset/manifest.json',{})
     episodes=[e for e in dataset.get('episodes',[]) if e.get('planned_trial_id',e.get('trial_id','')) in primary_ids]
@@ -52,16 +54,18 @@ def main():
     for plan in manifest['trial_plans']:
         folder=OUT/'trials'/plan['trial_id']
         attempts=list(folder.glob('*/campaign_launch.json'))
+        budget_state=trial_budget_state(plan['trial_id'],budget)
         results=[read(p,{}) for p in folder.glob('*/g_outcome.json')]
         best=next((d for d in results if d.get('runtime_valid') and d.get('probe_valid')),
                   results[-1] if results else {})
         formal=admitted.get(plan['trial_id'],{})
         status='PLANNED'
         if len(valid_by_config.get(plan['physical_config_id'],set()))>=3: status='PHYSICS_VALID'
-        if attempts: status='G1_LAUNCHED'
+        if budget_state['known_attempts']: status='G1_LAUNCHED'
         if best.get('runtime_valid'): status='RUNTIME_VALID'
         if best.get('probe_valid'): status='PROBE_VALID'
         if formal.get('label_valid'): status='LABEL_VALID'
+        if budget_state['withhold']: status='BLOCKED_WITH_REASON'
         if best: outcomes.append(best)
         failed_gates=[g for g in gates if g['physical_config_id']==plan['physical_config_id'] and not g['physics_valid']]
         if len(valid_by_config.get(plan['physical_config_id'],set()))>=3:
@@ -72,11 +76,12 @@ def main():
             admission_reason='THREE_DISTINCT_PHYSICS_SEEDS_PENDING'
         ledger.append(dict(trial_id=plan['trial_id'],scene_id=plan['scene_id'],
             physical_config_id=plan['physical_config_id'],seed=plan['seed'],probe_side=plan['probe_side'],
-            experiment_role=plan['experiment_role'],attempts_launched=len(attempts),stage=status,
+            experiment_role=plan['experiment_role'],attempts_launched=budget_state['known_attempts'],
+            local_launch_files=len(attempts),missing_raw_budget_withhold=budget_state['withhold'],stage=status,
             runtime_valid=bool(best.get('runtime_valid')),probe_valid=bool(best.get('probe_valid')),
             label_valid=bool(formal.get('label_valid')),label=formal.get('label',''),
             online_outcome_label_diagnostic_only=best.get('label',''),
-            reason=formal.get('label_reason','PRIMARY_IMPORT_AND_BODY_AUDIT_PENDING' if best else admission_reason)))
+            reason=budget_state['reason'] if budget_state['withhold'] else formal.get('label_reason','PRIMARY_IMPORT_AND_BODY_AUDIT_PENDING' if best else admission_reason)))
     learning=[]
     for p in OUT.glob('learning*/task_queue.json'):
         queue=read(p,{})
@@ -89,8 +94,7 @@ def main():
             all_scopes_task_counts=dict(Counter(t.get('status') for t in tasks))))
     actual_launches=list((OUT/'trials').glob('*/*/campaign_launch.json'))
     local_launch_keys={p.relative_to(ROOT).as_posix() for p in actual_launches}
-    historical_launch_keys={r['launch_file'].replace('\\','/') for r in manifest.get('prior_actual_g1_launches',[])}
-    known_launch_keys=local_launch_keys|historical_launch_keys
+    known_launch_keys={r['launch_file'] for r in budget['entries']}
     pilot_launches=[p for p in actual_launches if p.parent.parent.name not in primary_ids]
     pilot_rows=[]
     for path in pilot_launches:
@@ -99,8 +103,9 @@ def main():
             protocol_status='SUPERSEDED_DIAGNOSTIC_ONLY_NOT_PRIMARY',
             original_outcome_label=outcome.get('label',''),runtime_valid=outcome.get('runtime_valid',False),
             probe_valid=outcome.get('probe_valid',False),raw_path=str(path.parent.relative_to(ROOT))))
-    for key in sorted(historical_launch_keys-local_launch_keys):
+    for key in sorted(known_launch_keys-local_launch_keys):
         path=Path(key)
+        if path.parent.parent.name in primary_ids:continue
         pilot_rows.append(dict(trial_id=path.parent.parent.name,attempt=path.parent.name,
             protocol_status='HISTORICAL_LAUNCH_BUDGET_PRESERVED_RAW_NOT_PRESENT_LOCALLY',
             original_outcome_label='',runtime_valid='',probe_valid='',raw_path=str(path.parent)))
@@ -115,7 +120,10 @@ def main():
         physics_summaries=len(gates),physics_gates_passed=sum(g['physics_valid'] for g in gates),
         physical_configs_with_three_valid_seeds=sum(len(s)>=3 for s in valid_by_config.values()),
         g1_attempts_launched=len(known_launch_keys),g1_launch_files_locally_available=len(actual_launches),
-        historical_launches_not_present_locally=len(historical_launch_keys-local_launch_keys),
+        historical_launches_not_present_locally=len(budget['missing_raw_launches']),
+        durable_launch_ledger_entries=budget['durable_entry_count'],
+        budget_withheld_trial_ids=budget['withheld_trial_ids'],
+        remaining_actual_g1_launch_budget=budget['remaining'],
         primary_g1_attempts_launched=sum(r['attempts_launched'] for r in ledger),
         superseded_pilot_attempts_launched=len(pilot_rows),
         primary_g1_finalized_trial_ids=len(outcomes),g1_runtime_valid=sum(r['runtime_valid'] for r in ledger),

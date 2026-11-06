@@ -159,6 +159,59 @@ class LearningContracts(unittest.TestCase):
         self.assertTrue(np.all(ta <= .5))
         self.assertEqual(len(a), 6)
 
+    def test_partial_main_and_two_class_confirmation_keep_distinct_support(self):
+        from unittest.mock import patch
+        from train_benchmark import annotate_evaluation_scope, calibrate_and_evaluate, confirmation_status
+        from learning_core import read_json
+        # Synthetic output-only contract: no network fit or optimizer call.
+        episodes = [dict(trial_id=f"endpoint{i}", y=y, group_id=f"eg{i}", side="left", is_control=i == 7)
+                    for i, y in enumerate([0, 1, 1, 0, 0, 1, -1, 1])]
+        roles = dict(train=[0, 1], calibration=[2], test=[3], confirmation=[4, 5, 6, 7])
+        task = dict(split_id="synthetic_partial_confirmation", method="GRU", seed=0, label_fraction=1.,
+                    labelled_train_n=2, evaluation_scope="PARTIAL_HELDOUT_SINGLE_CLASS", heldout_supported_class=0)
+        p = np.array([.2, .8, .7, .9, .2, .8, .99, .1])
+        protocol = dict(risk_grid=[.05], conformal_alpha=.1)
+        parent = Path(__file__).resolve().parents[2]/"outputs/round4070_comprehensive_traversability/contract_tests"
+        parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=parent) as directory:
+            folder = Path(directory); confirm_folder = folder/"confirmation"; confirm_folder.mkdir()
+            with patch("torch.optim.LBFGS", side_effect=AssertionError("This contract must not fit a calibrator")):
+                rows, predictions, bins = calibrate_and_evaluate(p, roles, episodes, protocol, folder, task)
+                cr, cp, cb = calibrate_and_evaluate(p, {**roles, "test":roles["confirmation"]}, episodes,
+                    protocol, confirm_folder, task, fitted_calibration=read_json(folder/"calibration.json"))
+            for record in cr+cp:
+                record["mode"] = "confirmation/"+record["mode"]
+            for record in cb:
+                record["probability_kind"] = "confirmation/"+record["probability_kind"]
+            rows += cr; predictions += cp; bins += cb
+            annotate_evaluation_scope(rows, predictions, bins, task, roles, episodes)
+        main = next(r for r in rows if r["mode"] == "forced_raw" and r["subset"] == "all")
+        confirm = next(r for r in rows if r["mode"] == "confirmation/forced_raw" and r["subset"] == "all")
+        self.assertEqual(main["endpoint_label_support"], "SINGLE_CLASS")
+        self.assertEqual(main["heldout_supported_class"], 0)
+        self.assertEqual(main["class_conditional_selective_error"], 1.)
+        self.assertIsNone(main["selective_risk"])
+        self.assertIsNone(main["balanced_accuracy"])
+        self.assertEqual(confirm["endpoint_label_support"], "BOTH_CLASSES")
+        self.assertEqual(confirm["endpoint_evaluation_scope"], "INDEPENDENT_CONFIRMATION_BOTH_CLASSES")
+        self.assertIsNone(confirm["heldout_supported_class"])
+        self.assertEqual((confirm["n"], confirm["balanced_accuracy"], confirm["auroc"], confirm["selective_risk"]), (2, 1., 1., 0.))
+        self.assertNotIn("single-class", confirm["metric_scope"])
+        # Confirmation support cannot change the originating task's report
+        # partition, or count a partial fit as a full split completion.
+        self.assertTrue(all(r["evaluation_scope"] == "PARTIAL_HELDOUT_SINGLE_CLASS" for r in rows+predictions+bins))
+        self.assertTrue(all(r["heldout_supported_class"] is None for r in predictions+bins if r["evaluation_endpoint"] == "confirmation"))
+        self.assertEqual(confirmation_status(roles, episodes)["status"], "EVALUATED_INDEPENDENT_CONFIRMATION")
+        self.assertEqual(task["heldout_supported_class"], 0)
+        # Also cover the reverse: a two-class task cannot grant two-class
+        # metrics to an actually single-class confirmation endpoint.
+        reverse_rows = [dict(mode="confirmation/forced_raw", **metrics([0], [.9]))]
+        annotate_evaluation_scope(reverse_rows, [], [], {**task, "evaluation_scope":"FULL_SPLIT_BENCHMARK"},
+                                  {**roles, "test":[3, 5], "confirmation":[4, 6]}, episodes)
+        self.assertEqual(reverse_rows[0]["endpoint_label_support"], "SINGLE_CLASS")
+        self.assertIsNone(reverse_rows[0]["selective_risk"])
+        self.assertEqual(reverse_rows[0]["class_conditional_selective_error"], 1.)
+
     def test_train_only_normalization_and_strict_instant(self):
         names, raw, times, episodes = fixture()
         _, _, _, audit = prepare_features(raw, times, names, episodes, [0, 1], "GRU")

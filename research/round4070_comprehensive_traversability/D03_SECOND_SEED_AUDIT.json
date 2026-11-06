@@ -1,0 +1,35 @@
+{
+  "scope": "Second preregistered seed, independent bilateral evidence; not confirmation repetition 4-7 or method comparison",
+  "records": [
+    {
+      "trial_id": "G_D03_left_coverage_01_nominal_s72901_rng1_act2",
+      "seed": 72901,
+      "phase": "coverage",
+      "source": "outputs/round4070_comprehensive_traversability/trials/G_D03_left_coverage_01_nominal_s72901_rng1_act2/attempt01",
+      "audit_sha256": "9e6ce9e2e120b995738d7391f8890d3674c017fb21dbd1309b1c8c31b2014e9f",
+      "body_audit_status": "VERIFIED",
+      "static_certificate_status": "VERIFIED",
+      "physical_evidence_verified": true,
+      "poststep_states": 2659,
+      "original_online_label": "LABEL_UNKNOWN",
+      "safe_recovery": true,
+      "formal_label": "BLOCKED",
+      "raw_changed": false
+    },
+    {
+      "trial_id": "G_D03_right_coverage_01_nominal_s72901_rng1_act2",
+      "seed": 72901,
+      "phase": "coverage",
+      "source": "outputs/round4070_comprehensive_traversability/trials/G_D03_right_coverage_01_nominal_s72901_rng1_act2/attempt01",
+      "audit_sha256": "50fd0800295387098fad1d139fff0043016c081fb7edf9519b38fe9d2dae9d30",
+      "body_audit_status": "VERIFIED",
+      "static_certificate_status": "VERIFIED",
+      "physical_evidence_verified": true,
+      "poststep_states": 2659,
+      "original_online_label": "LABEL_UNKNOWN",
+      "safe_recovery": true,
+      "formal_label": "BLOCKED",
+      "raw_changed": false
+    }
+  ]
+}

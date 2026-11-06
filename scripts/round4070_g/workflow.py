@@ -21,6 +21,7 @@ import uuid
 import psutil
 
 from resource_lock import resource_lock
+from simulation_process import is_simulation_process
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = Path(__file__).resolve().parent
@@ -29,7 +30,8 @@ DOC = ROOT / 'research/round4070_comprehensive_traversability'
 DATA_FILES = ('manifest.json', 'split_manifest.json', 'matched_pairs.json', 'dataset_status.json')
 LEARNING_FILES = ('train_benchmark.py', 'learning_core.py', 'learning_models.py',
                   'engineering_rules.py', 'observation_randomization.py', 'resource_lock.py',
-                  'physics_history.py', 'collision_geometry.py', 'g1_action_contract_v2.py')
+                  'physics_history.py', 'collision_geometry.py', 'g1_action_contract_v2.py',
+                  'simulation_process.py')
 
 
 def read(path, default=None):
@@ -153,13 +155,11 @@ def freeze_learning(snapshot, identity):
 
 
 def active_simulations():
-    scripts = {'run_episode.py', 'physics_p1_asset.py', 'run_physics_scene.py',
-               'physics_scene.py', 'physics_gate.py', 'g1_trial.py'}
     active = []
     for process in psutil.process_iter(['pid', 'name', 'cmdline']):
         try:
             args = process.info['cmdline'] or []
-            if (process.info['name'] or '').lower() in ('kit.exe', 'isaac-sim.exe') or any(Path(x).name.lower() in scripts for x in args[1:]):
+            if is_simulation_process(process.info['name'], args):
                 active.append(process.info['pid'])
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue

@@ -14,7 +14,7 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(Path(__file__).resolve().parent))
-from g1_recording import Recorder, action_spec, write_json, ACTION_ID, CONTRACT
+from g1_recording import Recorder, action_spec, write_json, clean, ACTION_ID, CONTRACT
 from g1_randomization import ResetRandomization
 from g1_audit import BodyCollisionRecorder
 from g1_action_contract_v2 import PRIMARY_PROTOCOL as V5_PROTOCOL,load_plan_contract,ActionTubeGuard
@@ -32,6 +32,11 @@ def replace_once(source,old,new):
 
 
 def patch_source(source):
+    source=replace_once(source,'        sim = SimulationContext(SimulationCfg(dt=DT, render_interval=DECIMATION, device="cuda:0"))',
+        '        _g_sim_cfg = SimulationCfg(dt=DT, render_interval=DECIMATION, device="cuda:0")\n'
+        '        _G_CONFIGURE_SCENE_QUERY(_g_sim_cfg)\n'
+        '        sim = SimulationContext(_g_sim_cfg)\n'
+        '        _G_RECORD_SCENE_QUERY(sim, _g_sim_cfg)')
     source=replace_once(source,'                    retain_accelerations=False,',
         '                    retain_accelerations=True,  # G recorder: retain measured state only; policy unchanged')
     source=replace_once(source,'APP = AppLauncher(ARGS).app',
@@ -323,6 +328,47 @@ def verify_empty_evidence(plan):
     return {**expected,'frozen_campaign_path':str(campaign),'frozen_campaign_sha256':campaign_sha}
 
 
+def scene_query_required(plan,spec):
+    return bool(plan.get('primary_protocol')==V5_PROTOCOL and
+                (spec.get('wall') is not None or spec.get('geometry',{}).get('kind')=='rigid_board'))
+
+
+def configure_scene_query(cfg,required):
+    """Enable only the native query manager, before SimulationContext exists."""
+    before=clean(cfg.to_dict())
+    if required:cfg.enable_scene_query_support=True
+    after=clean(cfg.to_dict())
+    key='enable_scene_query_support'
+    if {k:v for k,v in before.items() if k!=key}!={k:v for k,v in after.items() if k!=key}:
+        raise RuntimeError('Scene-query configuration unexpectedly changed another simulation setting')
+    if after.get(key) is not bool(required):
+        raise RuntimeError('Unexpected default scene-query configuration for this frozen scene')
+    return dict(schema='round4070-g.scene_query_configuration.v1',required_for_actual_wall_evidence=bool(required),
+        configuration_before=before,configuration_after=after,
+        changed_configuration_fields=[k for k in sorted(set(before)|set(after)) if before.get(k)!=after.get(k)],
+        scope='Native scene-query facilities only; no solver, contact, dt, policy, action or scene changes',
+        model_input=False,configured_before_simulation_context=True)
+
+
+def record_scene_query_configuration(sim,cfg,record,proof,run_root):
+    actual=sim.get_physics_context().get_enable_scene_query_support()
+    if actual not in (True,False):raise RuntimeError('Native scene-query getter did not return a boolean')
+    actual=bool(actual)
+    if actual!=record['required_for_actual_wall_evidence'] or actual!=bool(cfg.enable_scene_query_support):
+        raise RuntimeError('Native scene-query flag differs from the requested actual configuration')
+    record={**record,'actual_native_readback_enabled':actual,
+        'readback_api':'SimulationContext.get_physics_context().get_enable_scene_query_support',
+        'readback_stage':'AFTER_SIMULATION_CONTEXT_BEFORE_SCENE_CONSTRUCTION',
+        'source_sha256':proof['runtime_source_archive']['g1_trial.py']['sha256']}
+    path=Path(run_root)/'g_scene_query_configuration.json'
+    if path.exists():raise FileExistsError('Never replace actual scene-query configuration evidence')
+    write_json(path,record)
+    proof['scene_query_configuration_evidence']=dict(path=path.name,sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        requested_enabled=record['required_for_actual_wall_evidence'],actual_enabled=actual)
+    write_json(Path(run_root)/'g_runner_contract.json',proof)
+    return record
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--scene-config-json',type=Path,required=True)
@@ -348,7 +394,9 @@ def main():
                physics_dt_s=.005,control_decimation=4,geometry_decimation=20,record_decimation=4,
                collision_audit_record_decimation=1 if action_v2 else 4,collision_audit_model_input=False,
                primary_protocol=plan['primary_protocol'],g1_reset_randomization=plan['g1_reset_randomization'],
-               dry_run=args.dry_run,followup_policy_uses_classifier=False)
+               dry_run=args.dry_run,followup_policy_uses_classifier=False,
+               scene_query_support_requested=scene_query_required(plan,spec),
+               scene_query_configuration_scope='Native query manager enabled only for V5 actual-wall evidence; no physics/controller parameter changes')
     write_json(args.run_root/'g_runner_contract.json',proof)
     if args.dry_run:
         print(json.dumps(proof,indent=2));return 0
@@ -373,6 +421,9 @@ def main():
     recorder=Recorder(args.run_root,plan,spec,sha(patched))
     body_audit=BodyCollisionRecorder(args.run_root,nominal_hz=200 if action_v2 else 50,action_contract=action_v2)
     action_guard=ActionTubeGuard(action_v2)
+    query_record={}
+    def configure_query(cfg):
+        query_record.update(configure_scene_query(cfg,proof['scene_query_support_requested']))
     def verify_live_scene_source():
         for name in ('physics_scene_builder.py','physics_scenes.py'):
             if hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()!=proof['runtime_source_archive'][name]['sha256']:
@@ -380,6 +431,8 @@ def main():
     namespace={'__name__':'_g_frozen_runner','__file__':str(SOURCE),'_G_RECORDER':recorder,
                '_G_SPEC':spec,'_G_PLAN':plan,'_G_UPPER_OFFSET':offset,'_G_VERIFY_SCENE_SOURCE':verify_live_scene_source,
                '_G_RANDOMIZATION':randomization,'_G_AUDIT':body_audit,'_G_ACTION_GUARD':action_guard,
+               '_G_CONFIGURE_SCENE_QUERY':configure_query,
+               '_G_RECORD_SCENE_QUERY':lambda sim,cfg:record_scene_query_configuration(sim,cfg,query_record,proof,args.run_root),
                '_G_WRITE_JSON':write_json,'_G_RUN_ROOT':args.run_root,
                '_G_POST_FINALIZE_CLEANUP':lambda sim:post_finalize_cleanup(sim,recorder,body_audit,args.run_root)}
     sys.argv=[str(SOURCE),*argv];sys.path.insert(0,str(SOURCE.parent))

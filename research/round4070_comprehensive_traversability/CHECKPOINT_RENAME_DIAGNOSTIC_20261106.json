@@ -1,0 +1,211 @@
+{
+  "schema": "round4070-g.checkpoint_rename_diagnostic.v1",
+  "read_only": true,
+  "observation_started_utc": "2026-11-06T18:19:40.297278+00:00",
+  "observation_finished_utc": "2026-11-06T18:19:40.355391+00:00",
+  "run_path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6",
+  "protocol_sha256": "f9d1757d028c114eb4e149c71adcc57094cb397ea0b5ad723698fa04fe11328c",
+  "fixed_epochs": 80,
+  "actual_queue_sha256_at_read": "dc8d058ec6a90d0ff0af5bd986ac0a2179c9e5223fe412e76c723ec549dba477",
+  "actual_queue_status_counts_at_read": {
+    "BLOCKED_WITH_REASON": 1260,
+    "EVALUATED": 99,
+    "FAILED_WITH_REASON": 19,
+    "TRAINING": 1,
+    "PLANNED": 141
+  },
+  "target_results": [
+    {
+      "seed": 40702,
+      "task_id": "split4_left_to_right__GRU__40702",
+      "files": {
+        "partial.pt": {
+          "path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6/fits/split4_left_to_right__GRU__40702/partial.pt",
+          "sha256": "a15caefe7e86085bb1dc5d4e8c661e745bb6b0128b70435a670d76d76451c367",
+          "bytes": 745426,
+          "file_attributes": 32,
+          "read_only_attribute": false,
+          "last_write_utc": "2026-11-06T18:11:34.088365+00:00",
+          "stable_size_and_mtime_during_read": true,
+          "cpu_deserialization_passed": true,
+          "next_epoch": 73,
+          "curve_count": 73,
+          "last_curve_epoch": 72,
+          "model_tensor_count": 6,
+          "optimizer_state_count": 6,
+          "all_checkpoint_tensors_finite": true,
+          "cpu_rng_saved": true,
+          "cuda_rng_saved": true
+        },
+        "partial.tmp.pt": {
+          "path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6/fits/split4_left_to_right__GRU__40702/partial.tmp.pt",
+          "sha256": "b7e5c427934e0565db63c9980428357cf22839bd0b20de6364ad8ba1de15fd26",
+          "bytes": 745490,
+          "file_attributes": 32,
+          "read_only_attribute": false,
+          "last_write_utc": "2026-11-06T18:11:34.167398+00:00",
+          "stable_size_and_mtime_during_read": true,
+          "cpu_deserialization_passed": true,
+          "next_epoch": 74,
+          "curve_count": 74,
+          "last_curve_epoch": 73,
+          "model_tensor_count": 6,
+          "optimizer_state_count": 6,
+          "all_checkpoint_tensors_finite": true,
+          "cpu_rng_saved": true,
+          "cuda_rng_saved": true
+        }
+      },
+      "committed_curve_is_exact_temporary_prefix": true,
+      "failure_json_sha256": "8e22b8310365de02d71e59c39258fd86c735219807e70815dd6231bb2843e330"
+    },
+    {
+      "seed": 40703,
+      "task_id": "split4_left_to_right__GRU__40703",
+      "files": {
+        "partial.pt": {
+          "path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6/fits/split4_left_to_right__GRU__40703/partial.pt",
+          "sha256": "3c652aa0a013023a5dd6c104aeb6e8d289e3ccd08f7a6c0cfeb11ed1d3232637",
+          "bytes": 743442,
+          "file_attributes": 32,
+          "read_only_attribute": false,
+          "last_write_utc": "2026-11-06T18:11:38.673766+00:00",
+          "stable_size_and_mtime_during_read": true,
+          "cpu_deserialization_passed": true,
+          "next_epoch": 47,
+          "curve_count": 47,
+          "last_curve_epoch": 46,
+          "model_tensor_count": 6,
+          "optimizer_state_count": 6,
+          "all_checkpoint_tensors_finite": true,
+          "cpu_rng_saved": true,
+          "cuda_rng_saved": true
+        },
+        "partial.tmp.pt": {
+          "path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6/fits/split4_left_to_right__GRU__40703/partial.tmp.pt",
+          "sha256": "fe5645a8edfd26ad6a16c18186458281145e74bd24a1c21c4c718f9477d64917",
+          "bytes": 743506,
+          "file_attributes": 32,
+          "read_only_attribute": false,
+          "last_write_utc": "2026-11-06T18:11:38.778761+00:00",
+          "stable_size_and_mtime_during_read": true,
+          "cpu_deserialization_passed": true,
+          "next_epoch": 48,
+          "curve_count": 48,
+          "last_curve_epoch": 47,
+          "model_tensor_count": 6,
+          "optimizer_state_count": 6,
+          "all_checkpoint_tensors_finite": true,
+          "cpu_rng_saved": true,
+          "cuda_rng_saved": true
+        }
+      },
+      "committed_curve_is_exact_temporary_prefix": true,
+      "failure_json_sha256": "590ea572457190e4c8407637b71104c313154b81b0f96ca568173eb4040d8c02"
+    },
+    {
+      "seed": 40704,
+      "task_id": "split4_left_to_right__GRU__40704",
+      "files": {
+        "partial.pt": {
+          "path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6/fits/split4_left_to_right__GRU__40704/partial.pt",
+          "sha256": "8125e74728c16ea43c74b0d61a56571eeb2010e7ecc250feb87177aee7c5c756",
+          "bytes": 742930,
+          "file_attributes": 32,
+          "read_only_attribute": false,
+          "last_write_utc": "2026-11-06T18:11:42.862559+00:00",
+          "stable_size_and_mtime_during_read": true,
+          "cpu_deserialization_passed": true,
+          "next_epoch": 40,
+          "curve_count": 40,
+          "last_curve_epoch": 39,
+          "model_tensor_count": 6,
+          "optimizer_state_count": 6,
+          "all_checkpoint_tensors_finite": true,
+          "cpu_rng_saved": true,
+          "cuda_rng_saved": true
+        },
+        "partial.tmp.pt": {
+          "path": "outputs/round4070_comprehensive_traversability/learning_campaign_3e48cd09d5df3559fdb6/fits/split4_left_to_right__GRU__40704/partial.tmp.pt",
+          "sha256": "76fd95ca4575ddc0d3653f43d1ef5d1bdbff5bf2198b24ddb36429b18092b274",
+          "bytes": 742994,
+          "file_attributes": 32,
+          "read_only_attribute": false,
+          "last_write_utc": "2026-11-06T18:11:42.947694+00:00",
+          "stable_size_and_mtime_during_read": true,
+          "cpu_deserialization_passed": true,
+          "next_epoch": 41,
+          "curve_count": 41,
+          "last_curve_epoch": 40,
+          "model_tensor_count": 6,
+          "optimizer_state_count": 6,
+          "all_checkpoint_tensors_finite": true,
+          "cpu_rng_saved": true,
+          "cuda_rng_saved": true
+        }
+      },
+      "committed_curve_is_exact_temporary_prefix": true,
+      "failure_json_sha256": "3c9edbd081e91bc3b1c6fd8899a90e4010b79a928c15e41409e93026505e3ba6"
+    }
+  ],
+  "directory_acl_observation": {
+    "source": "Read-only PowerShell Get-Acl for the three exact GRU directories",
+    "authenticated_users_modify": true,
+    "administrators_and_system_full_control": true,
+    "users_read_execute": true,
+    "explicit_deny_seen": false,
+    "limitation": "Observed directory ACL and attributes do not establish the effective token or absence of transient Windows sharing conflicts"
+  },
+  "save_implementation": {
+    "path": "scripts/round4070_g/train_benchmark.py",
+    "lines": [
+      330,
+      338,
+      392,
+      396
+    ],
+    "source_sha256": "40f640e33af1dac17026bc9afdd9c768cc1095dc03616eb67da39fb53902fa6a",
+    "sequence": "torch.save finishes before Path.replace(partial); no separate save_checkpoint function",
+    "torch_version": "2.7.0+cu128",
+    "torch_serialization_path": "C:\\conda_envs\\isaaclab\\Lib\\site-packages\\torch\\serialization.py",
+    "torch_serialization_sha256": "b3e4e0f0b84f6bd38a49a92354f2221e48169fd9ab6d54e9b6e62ccf8028be6b",
+    "source_observation": "torch.save uses _open_zipfile_writer context; its exit writes the ZIP end record. Python file streams are closed when present; torch.load file context closes. No explicit retained Python file handle is present in the fit code."
+  },
+  "frozen_source_hash_checks": {
+    "train_benchmark.py": true,
+    "learning_core.py": true,
+    "learning_models.py": true,
+    "resource_lock.py": true,
+    "engineering_rules.py": true,
+    "observation_randomization.py": true,
+    "physics_history.py": true,
+    "collision_geometry.py": true,
+    "g1_action_contract_v2.py": true,
+    "simulation_process.py": true
+  },
+  "diagnosis": {
+    "confirmed": "Temporary files fully deserialize, are exactly one completed epoch later, and failure occurs at replacement rather than serialization",
+    "candidate_causes_unconfirmed": [
+      "Transient Windows share/delete denial, including file inspection or scanning",
+      "Effective runtime access/identity interaction",
+      "Native writer or external handle timing"
+    ],
+    "not_established": [
+      "Identity of a handle owner",
+      "A persistent file-handle leak",
+      "Antivirus causation",
+      "Static ACL denial"
+    ],
+    "host_process_visibility": "Sandbox psutil query returned no matching host trainer; this is not evidence of process exit or no open handles"
+  },
+  "safe_resume_steps": [
+    "Wait for the current owned trainer to exit and its resource lock to be released; do not modify active fits.",
+    "Archive exact bytes and SHA of the first-pass queue, status, frozen protocol, failed directories including partial.pt, partial.tmp.pt, failure.json, and source manifest before retries.",
+    "Retain the same frozen protocol, code hashes, data, seeds, device and fixed 80 epochs; use a fresh valid exclusive training window.",
+    "Run the existing run command against the same output. It skips EVALUATED/BLOCKED_WITH_REASON and retries FAILED_WITH_REASON without manual queue edits.",
+    "Resume only the committed partial.pt: restore model, optimizer, CPU/CUDA RNG and curve; do not promote partial.tmp.pt or select an epoch by performance.",
+    "For these GRU seeds the committed next_epoch values are 73,47,40; recompute the one uncommitted epoch and finish the frozen total. CUDA bitwise identity is not promised by the existing nondeterministic implementation.",
+    "Preserve any second failure independently. If I/O code changes become necessary, audit/version them separately; never silently rewrite the original frozen protocol code hash."
+  ],
+  "writes": "Only this research Markdown and JSON; no run/raw/dataset/training source writes, no rename test, no GPU or model training"
+}

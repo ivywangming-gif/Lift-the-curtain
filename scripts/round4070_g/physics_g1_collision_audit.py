@@ -15,7 +15,7 @@ from collision_clearance import actual_collider_min_world_x,_rotations
 from physics_admission import auditor_source_hashes
 from physics_history import iterate_verified_chunks
 from g1_action_contract_v2 import load_plan_contract,witness_world,separation_certificate
-from physics_wall_evidence import verified_wall_for_audit
+from physics_wall_evidence import verified_wall_for_audit,verify_query_configuration
 
 
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -301,6 +301,8 @@ def audit_run_v5(run):
         from physics_native_bind import bind_trial_geometry
         rebound=bind_trial_geometry(run,contract,write_output=False,archived_query_source_sha256=native['binder_source_sha256'])
         if rebound!=native:raise GeometryNotVerified('NATIVE_BINDER_INDEPENDENT_REPLAY_DISAGREEMENT')
+        query=verify_query_configuration(run,capture,geom,result['source_files'])
+        if query is not None:result['scene_query_configuration_audit']=query
         wall=verified_wall_for_audit(run,geom,result['source_files'])
         parts,expected=actual_parts(native,geom['body_names']);faces=sheet_faces(geom);history=iterate_verified_chunks(run,capture,geom)
         result['all_robot_collision_bodies']=True;result['native_evidence_mode_counts']=native.get('evidence_mode_counts')

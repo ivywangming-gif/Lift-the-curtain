@@ -11,10 +11,10 @@ from train_benchmark import sources
 
 
 class WorkflowLearningIdentityContracts(unittest.TestCase):
-    def test_real_registry_exactly_matches_current_nine_trainer_sources(self):
-        self.assertEqual(len(workflow.LEARNING_FILES),9)
+    def test_real_registry_exactly_matches_current_ten_trainer_sources(self):
+        self.assertEqual(len(workflow.LEARNING_FILES),10)
         self.assertEqual(workflow.learning_source_hashes(),sources())
-        self.assertTrue({"physics_history.py","collision_geometry.py","g1_action_contract_v2.py"} <= set(workflow.LEARNING_FILES))
+        self.assertTrue({"physics_history.py","collision_geometry.py","g1_action_contract_v2.py","simulation_process.py"} <= set(workflow.LEARNING_FILES))
 
     def test_each_new_dependency_changes_identity_without_overwriting_old_protocol(self):
         parent=workflow.ROOT/"outputs/round4070_comprehensive_traversability/contract_tests"
@@ -38,11 +38,11 @@ class WorkflowLearningIdentityContracts(unittest.TestCase):
                 self.assertEqual(workflow.freeze_learning(snapshot,"frozen-dataset-id"),first)
                 self.assertEqual(len(calls),1)
                 runs={first}
-                for name in ("physics_history.py","collision_geometry.py","g1_action_contract_v2.py"):
+                for name in ("physics_history.py","collision_geometry.py","g1_action_contract_v2.py","simulation_process.py"):
                     (scripts/name).write_text("synthetic revised "+name)
                     runs.add(workflow.freeze_learning(snapshot,"frozen-dataset-id"))
-                self.assertEqual(len(runs),4)
-                self.assertEqual(len(calls),4)
+                self.assertEqual(len(runs),5)
+                self.assertEqual(len(calls),5)
                 self.assertEqual((first/"frozen_protocol.json").read_bytes(),original)
                 self.assertEqual(hashlib.sha256(original).hexdigest(),workflow.sha(first/"frozen_protocol.json"))
 

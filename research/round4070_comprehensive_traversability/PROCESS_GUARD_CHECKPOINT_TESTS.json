@@ -1,0 +1,11 @@
+{
+  "started_utc": "2026-11-06T18:10:12.309070+00:00",
+  "finished_utc": "2026-11-06T18:10:47.133373+00:00",
+  "exit_code": 0,
+  "tests_ran": 157,
+  "duration_s": 28.637,
+  "log_path": "outputs/round4070_comprehensive_traversability/handovers/v5_activation_20261106/guard_fixed_checkpoint_tests.log",
+  "log_sha256": "47900137b5f1ee49dc5069e4545007a4f336e03a5bc8ddf038a2beb4c556fa9d",
+  "cuda_visible_devices": "-1",
+  "scientific_trials_or_model_fits": false
+}
