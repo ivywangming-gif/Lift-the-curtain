@@ -10,7 +10,7 @@
   },
   "run_output": "outputs/round4070_comprehensive_traversability/exploratory_gru_ts2vec_20261109_5e3c3fba_v3",
   "source_script_sha256": "0ac1491420b86c7e61b7c4376390e0acf2cde514aa5888fc545b5d11931bce49",
-  "report_regeneration_script_sha256": "b749856febd5fd638bf10f1bf93be473c767e71734ce15d1c0b84728850de50c",
+  "report_regeneration_script_sha256": "1d629574e1db6980deae3f721c3899f1b2e25ccbdd06d81acb14c20f31437e72",
   "test_script_sha256": "4c4da763d8e601ec282c3af1e7b225721cb27bac2fdfd06dd3202b09e37cc451",
   "device": "cuda",
   "seeds": [40700, 40701, 40702, 40703, 40704],

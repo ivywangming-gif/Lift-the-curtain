@@ -492,6 +492,13 @@ def build_data_audit(snapshot: Path, run_dir: Path, gate: dict):
     pair_doc = read_json(pairs_path)
     pending_doc = read_json(OUT / "dataset/pending_collision_audit_manifest.json")
     all_histories = episodes + pending_doc.get("episodes", [])
+    pending_details = [{
+        "trial_id": e.get("trial_id"),
+        "scene_id": e.get("scene_id"),
+        "side": e.get("probe_side", e.get("side")),
+        "label": e.get("label"),
+        "label_reason": e.get("label_reason"),
+    } for e in pending_doc.get("episodes", [])]
     core_known = [e for e in all_histories if int(e.get("y", -1)) >= 0 and not e.get("is_control")]
     counts = {
         "admitted_histories": len(episodes),
@@ -504,6 +511,7 @@ def build_data_audit(snapshot: Path, run_dir: Path, gate: dict):
         "legal_unknown_rows": sum(int(e.get("y", -1)) < 0 for e in all_histories),
         "admitted_unknown_rows": sum(int(e.get("y", -1)) < 0 for e in episodes),
         "pending_collision_audit_rows": len(pending_doc.get("episodes", [])),
+        "pending_collision_audit_trial_ids": [item["trial_id"] for item in pending_details],
         "admitted_physical_configs": len({e["group_id"] for e in episodes}),
         "all_legal_physical_configs": len({e["group_id"] for e in all_histories}),
         "left_rows": sum(e.get("probe_side", e.get("side")) == "left" for e in all_histories),
@@ -546,6 +554,7 @@ def build_data_audit(snapshot: Path, run_dir: Path, gate: dict):
         "input_contract": manifest.get("action_contract"),
         "cutoff_s": CUTOFF_S, "max_steps": MAX_STEPS, "seeds": SEEDS,
         "selected_splits": SELECTED_SPLITS, "counts": counts, "split_audit": split_rows,
+        "pending_collision_audit": pending_details,
         "self_supervised_policy": {
             "allowed": "admitted train histories only, including UNKNOWN and EMPTY controls as unlabeled histories",
             "forbidden": "pending collision-audit histories, calibration, test, confirmation, material/anchor/wall truth",
@@ -563,7 +572,8 @@ def build_data_audit(snapshot: Path, run_dir: Path, gate: dict):
         "official_pause_interpretation": "PAUSE_G1 blocks the formal learning queue and physical admission; this isolated run is read-only exploratory analysis and does not alter that gate",
     }
     json_dump(run_dir / "protocol.json", protocol)
-    json_dump(run_dir / "data_audit.json", {"counts": counts, "split_audit": split_rows, "gate": gate})
+    json_dump(run_dir / "data_audit.json", {"counts": counts, "split_audit": split_rows,
+                                             "pending_collision_audit": pending_details, "gate": gate})
     csv_dump(run_dir / "pair_audit.csv", pair_rows)
     csv_dump(REPORT / "CONTRASTIVE_PAIR_AUDIT.csv", pair_rows)
     lines = [
@@ -577,6 +587,9 @@ def build_data_audit(snapshot: Path, run_dir: Path, gate: dict):
         f"- Known labels including EMPTY controls: {counts['known_label_rows_including_controls']}; EMPTY controls: {counts['empty_control_rows']}.",
         f"- Core known labels after excluding EMPTY: {counts['core_known_rows']} (PASSABLE {counts['core_passable_rows']}, BLOCKED {counts['core_blocked_rows']}).",
         f"- Legal LABEL_UNKNOWN histories: {counts['legal_unknown_rows']} (admitted {counts['admitted_unknown_rows']}, pending audit {counts['pending_collision_audit_rows']}).",
+        "- Pending collision-audit histories: " + "; ".join(
+            f"{item['trial_id']} [{item['scene_id']}/{item['side']}; {item['label_reason']} ]"
+            for item in pending_details) + ".",
         f"- Admitted physical configurations: {counts['admitted_physical_configs']}; all legal configuration IDs including pending: {counts['all_legal_physical_configs']}.",
         f"- Left/right legal history coverage: {counts['left_rows']} / {counts['right_rows']}.", "",
         "## Inclusion Rules", "",
@@ -733,14 +746,57 @@ def write_final_reports(result_rows: list[dict], split_rows: list[dict], run_dir
         labels = np.asarray(e1_test_labels.get(split_id, []), dtype=int)
         probabilities = np.asarray([e1_map[trial_id] for trial_id in e1_test_ids.get(split_id, []) if trial_id in e1_map], dtype=float)
         if len(labels) and len(labels) == len(probabilities):
+            test_sides = {"left" if "_left_" in trial_id else "right" if "_right_" in trial_id else "unknown"
+                          for trial_id in e1_test_ids.get(split_id, [])}
+            test_side = next(iter(test_sides)) if len(test_sides) == 1 else "mixed"
             e1_values = metrics(labels, probabilities)
             e1_summary[split_id] = {key: e1_values.get(key) for key in (
                 "balanced_accuracy", "false_pass", "false_reject", "passable_recall",
                 "blocked_recall", "coverage", "uncertain_rate", "brier", "ece")}
             ablation.append(metric_row("E1_FIXED_G_V1_REAL_DT", split_id, 0, "test_core", labels, probabilities,
                                        frozen_baseline=True, baseline_version="E1_FIXED_G_V1_REAL_DT",
-                                       calibration_status="FROZEN_NO_CALIBRATION", independent_configuration_ood=False))
+                                       calibration_status="FROZEN_NO_CALIBRATION", independent_configuration_ood=False,
+                                       side=test_side, side_test_n=len(labels)))
     ablation.extend(aggregate_rows(ablation))
+
+    # Make the requested A-E comparisons explicit instead of requiring a
+    # reader to infer them from the per-seed method rows.
+    comparisons = [
+        ("A", "B1_GRU", "B3_GRU_TS2Vec", "GRU vs GRU TS2Vec-style pretraining"),
+        ("B", "B3_GRU_TS2Vec", "B4_MatchedSupCon", "B3 vs matched SupCon"),
+        ("C", "B3_GRU_TS2Vec", "B4_MatchedSupCon", "B4 vs no matched SupCon"),
+        ("D", "B4_OrdinarySupCon", "B4_MatchedSupCon", "matched vs ordinary SupCon"),
+        ("E", "B1_GRU", "A_Orderless_GRU_Control", "time order retained vs removed"),
+    ]
+    for ablation_id, baseline_method, variant_method, description in comparisons:
+        for split_id in SELECTED_SPLITS:
+            baseline_rows = [r for r in result_rows if r.get("status") == "EVALUATED"
+                             and r.get("row_type") == "seed" and r.get("endpoint") == "test_core"
+                             and r.get("method") == baseline_method and r.get("split_id") == split_id]
+            variant_rows = [r for r in result_rows if r.get("status") == "EVALUATED"
+                            and r.get("row_type") == "seed" and r.get("endpoint") == "test_core"
+                            and r.get("method") == variant_method and r.get("split_id") == split_id]
+            row = {"row_type": "ablation_comparison", "ablation_id": ablation_id,
+                   "comparison": description, "split_id": split_id,
+                   "baseline_method": baseline_method, "variant_method": variant_method,
+                   "baseline_seed_n": len(baseline_rows), "variant_seed_n": len(variant_rows)}
+            if baseline_rows and variant_rows:
+                for key in ("balanced_accuracy", "false_pass", "false_reject", "passable_recall",
+                            "blocked_recall", "coverage", "uncertain_rate", "brier", "ece"):
+                    base_values = [float(r[key]) for r in baseline_rows if r.get(key) not in (None, "")]
+                    variant_values = [float(r[key]) for r in variant_rows if r.get(key) not in (None, "")]
+                    base_mean = float(np.mean(base_values)) if base_values else None
+                    variant_mean = float(np.mean(variant_values)) if variant_values else None
+                    row["baseline_" + key + "_mean"] = base_mean
+                    row["variant_" + key + "_mean"] = variant_mean
+                    row["delta_" + key + "_mean"] = (variant_mean - base_mean
+                                                        if base_mean is not None and variant_mean is not None else None)
+                row["status"] = "EVALUATED"
+            else:
+                row["status"] = ("NOT_EVALUABLE_DATA_INSUFFICIENT_MATCHED_PAIRS"
+                                  if "B4_MatchedSupCon" in (baseline_method, variant_method)
+                                  else "NOT_EVALUABLE_MISSING_METHOD_RESULT")
+            ablation.append(row)
     csv_dump(REPORT / "METHOD_ABLATION_RESULTS.csv", ablation)
     evaluated = [r for r in result_rows if r.get("status") == "EVALUATED" and r.get("row_type") == "seed"
                  and r.get("endpoint") == "test_core" and r.get("balanced_accuracy") is not None]

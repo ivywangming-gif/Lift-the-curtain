@@ -12,6 +12,7 @@ No manifest, raw episode, pause flag, or formal queue was modified.
 - Known labels including EMPTY controls: 14; EMPTY controls: 2.
 - Core known labels after excluding EMPTY: 12 (PASSABLE 8, BLOCKED 4).
 - Legal LABEL_UNKNOWN histories: 7 (admitted 4, pending audit 3).
+- Pending collision-audit histories: G_B10_left_coverage_00_nominal_s71700_rng1_act2__attempt01 [B10/left; ACTION_TUBE_VIOLATION ]; G_D01_left_coverage_00_nominal_s72700_rng1_act2__attempt01 [D01/left; FINITE_WALL_NO_CLOSED_LOOP_ACTION_IMPOSSIBILITY_PROOF ]; G_D01_right_coverage_00_nominal_s72700_rng1_act2__attempt01 [D01/right; FINITE_WALL_NO_CLOSED_LOOP_ACTION_IMPOSSIBILITY_PROOF ].
 - Admitted physical configurations: 8; all legal configuration IDs including pending: 10.
 - Left/right legal history coverage: 11 / 10.
 
