@@ -33,6 +33,7 @@ def current_campaign():
 def main():
     source,actual_hash=current_campaign()
     manifest=read(source)
+    e1_baseline=read(DOC/'IF_ELSE_BASELINE_STATUS.json',{})
     budget=launch_ledger_summary(manifest,repo_root=ROOT,ledger_path=DOC/'G1_LAUNCH_LEDGER.json')
     primary_ids={p['trial_id'] for p in manifest['trial_plans']}
     dataset=read(OUT/'dataset/manifest.json',{})
@@ -132,6 +133,7 @@ def main():
         imported_history_count=len(episodes),
         imported_core_labels=dict(Counter(e['label'] for e in episodes if not e.get('is_control'))),
         learning_runs=learning,active_locks=active,
+        e1_fixed_baseline=e1_baseline if e1_baseline.get('schema') == 'round4070-g.if_else_baseline_status.v1' else None,
         g1_admission_paused=(OUT/'PAUSE_G1.flag').exists(),
         completion_warning='No full benchmark or method advantage is claimed. Planned work is not executed evidence.',
         resume_command="powershell -NoProfile -ExecutionPolicy Bypass -File .\\run_round4070_g.ps1 -Mode all -RetryRuntimeFailures")

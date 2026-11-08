@@ -1,0 +1,93 @@
+{
+  "compatibility_status": "PASS",
+  "contract_tests": {
+    "command": [
+      "C:\\conda_envs\\isaaclab\\python.exe",
+      "-m",
+      "unittest",
+      "scripts/round4070_g/test_if_else_baseline.py",
+      "-q"
+    ],
+    "output_tail": "----------------------------------------------------------------------\nRan 4 tests in 16.753s\n\nOK",
+    "returncode": 0,
+    "status": "PASS"
+  },
+  "core_metrics": {
+    "auprc": 1.0,
+    "auroc": 1.0,
+    "balanced_accuracy": 0.75,
+    "blocked_n": 4,
+    "blocked_recall": 0.5,
+    "blocked_uncertain_n": 2,
+    "brier": 0.041666666666666664,
+    "coverage": 0.8333333333333334,
+    "ece": 0.08333333333333333,
+    "false_pass": 0.0,
+    "false_pass_episode_binomial_wilson_high": 0.4898908364545973,
+    "false_pass_episode_binomial_wilson_low": 0.0,
+    "false_pass_n": 0,
+    "false_reject": 0.0,
+    "false_reject_n": 0,
+    "interval_scope": "descriptive episode-binomial IID assumption; not configuration-cluster inference",
+    "n": 12,
+    "passable_n": 8,
+    "passable_recall": 1.0,
+    "passable_uncertain_n": 0,
+    "selective_risk": 0.0,
+    "true_block_n": 2,
+    "true_pass_n": 8,
+    "uncertain_n": 2,
+    "uncertain_rate": 0.16666666666666666
+  },
+  "dataset_label_counts": {
+    "BLOCKED": 4,
+    "LABEL_UNKNOWN": 7,
+    "PASSABLE_FOR_ACTION": 10
+  },
+  "decision_counts": {
+    "BLOCKED": 4,
+    "RESPONSIVE": 15,
+    "UNCERTAIN": 2
+  },
+  "e1_fixed_version": "E1_FIXED_G_V1_REAL_DT",
+  "g1_admission_paused": true,
+  "generated_utc": "2026-11-08T03:24:45.869948+00:00",
+  "git": {
+    "branch": "codex/round4070-g-comprehensive-traversability",
+    "head": "8540f44c718fb9c88940e43e220af0ca05d1d210",
+    "worktree_dirty": true,
+    "worktree_status_sha256": "86c691654f2aa38c3e272b79287201cac6266a4878412f7ae9eebc25c8389d47"
+  },
+  "global_pause_present": true,
+  "input_digest": "61154c50277590796dc1c307900f4e7304c4b7ca393f495cf38cbaefac18c3f1",
+  "input_scope": {
+    "accepted_count": 18,
+    "control_count": 2,
+    "history_count": 21,
+    "pending_count": 3,
+    "pending_ids": [
+      "G_B10_left_coverage_00_nominal_s71700_rng1_act2__attempt01",
+      "G_D01_left_coverage_00_nominal_s72700_rng1_act2__attempt01",
+      "G_D01_right_coverage_00_nominal_s72700_rng1_act2__attempt01"
+    ],
+    "superseded_pilots_excluded": true
+  },
+  "outputs": {
+    "all_scenes_csv": "research/round4070_comprehensive_traversability/IF_ELSE_BASELINE_ALL_SCENES.csv",
+    "frozen_doc": "research/round4070_comprehensive_traversability/FROZEN_IF_ELSE_BASELINE.md",
+    "run_manifest": "outputs/round4070_comprehensive_traversability/if_else_baseline_61154c50277590796dc1/run_manifest.json",
+    "zh_report": "research/round4070_comprehensive_traversability/IF_ELSE_BASELINE_REPORT_ZH.md"
+  },
+  "run_directory": "outputs/round4070_comprehensive_traversability/if_else_baseline_61154c50277590796dc1",
+  "schema": "round4070-g.if_else_baseline_status.v1",
+  "source_hashes": {
+    "canonical_e1_fixed": "7c264b68f74df161e3d317ed858acba0f91daef888da9c25f7600414d62fefb2",
+    "contract_test_source": "7bb8b6ac343f42520f8bf00b68b197024f27f51ed4ed172ef75868fce64b0488",
+    "g_compatibility_adapter": "be495dffe9b9e30aa44d417a1505bb2ecf39d753d35aa26f73fdd6921750f0f7",
+    "historical_e1_reference": "af997e57b06895beffb71cc348ab1a384f59fd393d552017c47a97b8d60a61d8",
+    "proprioceptive_thresholds": "7970fff8fafbf17a947585c4dfeee235a6807be88d048d3df17c329c5dd3ddf7",
+    "secondary_rule_freeze": "f217241714ddb1a05150f8d834cf2d9757e80b7a786c1e5943ec8e573e81edc8",
+    "semantic_observation_reference": "32585387e214483d710e6c1915ad037ee79381598420b684f095066418632c5a"
+  },
+  "status": "IN_PROGRESS_NOT_COMPLETE"
+}
