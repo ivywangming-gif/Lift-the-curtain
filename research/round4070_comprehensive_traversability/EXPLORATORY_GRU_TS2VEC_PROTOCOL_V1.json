@@ -1,0 +1,78 @@
+{
+  "schema": "round4070-g.exploratory-gru-ts2vec.protocol.v1",
+  "round": "4070-G",
+  "status": "EXPLORATORY_NOT_FORMAL_BENCHMARK",
+  "snapshot": {
+    "identity": "5e3c3fba3ad4e55a2ebc083fabcc0ae0033ffcaa90275eaa1d802e046d116b1b",
+    "manifest_sha256": "f4d2e517da27eaed22e44aa3115ea8d8866abe32f03c4ad87e550e87563a2255",
+    "split_manifest_sha256": "a93fbb83d3c3779abaf94492d36f42eba7ff845cb3107cce330e840d18cfadcc",
+    "matched_pairs_sha256": "a8b562efde1ecb56ae6107e93cc0353c79225d3edd3b4b325a733b477ef24bb5"
+  },
+  "run_output": "outputs/round4070_comprehensive_traversability/exploratory_gru_ts2vec_20261109_5e3c3fba_v3",
+  "source_script_sha256": "0ac1491420b86c7e61b7c4376390e0acf2cde514aa5888fc545b5d11931bce49",
+  "report_regeneration_script_sha256": "b749856febd5fd638bf10f1bf93be473c767e71734ce15d1c0b84728850de50c",
+  "test_script_sha256": "4c4da763d8e601ec282c3af1e7b225721cb27bac2fdfd06dd3202b09e37cc451",
+  "device": "cuda",
+  "seeds": [40700, 40701, 40702, 40703, 40704],
+  "selected_splits": ["split4_left_to_right", "split4_right_to_left"],
+  "methods": [
+    "B1_GRU",
+    "B2_TS2Vec_FrozenLinear",
+    "B2_TS2Vec_FineTune",
+    "B3_GRU_TS2Vec",
+    "B4_MatchedSupCon",
+    "B4_OrdinarySupCon",
+    "A_Orderless_GRU_Control"
+  ],
+  "frozen_baseline": "E1_FIXED_G_V1_REAL_DT",
+  "hyperparameters": {
+    "max_steps": 128,
+    "observation_cutoff_s": 2.0,
+    "hidden": 48,
+    "projection": 32,
+    "pretrain_epochs": 20,
+    "supervised_epochs": 80,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "contrastive_weight": 0.1,
+    "temperature": 0.2,
+    "matched_margin": 0.2
+  },
+  "data_contract": {
+    "core_known_rows": 12,
+    "core_passable_rows": 8,
+    "core_blocked_rows": 4,
+    "empty_controls_excluded_from_supervision": 2,
+    "legal_unknown_rows": 7,
+    "pending_collision_audit_rows_excluded": 3,
+    "self_supervised_train_only": true,
+    "test_and_calibration_excluded_from_pretraining": true,
+    "b10_and_d01_excluded": true,
+    "no_metadata_inputs": true
+  },
+  "augmentation_contract": {
+    "timestamp_masking": "contiguous whole timestamps",
+    "sensor_noise": "small normalized noise on sensor columns only",
+    "time_order_preserved": true,
+    "command_response_alignment_preserved": true,
+    "arbitrary_crop": false
+  },
+  "matched_pair_contract": {
+    "positive": "different physical configurations with the same trusted label",
+    "hard_negative": "different physical configurations with different trusted labels",
+    "minimum_per_split": {
+      "positive": 2,
+      "hard_negative": 2
+    },
+    "no_duplication_or_synthetic_pairs": true
+  },
+  "safety_and_queue": {
+    "global_pause_sha256": "3231de7b0f0c282178d2b92fb44b0b37ec57b16364e07cd873ccfe8fafffc5ae",
+    "g1_pause_sha256": "b44cceffe2c948e9f13bbf10c1c1a63adf6d76629cf5cd8dcd774720fa8b6f4f",
+    "formal_queue_touched": false,
+    "physical_collection_started": false,
+    "manifest_reinitialized": false,
+    "frozen_e1_modified": false
+  },
+  "reproduction_command": "& C:\\conda_envs\\isaaclab\\python.exe scripts\\round4070_g\\run_gru_ts2vec_exploratory.py --snapshot outputs\\round4070_comprehensive_traversability\\dataset_snapshots\\5e3c3fba3ad4e55a2ebc083fabcc0ae0033ffcaa90275eaa1d802e046d116b1b --output outputs\\round4070_comprehensive_traversability\\exploratory_gru_ts2vec_20261109_5e3c3fba_v3 --device cuda"
+}
