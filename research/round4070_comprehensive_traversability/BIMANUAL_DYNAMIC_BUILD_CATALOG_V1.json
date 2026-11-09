@@ -1,0 +1,602 @@
+{
+  "schema": "round4070-g.bimanual.dynamic_build_catalog.v1",
+  "builder_schema": "round4070-g.bimanual.dynamic_scene_plan.v1",
+  "status": "OFFLINE_DYNAMIC_PLANS_ONLY",
+  "scene_count": 56,
+  "plan_root": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans",
+  "native_usd_assets_generated": false,
+  "kit_launch_performed": false,
+  "physics_gate_performed": false,
+  "status_counts": {
+    "REQUIRES_PHYSICS_VALIDATION": 53,
+    "NOT_BUILT": 3
+  },
+  "builder_status_counts": {
+    "BUILDER_READY": 53,
+    "NOT_BUILT": 3
+  },
+  "dynamic_asset_status_counts": {
+    "NOT_BUILT": 56
+  },
+  "physics_status_counts": {
+    "NOT_RUN_PAUSED": 56
+  },
+  "missing_reason_counts": {
+    "MISSING_EXTERNAL_MATERIAL_ASSET": 3
+  },
+  "component_counts": {
+    "FabricCurtainBuilder": 56,
+    "RigidObstacleBuilder": 56,
+    "PvcMeshBuilder": 56,
+    "HingedDoorBuilder": 56,
+    "MaterialAssetDependency": 3
+  },
+  "scene_plans": [
+    {
+      "scene_id": "BI_A01_BASIC_CLOTH",
+      "physical_config_id": "08f53745dc901298",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_A01_BASIC_CLOTH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_A02_RIGID_BOARD",
+      "physical_config_id": "30ca66e128f8f488",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_A02_RIGID_BOARD.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_A03_EMPTY_CONTROL",
+      "physical_config_id": "c0c67bba2d6fb3ae",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_A03_EMPTY_CONTROL.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_B_WALL_02CM",
+      "physical_config_id": "a06df023d266feee",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_B_WALL_02CM.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_B_WALL_04CM",
+      "physical_config_id": "3bb3ee91e73f77a4",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_B_WALL_04CM.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_B_WALL_06CM",
+      "physical_config_id": "f0771a2c0388d670",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_B_WALL_06CM.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_B_WALL_08CM",
+      "physical_config_id": "a3f3319ddcd6eb12",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_B_WALL_08CM.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_B_WALL_NOWALL",
+      "physical_config_id": "08f53745dc901298",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_B_WALL_NOWALL.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_BOTH_BOTTOM_CORNERS",
+      "physical_config_id": "49e5e52a9fc8cbf4",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_BOTH_BOTTOM_CORNERS.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_FOUR_CORNERS",
+      "physical_config_id": "ee23859eb40e7e74",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_FOUR_CORNERS.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_FULL_PERIMETER",
+      "physical_config_id": "7c85cb1a7483a978",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_FULL_PERIMETER.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_LEFT_BOTTOM_CORNER",
+      "physical_config_id": "16c7add3c40eae18",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_LEFT_BOTTOM_CORNER.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_LEFT_EDGE_FIXED",
+      "physical_config_id": "ada963091717e2c2",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_LEFT_EDGE_FIXED.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_RIGHT_BOTTOM_CORNER",
+      "physical_config_id": "58b3a93fe3a08c2f",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_RIGHT_BOTTOM_CORNER.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_RIGHT_EDGE_FIXED",
+      "physical_config_id": "cde703702fd94a22",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_RIGHT_EDGE_FIXED.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_THREE_MISSING_BOTTOM_LEFT",
+      "physical_config_id": "c9678f05a11ee271",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_THREE_MISSING_BOTTOM_LEFT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_THREE_MISSING_BOTTOM_RIGHT",
+      "physical_config_id": "3de0099adfd63156",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_THREE_MISSING_BOTTOM_RIGHT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_THREE_MISSING_TOP_LEFT",
+      "physical_config_id": "9e12015fb6b9b65d",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_THREE_MISSING_TOP_LEFT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_THREE_MISSING_TOP_RIGHT",
+      "physical_config_id": "4f108b4608d026f1",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_THREE_MISSING_TOP_RIGHT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_C_TOP_PLUS_BOTTOM_CORNERS",
+      "physical_config_id": "3d6afb86ea6870a2",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_C_TOP_PLUS_BOTTOM_CORNERS.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_BEND_HIGH",
+      "physical_config_id": "acf4745d864c4566",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_BEND_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_DAMPING_HIGH",
+      "physical_config_id": "bd7c33cc1d4bfe49",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_DAMPING_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_DENSITY_HIGH",
+      "physical_config_id": "d0fd27dcb6ab8b6b",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_DENSITY_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_DENSITY_ORDINARY",
+      "physical_config_id": "08f53745dc901298",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_DENSITY_ORDINARY.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_DENSITY_VERY_HIGH",
+      "physical_config_id": "cb6e0bbed61bf8e5",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_DENSITY_VERY_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_FRICTION_HIGH",
+      "physical_config_id": "deb86287829930eb",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_FRICTION_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_HEM_MASS",
+      "physical_config_id": "88bd0423397da517",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_HEM_MASS.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_INITIAL_RELAXED",
+      "physical_config_id": "5d25aafa0127fa0b",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_INITIAL_RELAXED.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_INITIAL_TENSIONED",
+      "physical_config_id": "39ddfd5f87fb39c6",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_INITIAL_TENSIONED.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_PLEAT_GENTLE",
+      "physical_config_id": "cf8d2d2d3ee779fb",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_PLEAT_GENTLE.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_PLEAT_LARGE",
+      "physical_config_id": "f804ae62070266d3",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_PLEAT_LARGE.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_STRETCH_HIGH",
+      "physical_config_id": "b8700a94645f211f",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_STRETCH_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_D_THICKNESS_HIGH",
+      "physical_config_id": "b89c465a3564ff7a",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_D_THICKNESS_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_CLOTH_PROXY",
+      "physical_config_id": "08f53745dc901298",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_CLOTH_PROXY.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_DENSE_MESH_PROXY",
+      "physical_config_id": "22b09e1495a5aa21",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_DENSE_MESH_PROXY.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_DOUBLE_CENTER_OPENING",
+      "physical_config_id": "6806a4ee1e41f438",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_DOUBLE_CENTER_OPENING.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_LEFT_OPEN",
+      "physical_config_id": "dca616f3d8f69e07",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_LEFT_OPEN.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_OPEN_MESH_PROXY",
+      "physical_config_id": "a9693c93a6e183c2",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_OPEN_MESH_PROXY.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_PVC_INDEPENDENT_PROXY",
+      "physical_config_id": "235e4c18bd897993",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_PVC_INDEPENDENT_PROXY.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_PVC_OVERLAP_PROXY",
+      "physical_config_id": "30cd46c15815f6cf",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_PVC_OVERLAP_PROXY.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_PVC_SPACING_VARIANT",
+      "physical_config_id": "2a0682f4a64bc36e",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_PVC_SPACING_VARIANT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_PVC_THICKNESS_VARIANT",
+      "physical_config_id": "719b8f4cc4bc55ed",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_PVC_THICKNESS_VARIANT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_PVC_WIDTH_VARIANT",
+      "physical_config_id": "187f4c294af53d92",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_PVC_WIDTH_VARIANT.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_E_REAL_CLOTH",
+      "physical_config_id": "08f53745dc901298",
+      "status": "NOT_BUILT",
+      "dynamic_builder_status": "NOT_BUILT",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_REAL_CLOTH.json",
+      "missing_or_blocking_reasons": [
+        "MISSING_EXTERNAL_MATERIAL_ASSET"
+      ]
+    },
+    {
+      "scene_id": "BI_E_REAL_MESH",
+      "physical_config_id": "a9693c93a6e183c2",
+      "status": "NOT_BUILT",
+      "dynamic_builder_status": "NOT_BUILT",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_REAL_MESH.json",
+      "missing_or_blocking_reasons": [
+        "MISSING_EXTERNAL_MATERIAL_ASSET"
+      ]
+    },
+    {
+      "scene_id": "BI_E_REAL_PVC",
+      "physical_config_id": "30cd46c15815f6cf",
+      "status": "NOT_BUILT",
+      "dynamic_builder_status": "NOT_BUILT",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_REAL_PVC.json",
+      "missing_or_blocking_reasons": [
+        "MISSING_EXTERNAL_MATERIAL_ASSET"
+      ]
+    },
+    {
+      "scene_id": "BI_E_RIGHT_OPEN",
+      "physical_config_id": "b5f7a7fc7d74e27e",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_E_RIGHT_OPEN.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_F_CENTER_SPLIT_MOVABLE",
+      "physical_config_id": "cbd2ced1dd4b49a0",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_F_CENTER_SPLIT_MOVABLE.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_F_INDEPENDENT_RINGS",
+      "physical_config_id": "9a87aee5eb46a910",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_F_INDEPENDENT_RINGS.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_F_LEFT_OPEN_MOVABLE",
+      "physical_config_id": "a856b7c83ed3aef7",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_F_LEFT_OPEN_MOVABLE.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_F_RIGHT_OPEN_MOVABLE",
+      "physical_config_id": "49e02d2767d6b9bb",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_F_RIGHT_OPEN_MOVABLE.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_F_TOP_RAIL",
+      "physical_config_id": "74c099792346e458",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_F_TOP_RAIL.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_G_DOOR_HIGH",
+      "physical_config_id": "127fa119f0a9d287",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_G_DOOR_HIGH.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_G_DOOR_MEDIUM",
+      "physical_config_id": "6da8cdabb69c3c85",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_G_DOOR_MEDIUM.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_G_DOOR_NONPUSHABLE",
+      "physical_config_id": "5e89492c04ecc1f5",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_G_DOOR_NONPUSHABLE.json",
+      "missing_or_blocking_reasons": []
+    },
+    {
+      "scene_id": "BI_G_DOOR_ORDINARY",
+      "physical_config_id": "5dc87feb1d0da854",
+      "status": "REQUIRES_PHYSICS_VALIDATION",
+      "dynamic_builder_status": "BUILDER_READY",
+      "dynamic_asset_status": "NOT_BUILT",
+      "physics_validation_status": "NOT_RUN_PAUSED",
+      "plan_path": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans\\BI_G_DOOR_ORDINARY.json",
+      "missing_or_blocking_reasons": []
+    }
+  ]
+}

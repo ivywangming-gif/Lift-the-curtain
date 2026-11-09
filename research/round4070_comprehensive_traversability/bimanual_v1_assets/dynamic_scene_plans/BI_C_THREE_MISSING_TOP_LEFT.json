@@ -1,0 +1,167 @@
+{
+  "schema": "round4070-g.bimanual.dynamic_scene_plan.v1",
+  "plan_version": "BIMANUAL_DYNAMIC_BUILDER_V1",
+  "scene_id": "BI_C_THREE_MISSING_TOP_LEFT",
+  "physical_config_id": "9e12015fb6b9b65d",
+  "source_scene_asset": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\scene_specs\\BI_C_THREE_MISSING_TOP_LEFT.json",
+  "safety": {
+    "kit_launch_performed": false,
+    "physics_gate_performed": false,
+    "g1_launch_performed": false,
+    "pause_flags_required": true,
+    "v6_status": "NO_GO_UNCHANGED"
+  },
+  "status": "REQUIRES_PHYSICS_VALIDATION",
+  "dynamic_builder_status": "BUILDER_READY",
+  "dynamic_asset_status": "NOT_BUILT",
+  "physics_validation_status": "NOT_RUN_PAUSED",
+  "missing_or_blocking_reasons": [],
+  "warnings": [],
+  "components": [
+    {
+      "component_type": "FabricCurtainBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": true,
+        "native_api": "Isaac Sim 5.1 surface-deformable API",
+        "surface_deformable": true,
+        "sheet_count": 1,
+        "sheets": [
+          {
+            "sheet_index": 0,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 1.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": 0.0,
+              "columns": 25,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "cb8d048ba6d1cb9ccda25ba9e930401bfb04d8cc835a16ff3f72cef1bf0d1f67",
+            "vertex_count": 825,
+            "cell_count": 768,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 1536,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                -0.6,
+                0.02
+              ],
+              "max": [
+                0.85,
+                0.6,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.049999999999999996,
+            "fixed_vertex_indices": [
+              0,
+              800,
+              824
+            ],
+            "fixed_vertex_count": 3,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.01
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          }
+        ],
+        "runtime_builder_source": "scripts/round4070_g/physics_scene_builder.py + structural_curtain_asset.py"
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "RigidObstacleBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "obstacles": [],
+        "native_schema": {
+          "geometry": "UsdGeom.Cube / Isaac Lab sim_utils.CuboidCfg",
+          "collision": "UsdPhysics.CollisionAPI",
+          "fixed_body": "no dynamic RigidBodyAPI for fixed barriers"
+        }
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "PvcMeshBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "reason": "ordinary_surface_or_rigid_control"
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "HingedDoorBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "reason": "no_door_component"
+      },
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "offline_checks": {
+    "mesh": "PASS_OFFLINE_ANALYTIC",
+    "units": "PASS_METRIC_M_KG_S",
+    "fixed_nodes": "PASS_INDEX_RANGE",
+    "colliders": "DECLARED_NATIVE_SCHEMA_NOT_RUNTIME_BOUND",
+    "physics_material": "DECLARED_NATIVE_MATERIAL_PARAMETERS",
+    "usd_schema": "DECLARED_NATIVE_API_MAPPING",
+    "initial_spacing": "PASS_POSITIVE_GAP_AND_GRID",
+    "hand_collider": "NOT_FORMALLY_CERTIFIED",
+    "composition": "PASS_OFFLINE_COMPONENT_COMPOSITION",
+    "physics_gate": "NOT_RUN_PAUSED"
+  },
+  "hand_collider": {
+    "status": "NOT_FORMALLY_CERTIFIED",
+    "source": "research/round4070_comprehensive_traversability/NATIVE_HAND_COLLIDER_CERTIFICATION_V6.json",
+    "exact_native_collider_admission": false,
+    "reason": "B10/V6 native binding and contact-plane certification remains pending; no scene plan can upgrade it."
+  },
+  "formal_use": "PROHIBITED_UNTIL_NATIVE_USD_PHYSICS_VALIDATION_AND_BIMANUAL_SAFETY_CERTIFICATION",
+  "plan_sha256": "9da7e9afaf4cb63b2147f5c6f91a4bb86dd3999de1600cc9eec056be472fc77c"
+}

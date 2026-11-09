@@ -1,6 +1,6 @@
 {
   "schema": "round4070-g.bimanual_asset_catalog.v1",
-  "status": "STATIC_CANDIDATES_ONLY",
+  "status": "STATIC_CANDIDATES_PLUS_OFFLINE_DYNAMIC_PLANS",
   "scene_count": 56,
   "asset_root": "research/round4070_comprehensive_traversability/bimanual_v1_assets",
   "scene_spec_paths": [
@@ -70,5 +70,22 @@
   "overall_gate_status_counts": {
     "EXECUTION_BLOCKED": 56
   },
-  "warning": "JSON and OBJ files are candidate geometry/configuration only, not native USD, PhysX binding, or physics evidence."
+  "warning": "JSON/OBJ files and offline dynamic plans are not native USD, PhysX binding, or physics evidence.",
+  "dynamic_builder_schema": "round4070-g.bimanual.dynamic_scene_plan.v1",
+  "dynamic_plan_root": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans",
+  "native_usd_assets_generated": false,
+  "dynamic_status_counts": {
+    "REQUIRES_PHYSICS_VALIDATION": 53,
+    "NOT_BUILT": 3
+  },
+  "dynamic_builder_status_counts": {
+    "BUILDER_READY": 53,
+    "NOT_BUILT": 3
+  },
+  "dynamic_physics_status_counts": {
+    "NOT_RUN_PAUSED": 56
+  },
+  "dynamic_missing_reason_counts": {
+    "MISSING_EXTERNAL_MATERIAL_ASSET": 3
+  }
 }

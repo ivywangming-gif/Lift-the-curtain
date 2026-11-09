@@ -1,0 +1,576 @@
+{
+  "schema": "round4070-g.bimanual.dynamic_scene_plan.v1",
+  "plan_version": "BIMANUAL_DYNAMIC_BUILDER_V1",
+  "scene_id": "BI_E_PVC_SPACING_VARIANT",
+  "physical_config_id": "2a0682f4a64bc36e",
+  "source_scene_asset": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\scene_specs\\BI_E_PVC_SPACING_VARIANT.json",
+  "safety": {
+    "kit_launch_performed": false,
+    "physics_gate_performed": false,
+    "g1_launch_performed": false,
+    "pause_flags_required": true,
+    "v6_status": "NO_GO_UNCHANGED"
+  },
+  "status": "REQUIRES_PHYSICS_VALIDATION",
+  "dynamic_builder_status": "BUILDER_READY",
+  "dynamic_asset_status": "NOT_BUILT",
+  "physics_validation_status": "NOT_RUN_PAUSED",
+  "missing_or_blocking_reasons": [],
+  "warnings": [
+    "PVC_OR_NET_PROXY_IS_NOT_MATERIAL_CALIBRATION"
+  ],
+  "components": [
+    {
+      "component_type": "FabricCurtainBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": true,
+        "native_api": "Isaac Sim 5.1 surface-deformable API",
+        "surface_deformable": true,
+        "sheet_count": 6,
+        "sheets": [
+          {
+            "sheet_index": 0,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 0.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": -0.4,
+              "columns": 7,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "18d8fbd391c5e7fd904f030d16cbac0b67704a95c5b6a7873137ead2c92de5fb",
+            "vertex_count": 231,
+            "cell_count": 192,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 384,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                -0.5,
+                0.02
+              ],
+              "max": [
+                0.85,
+                -0.30000000000000004,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.03333333333333333,
+            "fixed_vertex_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "fixed_vertex_count": 7,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.005
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          },
+          {
+            "sheet_index": 1,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 0.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": -0.24,
+              "columns": 7,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "24c424088490ecd5a0c72df86ebd7f036baaa16cbcbaff74c4975644cbe49bea",
+            "vertex_count": 231,
+            "cell_count": 192,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 384,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                -0.33999999999999997,
+                0.02
+              ],
+              "max": [
+                0.85,
+                -0.13999999999999999,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.03333333333333333,
+            "fixed_vertex_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "fixed_vertex_count": 7,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.005
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          },
+          {
+            "sheet_index": 2,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 0.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": -0.08,
+              "columns": 7,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "be2ab95f3c93c310686e9297797a8322b106b564b3c76df4ce8b57e339c2ff8a",
+            "vertex_count": 231,
+            "cell_count": 192,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 384,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                -0.18,
+                0.02
+              ],
+              "max": [
+                0.85,
+                0.020000000000000004,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.03333333333333333,
+            "fixed_vertex_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "fixed_vertex_count": 7,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.005
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          },
+          {
+            "sheet_index": 3,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 0.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": 0.08,
+              "columns": 7,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "c42830af3038a2f9a6791f1f7290740ec39cabe36a96d47a86ce5dba188d4952",
+            "vertex_count": 231,
+            "cell_count": 192,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 384,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                -0.020000000000000004,
+                0.02
+              ],
+              "max": [
+                0.85,
+                0.18,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.03333333333333333,
+            "fixed_vertex_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "fixed_vertex_count": 7,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.005
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          },
+          {
+            "sheet_index": 4,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 0.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": 0.24,
+              "columns": 7,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "b9b051d1af7a95853a2f5c0c5bd29e4a80684b344926bb3826c936f21f70f6e2",
+            "vertex_count": 231,
+            "cell_count": 192,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 384,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                0.13999999999999999,
+                0.02
+              ],
+              "max": [
+                0.85,
+                0.33999999999999997,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.03333333333333333,
+            "fixed_vertex_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "fixed_vertex_count": 7,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.005
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          },
+          {
+            "sheet_index": 5,
+            "component_type": "surface_deformable_sheet",
+            "units": "m_kg_s",
+            "mesh_recipe": {
+              "local_plane": "x_z",
+              "native_yaw_rad": 1.5707963267948966,
+              "world_axes": {
+                "width": "+y_after_yaw",
+                "normal": "+x_after_yaw",
+                "height": "+z"
+              },
+              "width_m": 0.2,
+              "height_m": 2.0,
+              "bottom_z_m": 0.02,
+              "center_x_m": 0.85,
+              "center_y_m": 0.4,
+              "columns": 7,
+              "rows": 33,
+              "pleat_amplitude_m": 0.0,
+              "pleat_waves": 2.0,
+              "net_hole_period": 0,
+              "net_hole_size": 1
+            },
+            "mesh_hash": "ece41862b2537f2d1639ab287b86b43f927856bc8cbe1a208b7e6af05e24dd56",
+            "vertex_count": 231,
+            "cell_count": 192,
+            "removed_hole_cell_count": 0,
+            "triangle_count": 384,
+            "rest_bounds_m": {
+              "min": [
+                0.85,
+                0.30000000000000004,
+                0.02
+              ],
+              "max": [
+                0.85,
+                0.5,
+                2.02
+              ]
+            },
+            "minimum_grid_spacing_m": 0.03333333333333333,
+            "fixed_vertex_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "fixed_vertex_count": 7,
+            "attachment": {
+              "mechanism": "WORLD_FIXED",
+              "suspension": "STATIC",
+              "rail_limit_m": 0.3,
+              "ring_stride": 3,
+              "overlap_offset_m": 0.005
+            },
+            "physics_material": {
+              "density_kg_m3": 250.0,
+              "thickness_m": 0.002,
+              "static_friction": 0.5,
+              "dynamic_friction": 0.4,
+              "stretch_stiffness": 500.0,
+              "shear_stiffness": 250.0,
+              "bend_stiffness": 0.02,
+              "damping": 0.05,
+              "hem_mass_kg": 0.0
+            },
+            "native_schema": {
+              "mesh": "UsdGeom.Mesh",
+              "deformable_body": "omni.physx.scripts.deformableUtils.set_physics_surface_deformable_body",
+              "collision": "UsdPhysics.CollisionAPI",
+              "material": "omni.physx.scripts.deformableUtils.add_surface_deformable_material",
+              "attachment": "omni.physx.scripts.deformableUtils.create_auto_deformable_attachment",
+              "attachment_refresh": "omni.physx.get_physx_attachment_private_interface.update_auto_deformable_attachment"
+            }
+          }
+        ],
+        "runtime_builder_source": "scripts/round4070_g/physics_scene_builder.py + structural_curtain_asset.py"
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "RigidObstacleBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "obstacles": [],
+        "native_schema": {
+          "geometry": "UsdGeom.Cube / Isaac Lab sim_utils.CuboidCfg",
+          "collision": "UsdPhysics.CollisionAPI",
+          "fixed_body": "no dynamic RigidBodyAPI for fixed barriers"
+        }
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "PvcMeshBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": true,
+        "representation": "pvc_independent_surface_strips",
+        "material_fidelity": "UNCALIBRATED_SURFACE_PVC_PROXY",
+        "proxy_of": "PVC_or_open_mesh",
+        "external_asset_required": false,
+        "calibration_required_before_formal_use": true,
+        "fabric_sheet_plan_hash": "1bb0262a8810da70563cc125ef94bc0a5da46477277a68faad0fa2420d39692a",
+        "native_surface_api": "same_surface_deformable_backend_as_fabric"
+      },
+      "errors": [],
+      "warnings": [
+        "PVC_OR_NET_PROXY_IS_NOT_MATERIAL_CALIBRATION"
+      ]
+    },
+    {
+      "component_type": "HingedDoorBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "reason": "no_door_component"
+      },
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "offline_checks": {
+    "mesh": "PASS_OFFLINE_ANALYTIC",
+    "units": "PASS_METRIC_M_KG_S",
+    "fixed_nodes": "PASS_INDEX_RANGE",
+    "colliders": "DECLARED_NATIVE_SCHEMA_NOT_RUNTIME_BOUND",
+    "physics_material": "DECLARED_NATIVE_MATERIAL_PARAMETERS",
+    "usd_schema": "DECLARED_NATIVE_API_MAPPING",
+    "initial_spacing": "PASS_POSITIVE_GAP_AND_GRID",
+    "hand_collider": "NOT_FORMALLY_CERTIFIED",
+    "composition": "PASS_OFFLINE_COMPONENT_COMPOSITION",
+    "physics_gate": "NOT_RUN_PAUSED"
+  },
+  "hand_collider": {
+    "status": "NOT_FORMALLY_CERTIFIED",
+    "source": "research/round4070_comprehensive_traversability/NATIVE_HAND_COLLIDER_CERTIFICATION_V6.json",
+    "exact_native_collider_admission": false,
+    "reason": "B10/V6 native binding and contact-plane certification remains pending; no scene plan can upgrade it."
+  },
+  "formal_use": "PROHIBITED_UNTIL_NATIVE_USD_PHYSICS_VALIDATION_AND_BIMANUAL_SAFETY_CERTIFICATION",
+  "plan_sha256": "d176dbab0abda5107a13b82e427a913c6ac698aa394367955e9c4ed49277db34"
+}

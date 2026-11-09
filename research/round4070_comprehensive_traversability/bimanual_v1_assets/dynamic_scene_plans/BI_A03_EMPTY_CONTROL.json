@@ -1,0 +1,87 @@
+{
+  "schema": "round4070-g.bimanual.dynamic_scene_plan.v1",
+  "plan_version": "BIMANUAL_DYNAMIC_BUILDER_V1",
+  "scene_id": "BI_A03_EMPTY_CONTROL",
+  "physical_config_id": "c0c67bba2d6fb3ae",
+  "source_scene_asset": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\scene_specs\\BI_A03_EMPTY_CONTROL.json",
+  "safety": {
+    "kit_launch_performed": false,
+    "physics_gate_performed": false,
+    "g1_launch_performed": false,
+    "pause_flags_required": true,
+    "v6_status": "NO_GO_UNCHANGED"
+  },
+  "status": "REQUIRES_PHYSICS_VALIDATION",
+  "dynamic_builder_status": "BUILDER_READY",
+  "dynamic_asset_status": "NOT_BUILT",
+  "physics_validation_status": "NOT_RUN_PAUSED",
+  "missing_or_blocking_reasons": [],
+  "warnings": [],
+  "components": [
+    {
+      "component_type": "FabricCurtainBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "reason": "geometry_kind=empty"
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "RigidObstacleBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "obstacles": [],
+        "native_schema": {
+          "geometry": "UsdGeom.Cube / Isaac Lab sim_utils.CuboidCfg",
+          "collision": "UsdPhysics.CollisionAPI",
+          "fixed_body": "no dynamic RigidBodyAPI for fixed barriers"
+        }
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "PvcMeshBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "reason": "ordinary_surface_or_rigid_control"
+      },
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "component_type": "HingedDoorBuilder",
+      "status": "BUILDER_READY",
+      "plan": {
+        "enabled": false,
+        "reason": "no_door_component"
+      },
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "offline_checks": {
+    "mesh": "PASS_OFFLINE_ANALYTIC",
+    "units": "PASS_METRIC_M_KG_S",
+    "fixed_nodes": "PASS_INDEX_RANGE",
+    "colliders": "DECLARED_NATIVE_SCHEMA_NOT_RUNTIME_BOUND",
+    "physics_material": "DECLARED_NATIVE_MATERIAL_PARAMETERS",
+    "usd_schema": "DECLARED_NATIVE_API_MAPPING",
+    "initial_spacing": "PASS_POSITIVE_GAP_AND_GRID",
+    "hand_collider": "NOT_FORMALLY_CERTIFIED",
+    "composition": "PASS_OFFLINE_COMPONENT_COMPOSITION",
+    "physics_gate": "NOT_RUN_PAUSED"
+  },
+  "hand_collider": {
+    "status": "NOT_FORMALLY_CERTIFIED",
+    "source": "research/round4070_comprehensive_traversability/NATIVE_HAND_COLLIDER_CERTIFICATION_V6.json",
+    "exact_native_collider_admission": false,
+    "reason": "B10/V6 native binding and contact-plane certification remains pending; no scene plan can upgrade it."
+  },
+  "formal_use": "PROHIBITED_UNTIL_NATIVE_USD_PHYSICS_VALIDATION_AND_BIMANUAL_SAFETY_CERTIFICATION",
+  "plan_sha256": "6db24b0fbc1f62c6b31a2fd64d106ae4caece93a87c0076a30ef3fa73971f369"
+}

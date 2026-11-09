@@ -1,7 +1,7 @@
 {
   "schema": "round4070-g.bimanual_progress.v1",
   "round": "4070-G",
-  "stage": "STAGE_1_SCENE_AUDIT_AND_ASSET_SUPPLEMENT",
+  "stage": "STAGE_2_OFFLINE_DYNAMIC_BUILDER_PREPARATION",
   "status": "IN_PROGRESS_NOT_COMPLETE",
   "safety": {
     "global_pause_present": true,
@@ -9,7 +9,13 @@
     "v6_decision": "NO_GO_FOR_FORMAL_G1_COLLECTION",
     "flags_modified": false,
     "manifest_reset": false,
-    "e1_fixed_modified": false
+    "e1_fixed_modified": false,
+    "pause_flags_modified": false,
+    "manifest_sha256_at_dynamic_preparation": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+    "pause_hashes_at_dynamic_preparation": {
+      "PAUSE.flag": "3231de7b0f0c282178d2b92fb44b0b37ec57b16364e07cd873ccfe8fafffc5ae",
+      "PAUSE_G1.flag": "b44cceffe2c948e9f13bbf10c1c1a63adf6d76629cf5cd8dcd774720fa8b6f4f"
+    }
   },
   "input_sources": {
     "current_campaign": {
@@ -152,16 +158,151 @@
     "assumption_note": "Row total is a conservative no-reuse planning bound; cluster total is an optimistic lower bound."
   },
   "not_run": [
-    "bimanual physics gate",
-    "bimanual G1 collection",
     "E1_BI evaluation",
+    "Kit launch",
     "M1-M6 training",
-    "formal model comparison"
+    "bimanual G1 collection",
+    "bimanual physics gate",
+    "formal model comparison",
+    "native USD authoring"
   ],
   "next_gates": [
-    "resolve V6/native safety NO-GO",
-    "approve budget addendum",
-    "implement and validate bimanual runtime builder",
-    "run representative physics-only bimanual stop/retract"
-  ]
+    "resolve B10/V6 action and exact native hand collider safety NO-GO",
+    "obtain independent safety approval for representative stop/retract physics-only validation",
+    "supply and calibrate the three missing real-material assets before using those rows",
+    "approve a material-aware budget and partial-factorial/LHS design"
+  ],
+  "dynamic_builder_preparation": {
+    "schema": "round4070-g.bimanual.dynamic_scene_plan.v1",
+    "builder_version": "BIMANUAL_DYNAMIC_BUILDER_V1",
+    "candidate_scene_count": 56,
+    "status_counts": {
+      "REQUIRES_PHYSICS_VALIDATION": 53,
+      "NOT_BUILT": 3
+    },
+    "builder_status_counts": {
+      "BUILDER_READY": 53,
+      "NOT_BUILT": 3
+    },
+    "native_usd_assets_generated": false,
+    "kit_launch_performed": false,
+    "physics_gate_performed": false,
+    "g1_launch_performed": false,
+    "plan_root": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\dynamic_scene_plans",
+    "environment_report": "research\\round4070_comprehensive_traversability\\BIMANUAL_PHYSICS_ENVIRONMENT_COMPATIBILITY.json",
+    "readiness_report": "research\\round4070_comprehensive_traversability\\BIMANUAL_DYNAMIC_SCENE_READINESS.csv"
+  },
+  "environment_compatibility": {
+    "report": "research\\round4070_comprehensive_traversability\\BIMANUAL_PHYSICS_ENVIRONMENT_COMPATIBILITY.json",
+    "isaac_sim": "5.1.0.0",
+    "isaac_lab": "0.54.4",
+    "python": "3.11.15",
+    "torch": "2.7.0+cu128",
+    "physx_extension": "107.3.26",
+    "decision": "OFFLINE_BUILDER_COMPATIBLE; PHYSICS_RUNTIME_NOT_ADMITTED"
+  },
+  "budget_v2": {
+    "registered": {
+      "candidate_rows": 56,
+      "valid_episode_target": 1820,
+      "independent_parameter_combos": 595,
+      "physics_seed_checks_at_three_seeds": 1785
+    },
+    "deduplication": {
+      "physical_config_id_count": 50,
+      "physical_config_lower_bound_not_material_safe": 1620,
+      "physical_config_combo_lower_bound_not_material_safe": 530,
+      "material_aware_execution_strata": 53,
+      "material_aware_episode_lower_bound": 1710,
+      "material_aware_combo_lower_bound": 560,
+      "material_aware_seed_checks_at_three_seeds": 1680,
+      "duplicate_groups": [
+        {
+          "execution_stratum": [
+            "08f53745dc901298",
+            "UNCALIBRATED_SURFACE_DEFORMABLE_PROXY"
+          ],
+          "scene_ids": [
+            "BI_A01_BASIC_CLOTH",
+            "BI_B_WALL_NOWALL",
+            "BI_D_DENSITY_ORDINARY",
+            "BI_E_CLOTH_PROXY"
+          ]
+        }
+      ],
+      "physical_duplicate_groups": [
+        {
+          "physical_config_id": "08f53745dc901298",
+          "scene_ids": [
+            "BI_A01_BASIC_CLOTH",
+            "BI_B_WALL_NOWALL",
+            "BI_D_DENSITY_ORDINARY",
+            "BI_E_CLOTH_PROXY",
+            "BI_E_REAL_CLOTH"
+          ],
+          "material_fidelities": [
+            "REAL_CLOTH_ASSET_REQUIRED_NOT_PRESENT",
+            "UNCALIBRATED_SURFACE_DEFORMABLE_PROXY"
+          ],
+          "safe_to_merge": false
+        },
+        {
+          "physical_config_id": "a9693c93a6e183c2",
+          "scene_ids": [
+            "BI_E_OPEN_MESH_PROXY",
+            "BI_E_REAL_MESH"
+          ],
+          "material_fidelities": [
+            "REAL_MESH_ASSET_REQUIRED_NOT_PRESENT",
+            "UNCALIBRATED_PERFORATED_SURFACE_NET_PROXY"
+          ],
+          "safe_to_merge": false
+        },
+        {
+          "physical_config_id": "30cd46c15815f6cf",
+          "scene_ids": [
+            "BI_E_PVC_OVERLAP_PROXY",
+            "BI_E_REAL_PVC"
+          ],
+          "material_fidelities": [
+            "REAL_PVC_ASSET_REQUIRED_NOT_PRESENT",
+            "UNCALIBRATED_SURFACE_PVC_PROXY"
+          ],
+          "safe_to_merge": false
+        }
+      ],
+      "safe_episode_reduction_from_exact_material_aware_duplicates": 110,
+      "safe_combo_reduction_from_exact_material_aware_duplicates": 35,
+      "warning": "physical_config_id excludes material_fidelity; real-material rows must not be silently merged with proxy rows"
+    },
+    "current_v5_budget": {
+      "max_g1_launches": 1000,
+      "g1_attempts_launched": 36,
+      "remaining_g1_launches": 964,
+      "registered_episode_deficit_at_100_percent_yield": 856,
+      "registered_nominal_attempt_deficit_at_80_percent_yield": 1311,
+      "max_valid_episodes_at_80_percent_yield": 771
+    },
+    "minimal_feasible_after_all_safety_approvals": {
+      "scope": "one representative valid episode per unique proxy physical configuration",
+      "unique_proxy_configs": 50,
+      "physics_seed_checks": 150,
+      "valid_bimanual_episodes": 50,
+      "nominal_g1_attempts_at_80_percent_yield": 63,
+      "formal_ranking": false
+    },
+    "within_remaining_budget_balanced_plan_not_authorization": {
+      "scope": "15 valid episodes per unique proxy physical configuration",
+      "valid_bimanual_episodes": 750,
+      "nominal_g1_attempts_at_80_percent_yield": 938,
+      "remaining_nominal_headroom": 26,
+      "formal_ranking": false
+    },
+    "assumptions": [
+      "left and right hands remain one synchronized episode, never two samples",
+      "physics seeds are validation checks, not independent physical scenes",
+      "a valid episode cannot be claimed before B10/V6, hand collider, stop/retract and independent approval gates",
+      "no task is launched by this audit"
+    ]
+  }
 }
