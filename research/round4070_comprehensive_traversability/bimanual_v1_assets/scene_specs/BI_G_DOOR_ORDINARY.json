@@ -1,0 +1,85 @@
+{
+  "schema": "round4070-g.bimanual.scene.asset.v1",
+  "scene_id": "BI_G_DOOR_ORDINARY",
+  "physical_config_id": "5dc87feb1d0da854",
+  "source_base_ref": "A01",
+  "category": "G_CURTAIN_DOOR_COMPOSITE",
+  "scene_config": {
+    "schema": "round4070-g.scene.v1",
+    "scene_id": "BI_G_DOOR_ORDINARY",
+    "family": "BI",
+    "name": "ordinary pushable hinged door",
+    "material_fidelity": "UNCALIBRATED_SURFACE_DEFORMABLE_PROXY",
+    "real_material_validated": false,
+    "geometry": {
+      "kind": "surface",
+      "width_m": 1.2,
+      "height_m": 2.0,
+      "bottom_z_m": 0.02,
+      "center_x_m": 0.85,
+      "center_y_m": 0.0,
+      "columns": 25,
+      "rows": 33,
+      "pleat_amplitude_m": 0.0,
+      "pleat_waves": 2,
+      "net_hole_period": 0,
+      "net_hole_size": 1
+    },
+    "physics": {
+      "density_kg_m3": 250.0,
+      "thickness_m": 0.002,
+      "stretch_stiffness": 500.0,
+      "shear_stiffness": 250.0,
+      "bend_stiffness": 0.02,
+      "damping": 0.05,
+      "static_friction": 0.5,
+      "dynamic_friction": 0.4,
+      "hem_mass_kg": 0.0
+    },
+    "topology": {
+      "kind": "TOP_EDGE",
+      "suspension": "STATIC",
+      "rail_limit_m": 0.3,
+      "ring_stride": 3,
+      "local_fixed_vertex_indices": null
+    },
+    "sheets": [],
+    "wall": null,
+    "scope": "BIMANUAL_V1_CANDIDATE",
+    "physical_config_id": "5dc87feb1d0da854",
+    "door": {
+      "kind": "HINGED_PUSH_DOOR",
+      "pushable": true,
+      "width_m": 0.9,
+      "height_m": 2.0,
+      "thickness_m": 0.04,
+      "curtain_to_door_gap_m": 0.08,
+      "opening_direction": "POSITIVE_Y",
+      "hinge_friction_torque_nm": 0.2,
+      "initial_angle_rad": 0.0,
+      "nominal_open_angle_rad": 1.3089969389957472,
+      "curtain_layer_label_scope": "CURTAIN_ONLY_FIRST",
+      "composite_route_label_scope": "SECOND_STAGE_ONLY"
+    },
+    "bimanual_metadata": {
+      "base_ref": "A01",
+      "category": "G_CURTAIN_DOOR_COMPOSITE",
+      "target": 30,
+      "is_control": false,
+      "notes": "Curtain and composite route labels must remain separate."
+    }
+  },
+  "static_geometry_check": {
+    "status": "PASS_STATIC_ANALYTIC",
+    "errors": [],
+    "initial_clearance_m": 0.08,
+    "sheet_count": 1,
+    "topology_vertex_count": 0
+  },
+  "static_obj_candidate": "research\\round4070_comprehensive_traversability\\bimanual_v1_assets\\static_obj_candidates\\BI_G_DOOR_ORDINARY.obj",
+  "asset_status": "STATIC_DOOR_CANDIDATE_REQUIRES_DOOR_BUILDER",
+  "scene_build_status": "NOT_BUILT",
+  "overall_gate_status": "EXECUTION_BLOCKED",
+  "physics_status": "NOT_RUN_PAUSED",
+  "formal_use": "PROHIBITED_UNTIL_NATIVE_PHYSICS_VALIDATION_AND_BIMANUAL_SAFETY_CERTIFICATION"
+}

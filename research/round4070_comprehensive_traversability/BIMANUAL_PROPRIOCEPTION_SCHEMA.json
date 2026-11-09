@@ -1,0 +1,96 @@
+{
+  "schema": "round4070-g.bimanual_proprioception.v1",
+  "version": "BIMANUAL_PROPRIOCEPTION_SCHEMA",
+  "status": "OFFLINE_SCHEMA_FROZEN_PENDING_EXECUTION_CERTIFICATION",
+  "time_axis": {
+    "shape": "[T,C]",
+    "timestamp_field": "t_s",
+    "sampling": "raw_200_hz_with_actual_timestamps",
+    "one_episode_only": true,
+    "left_right_body_alignment": "same_row_timestamp_or_explicit_mask"
+  },
+  "episode_tensor": "X_t = [X_t^L, X_t^R, X_t^Body]",
+  "left_hand": {
+    "required_groups": [
+      "q",
+      "qdot",
+      "q_cmd",
+      "effort_proxy",
+      "fk_body_frame",
+      "velocity_body_frame",
+      "actual_progress",
+      "contact_time",
+      "stop_state",
+      "retract_state"
+    ]
+  },
+  "right_hand": {
+    "required_groups": [
+      "q",
+      "qdot",
+      "q_cmd",
+      "effort_proxy",
+      "fk_body_frame",
+      "velocity_body_frame",
+      "actual_progress",
+      "contact_time",
+      "stop_state",
+      "retract_state"
+    ]
+  },
+  "body": {
+    "required_groups": [
+      "imu_orientation",
+      "imu_angular_velocity",
+      "imu_linear_acceleration",
+      "torso_pose",
+      "root_velocity",
+      "probe_relevant_joint_feedback"
+    ]
+  },
+  "episode_metadata": {
+    "required": [
+      "episode_id",
+      "scene_id",
+      "physical_config_id",
+      "physics_seed",
+      "action_protocol_version",
+      "observation_cutoff_s",
+      "left_contact_pose_id",
+      "right_contact_pose_id",
+      "stop_reason",
+      "curtain_layer_label",
+      "composite_route_label"
+    ],
+    "forbidden_model_inputs": [
+      "scene_id",
+      "physical_config_id",
+      "material_truth",
+      "constraint_truth",
+      "hidden_wall_distance",
+      "door_truth",
+      "future_observations",
+      "contact_truth_from_simulator"
+    ]
+  },
+  "mask_contract": {
+    "every_group_has_validity_mask": true,
+    "missing_value_policy": "retain_raw_placeholder_plus_reason_and_mask",
+    "allowed_reasons": [
+      "sensor_missing",
+      "runtime_drop",
+      "not_applicable",
+      "not_yet_recorded",
+      "safety_stop_before_sample"
+    ]
+  },
+  "label_contract": {
+    "one_overall_label_per_episode": true,
+    "allowed_overall_labels": [
+      "PASSABLE_FOR_ACTION",
+      "BLOCKED",
+      "LABEL_UNKNOWN"
+    ],
+    "hand_side_not_a_sample_axis": true
+  }
+}

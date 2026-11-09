@@ -1,0 +1,7 @@
+ablation_id,comparison,purpose,status
+A,M1_vs_M3,pretraining contribution,NOT_RUN_NO_BIMANUAL_EPISODES
+B,M3_vs_M4,matched SupCon contribution,NOT_RUN_NO_BIMANUAL_EPISODES
+C,M4_vs_M3_no_supcon,remove matched SupCon,NOT_RUN_NO_BIMANUAL_EPISODES
+D,M4_vs_M6,matched vs ordinary SupCon,NOT_RUN_NO_BIMANUAL_EPISODES
+E,M4_order_vs_no_order,time-order preservation,NOT_RUN_NO_BIMANUAL_EPISODES
+F,left_right_bimanual_body,input ablation,NOT_RUN_NO_BIMANUAL_EPISODES

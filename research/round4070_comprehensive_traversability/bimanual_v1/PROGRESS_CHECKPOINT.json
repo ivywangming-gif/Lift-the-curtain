@@ -1,0 +1,167 @@
+{
+  "schema": "round4070-g.bimanual_progress.v1",
+  "round": "4070-G",
+  "stage": "STAGE_1_SCENE_AUDIT_AND_ASSET_SUPPLEMENT",
+  "status": "IN_PROGRESS_NOT_COMPLETE",
+  "safety": {
+    "global_pause_present": true,
+    "g1_pause_present": true,
+    "v6_decision": "NO_GO_FOR_FORMAL_G1_COLLECTION",
+    "flags_modified": false,
+    "manifest_reset": false,
+    "e1_fixed_modified": false
+  },
+  "input_sources": {
+    "current_campaign": {
+      "path": "research\\round4070_comprehensive_traversability\\CURRENT_CAMPAIGN.json",
+      "exists": true,
+      "sha256": "195c9e8a6ad34e289943badb088ea227cdfef056a222f29cc6661e6e083ee49d"
+    },
+    "progress_checkpoint": {
+      "path": "research\\round4070_comprehensive_traversability\\PROGRESS_CHECKPOINT.json",
+      "exists": true,
+      "sha256": "b9a548dee422415047c243a38546573f9187bcc5fb7df4966f2bc2171ce8aa9e"
+    },
+    "scene_coverage_matrix": {
+      "path": "research\\round4070_comprehensive_traversability\\SCENE_COVERAGE_MATRIX.csv",
+      "exists": true,
+      "sha256": "389770101164c628a942c6057da881bf265ea2a7aa49dac90528f3137877c4ff"
+    },
+    "g1_launch_ledger": {
+      "path": "research\\round4070_comprehensive_traversability\\G1_LAUNCH_LEDGER.json",
+      "exists": true,
+      "sha256": "811608ef6a20828c123356b3a007454360c1914be9cd236e3bb6614bb208b495"
+    },
+    "learning_delivery_status": {
+      "path": "research\\round4070_comprehensive_traversability\\LEARNING_DELIVERY_STATUS.json",
+      "exists": true,
+      "sha256": "753af7f62dfc6550f4cd0cf70a20992d880bf4dac2f1d33d29209ea994d6f288"
+    },
+    "frozen_if_else_baseline": {
+      "path": "research\\round4070_comprehensive_traversability\\FROZEN_IF_ELSE_BASELINE.md",
+      "exists": true,
+      "sha256": "f8c7f00a307b427848c50260f4b24d469faaea01da7dd56130cc80f4a21e9797"
+    },
+    "v6_go_no_go_review": {
+      "path": "research\\round4070_comprehensive_traversability\\V6_GO_NO_GO_REVIEW.md",
+      "exists": true,
+      "sha256": "4064623bbfdbe0ac893f0a59acd32cc9fc8c162c1afc1f76cf6b63adf3c590b9"
+    },
+    "v6_physics_validation_status": {
+      "path": "research\\round4070_comprehensive_traversability\\V6_PHYSICS_VALIDATION_STATUS.json",
+      "exists": true,
+      "sha256": "f52fb49b533178921806a1290de0008e4f040986a8adb6f7454910b407000a49"
+    }
+  },
+  "legacy_audit": {
+    "legal_history_count": 21,
+    "admitted_history_count": 18,
+    "pending_history_count": 3,
+    "known_label_count_including_controls": 14,
+    "core_label_count_excluding_empty_controls": 12,
+    "core_passable_count": 8,
+    "core_blocked_count": 4,
+    "legal_unknown_count": 7,
+    "unique_g1_trials_in_split_manifest": 18,
+    "unique_g1_physical_configs_in_split_manifest": 8,
+    "bimanual_episode_count": 0,
+    "left_right_synchronized_bimanual_episode_count": 0,
+    "current_campaign": {
+      "path": "research\\round4070_comprehensive_traversability\\CURRENT_CAMPAIGN.json",
+      "exists": true,
+      "manifest": "campaign_manifest_v5.json",
+      "sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+      "manifest_sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+      "manifest_matches": true
+    },
+    "input_sources": {
+      "current_campaign": {
+        "path": "research\\round4070_comprehensive_traversability\\CURRENT_CAMPAIGN.json",
+        "exists": true,
+        "sha256": "195c9e8a6ad34e289943badb088ea227cdfef056a222f29cc6661e6e083ee49d"
+      },
+      "progress_checkpoint": {
+        "path": "research\\round4070_comprehensive_traversability\\PROGRESS_CHECKPOINT.json",
+        "exists": true,
+        "sha256": "b9a548dee422415047c243a38546573f9187bcc5fb7df4966f2bc2171ce8aa9e"
+      },
+      "scene_coverage_matrix": {
+        "path": "research\\round4070_comprehensive_traversability\\SCENE_COVERAGE_MATRIX.csv",
+        "exists": true,
+        "sha256": "389770101164c628a942c6057da881bf265ea2a7aa49dac90528f3137877c4ff"
+      },
+      "g1_launch_ledger": {
+        "path": "research\\round4070_comprehensive_traversability\\G1_LAUNCH_LEDGER.json",
+        "exists": true,
+        "sha256": "811608ef6a20828c123356b3a007454360c1914be9cd236e3bb6614bb208b495"
+      },
+      "learning_delivery_status": {
+        "path": "research\\round4070_comprehensive_traversability\\LEARNING_DELIVERY_STATUS.json",
+        "exists": true,
+        "sha256": "753af7f62dfc6550f4cd0cf70a20992d880bf4dac2f1d33d29209ea994d6f288"
+      },
+      "frozen_if_else_baseline": {
+        "path": "research\\round4070_comprehensive_traversability\\FROZEN_IF_ELSE_BASELINE.md",
+        "exists": true,
+        "sha256": "f8c7f00a307b427848c50260f4b24d469faaea01da7dd56130cc80f4a21e9797"
+      },
+      "v6_go_no_go_review": {
+        "path": "research\\round4070_comprehensive_traversability\\V6_GO_NO_GO_REVIEW.md",
+        "exists": true,
+        "sha256": "4064623bbfdbe0ac893f0a59acd32cc9fc8c162c1afc1f76cf6b63adf3c590b9"
+      },
+      "v6_physics_validation_status": {
+        "path": "research\\round4070_comprehensive_traversability\\V6_PHYSICS_VALIDATION_STATUS.json",
+        "exists": true,
+        "sha256": "f52fb49b533178921806a1290de0008e4f040986a8adb6f7454910b407000a49"
+      }
+    }
+  },
+  "matrix": {
+    "row_count": 104,
+    "legacy_reference_rows": 48,
+    "supplemental_candidate_rows": 56,
+    "overall_gate_status_counts": {
+      "PHYSICS_VALID": 32,
+      "PHYSICS_INVALID": 16,
+      "EXECUTION_BLOCKED": 56
+    },
+    "physics_status_counts": {
+      "LEGACY_SINGLE_HAND_ONLY": 48,
+      "NOT_RUN_PAUSED": 56
+    },
+    "asset_status_counts": {
+      "RUNTIME_CONFIG_AND_BUILDER_SOURCE_NO_STATIC_SCENE_ASSET": 48,
+      "STATIC_GEOMETRY_CANDIDATE_NOT_RUNTIME_BUILT": 49,
+      "MISSING_EXTERNAL_MATERIAL_ASSET": 3,
+      "STATIC_DOOR_CANDIDATE_REQUIRES_DOOR_BUILDER": 4
+    }
+  },
+  "budget": {
+    "formal_candidate_row_count": 56,
+    "row_cell_valid_episode_target": 1820,
+    "exact_config_cluster_lower_bound": 1620,
+    "independent_parameter_combo_target": 595,
+    "minimum_physics_seed_checks": 1785,
+    "existing_v5_max_g1_launches": 1000,
+    "existing_g1_attempts_launched": 36,
+    "existing_remaining_g1_launch_budget": 964,
+    "lower_bound_budget_deficit_against_remaining": 856,
+    "nominal_physics_gate_seconds_at_24s_each": 42840.0,
+    "nominal_g1_attempts_at_80_percent_valid_yield": 2275,
+    "assumption_note": "Row total is a conservative no-reuse planning bound; cluster total is an optimistic lower bound."
+  },
+  "not_run": [
+    "bimanual physics gate",
+    "bimanual G1 collection",
+    "E1_BI evaluation",
+    "M1-M6 training",
+    "formal model comparison"
+  ],
+  "next_gates": [
+    "resolve V6/native safety NO-GO",
+    "approve budget addendum",
+    "implement and validate bimanual runtime builder",
+    "run representative physics-only bimanual stop/retract"
+  ]
+}

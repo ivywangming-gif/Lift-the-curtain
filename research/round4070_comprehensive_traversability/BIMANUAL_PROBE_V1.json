@@ -1,0 +1,100 @@
+{
+  "schema": "round4070-g.bimanual_probe.v1",
+  "version": "BIMANUAL_PROBE_V1",
+  "status": "OFFLINE_PROTOCOL_DRAFT_PENDING_INDEPENDENT_SAFETY_CERTIFICATION",
+  "parent_protocols": [
+    "V5_FROZEN",
+    "V6_OFFLINE_REPAIR_NO_GO"
+  ],
+  "protected_invariants": {
+    "v5_v6_unchanged": true,
+    "e1_fixed_unchanged": true,
+    "pause_flags_must_remain_present": true,
+    "max_nominal_probe_m_per_hand": 0.1,
+    "y_z_action_tube_not_relaxed": true,
+    "no_unilateral_continuation_after_one_hand_stop": true
+  },
+  "clock": {
+    "raw_physics_hz": 200,
+    "control_hz": 50,
+    "timestamp_source": "actual_monotonic_physics_timestamp",
+    "shared_episode_time_axis": true,
+    "interpolation": "forbidden_for_raw_evidence"
+  },
+  "coordinate_frames": {
+    "body_forward_axis": "initial_robot_body_forward_x",
+    "hand_action_axis": "precontact_curtain_local_normal",
+    "left_and_right_contact_poses": "frozen_per_scene_and_logged_in_trial_config"
+  },
+  "staging_region": {
+    "status": "TO_BE_CERTIFIED",
+    "must_check": [
+      "biped_stability",
+      "torso_clearance",
+      "bilateral_reachability",
+      "natural_arm_extension",
+      "retract_space",
+      "self_collision",
+      "environment_collision"
+    ],
+    "legacy_y_minus_0_35_m": "retain_until_independent_action_space_audit_resolves_its_physical_meaning"
+  },
+  "action": {
+    "precontact_pose_required": true,
+    "max_nominal_probe_displacement_m": 0.1,
+    "actual_displacement_can_be_less_than_nominal": true,
+    "valid_early_stop_displacements_m": [
+      0.02,
+      0.05,
+      0.08,
+      0.1
+    ],
+    "record": [
+      "commanded_probe_displacement",
+      "actual_left_fk_displacement",
+      "actual_right_fk_displacement",
+      "curtain_surface_displacement",
+      "first_contact_time_left",
+      "first_contact_time_right",
+      "final_hand_positions",
+      "stop_reason"
+    ]
+  },
+  "coordinated_stop_and_retract": {
+    "trigger": "either_hand_verified_safety_stop",
+    "stop_latch": "both_hands_stop_forward_progress_at_next_legal_control_boundary",
+    "unilateral_forward_motion": "forbidden",
+    "retract": "only_after_physics_validated_coordinated_retract_is_admitted",
+    "unvalidated_retract": "hold_safe_state_and_end_trial_as_LABEL_UNKNOWN",
+    "safety_stop_is_not_automatically_blocked": true,
+    "required_logs": [
+      "left_stop_time",
+      "right_stop_time",
+      "left_stop_position",
+      "right_stop_position",
+      "left_retract_trajectory",
+      "right_retract_trajectory"
+    ]
+  },
+  "episode_contract": {
+    "one_overall_label_per_episode": true,
+    "left_and_right_are_not_independent_samples": true,
+    "labels": [
+      "PASSABLE_FOR_ACTION",
+      "BLOCKED",
+      "LABEL_UNKNOWN"
+    ],
+    "curtain_layer_label_separate_from_door_route_label": true,
+    "door_second_stage_must_not_leak_into_first_stage_model_input": true
+  },
+  "launch_gate": {
+    "current_decision": "NO_GO",
+    "required_before_any_physical_launch": [
+      "B10_V6_action_tube_safety_resolution",
+      "native_exact_hand_collider_certification",
+      "representative_stop_retract_physics_only_validation",
+      "independent_safety_approval",
+      "budget_addendum_approval_if_needed"
+    ]
+  }
+}
