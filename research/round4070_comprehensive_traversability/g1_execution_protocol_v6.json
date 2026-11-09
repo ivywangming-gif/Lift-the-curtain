@@ -1,0 +1,87 @@
+{
+  "schema": "round4070-g.execution-protocol.v6",
+  "protocol_id": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V6",
+  "status": "OFFLINE_DEVELOPMENT_NOT_ADMITTED",
+  "parent_protocol": {
+    "id": "G1_RNG_V1_BODY_COLLISION_200HZ_ACTION_TUBE_V2",
+    "action_contract_path": "outputs/round4070_comprehensive_traversability/g1_action_contract_v2.json",
+    "action_contract_sha256": "c4182e3ec33f0e7c60b9074c1f37bdef3e0dc22e5c86b28d6d43c4679ec01329",
+    "manifest_path": "outputs/round4070_comprehensive_traversability/campaign_manifest_v5.json",
+    "manifest_sha256": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+    "frozen_v5_unchanged": true
+  },
+  "execution_delta": {
+    "pre_step_gate": "Causal one-step prediction from the latest actual 200 Hz witness before issuing the next physics step.",
+    "prediction_model": "Constant-velocity extrapolation from the two latest actual 200 Hz witnesses; empirical replay only, not a certified worst-case motion bound.",
+    "hard_stop": "If current or predicted next witness is outside the unchanged V5 tube, do not call sim.step; latch STOP and enter the existing retract/recovery path.",
+    "brake": "Optional command scaling is draft-only; it is not admitted until representative physics certifies the deceleration and target-update timing.",
+    "between_control_updates": "A BRAKE request that cannot modify the already-held target is fail-closed to STOP.",
+    "safe_retract": "Uses the existing recovery phases; no new bypass and no boundary widening."
+  },
+  "unchanged_safety_contract": {
+    "tube_bounds_y_m": [
+      -0.35,
+      0.35
+    ],
+    "tube_bounds_z_m": [
+      0.45,
+      1.25
+    ],
+    "max_step_x_m": 0.02,
+    "sample_dt_s": 0.005,
+    "penetration_tolerance_m": 0.005,
+    "falcon_rule": "FALCON source/checksum and policy contract remain inherited and unchanged.",
+    "e1_fixed_rule": "E1_FIXED_G_V1_REAL_DT thresholds, features, and decision rule remain unchanged.",
+    "model_input": false
+  },
+  "implementation": {
+    "executor_path": "scripts/round4070_g/g1_action_executor_v6.py",
+    "executor_sha256": "19cdd05d776bb0ada9eba5b83643bb47343c1c7adae7c2ab20cc8dc6b67a9eba",
+    "adapter_path": "scripts/round4070_g/g1_trial_v6.py",
+    "adapter_sha256": "3e643e5cc72891246a302007d8420dc9df1130524eeac85fcd53840ebbbf0c75",
+    "replay_path": "research/round4070_comprehensive_traversability/V6_ACTION_REPLAY.json",
+    "replay_sha256": "49181a0d2e41c4e640782b62d9840bb63d9ddb84a5cbf21f7458522df7f17368",
+    "native_certification_path": "research/round4070_comprehensive_traversability/NATIVE_HAND_COLLIDER_CERTIFICATION_V6.json",
+    "native_certification_sha256": "f3595da3771d83668891898b9a0943b81b8ab2f0828d2f5fafb4aae3df879c14"
+  },
+  "data_fairness_and_separation": {
+    "same_execution_rules_for_all_scenes": true,
+    "same_execution_rules_for_left_and_right_hands": true,
+    "same_history_cutoff_for_e1_and_learning_models": true,
+    "same_observation_cutoff_and_traversability_label": true,
+    "v5_and_v6_data_must_be_reported_separately": true,
+    "v5_data_may_be_mixed_into_v6_training": false,
+    "original_b10_trial_path": "outputs/round4070_comprehensive_traversability/trials/G_B10_left_coverage_00_nominal_s71700_rng1_act2/attempt01",
+    "original_b10_label_preserved": true,
+    "new_attempt_ids_append_only": true,
+    "new_attempt_id_rule": "<frozen_trial_id>_v6aNN; never overwrite attempt01 or any existing raw directory.",
+    "allowed_learning_methods": [
+      "GRU",
+      "LSTM",
+      "residual",
+      "self_supervised",
+      "contrastive"
+    ],
+    "forbidden_targets": [
+      "Soft/Rigid",
+      "mass",
+      "fixed_point_identity"
+    ]
+  },
+  "offline_evidence": {
+    "hard_stop_profile_status": "CAUSAL_OFFLINE_VALIDATION_COMPLETE",
+    "draft_braking_profile_status": "DRAFT_PROFILE_REQUIRES_REPRESENTATIVE_PHYSICS_CERTIFICATION",
+    "native_binding_chain_verified": true,
+    "native_contact_planes_verified": false,
+    "formal_admission_ready": false
+  },
+  "admission_and_recovery": {
+    "pause_flag_removal_authorized": false,
+    "g1_pause_flag_removal_authorized": false,
+    "formal_g1_collection_authorized": false,
+    "independent_safety_approval_required": true,
+    "new_b10_attempt_requires_explicit_recorded_approval": true,
+    "manifest_reinitialization": false,
+    "e1_fixed_reinitialization": false
+  }
+}

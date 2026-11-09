@@ -1,0 +1,83 @@
+{
+  "schema": "round4070-g.bimanual.kit-physics-only-approval.v1",
+  "status": "PENDING_OWNER_AND_INDEPENDENT_REVIEWER_SIGNATURES",
+  "request_path": "research/round4070_comprehensive_traversability/BIMANUAL_STAGE2_KIT_PHYSICS_AUTH_REQUEST_20261109.md",
+  "plan_path": "research/round4070_comprehensive_traversability/BIMANUAL_STAGE2_KIT_PHYSICS_PLAN_20261109.json",
+  "plan_sha256": "b59133f5481a4fe9516cee93a027f664f9ce07ac24a34e0cf2c0173da95f7eb4",
+  "runner_path": "scripts/round4070_g/run_bimanual_kit_physics_only.py",
+  "runner_sha256": "fe0273adf7417a585ea252871abf3fdd3e6a55063ee26dd5f9416cdd8668381a",
+  "worker_path": "scripts/round4070_g/bimanual_stage2_kit_physics_worker.py",
+  "worker_sha256": "611caef19fe9dc299f81c556c7fd56bd0e10865be85e29bf327092bd32b7d99a",
+  "door_acceptance_contract_path": "research/round4070_comprehensive_traversability/BIMANUAL_STAGE2_DOOR_ACCEPTANCE_CONTRACT_20261109.json",
+  "door_acceptance_contract_sha256": "82bc040348c3935eadff5001989d3989d25bce5c0a66ca608f98f34d82d2e094",
+  "implementation_author_id": "codex-agent-implementation-author",
+  "approvals": {
+    "project_owner": {
+      "status": "PENDING",
+      "name_or_id": "",
+      "approved_scope": "",
+      "approved_plan_sha256": "",
+      "approved_runner_sha256": "",
+      "approved_worker_sha256": "",
+      "signed_at": "",
+      "approval_reference": "",
+      "approval_evidence_path": "",
+      "approval_evidence_sha256": ""
+    },
+    "independent_safety_reviewer": {
+      "status": "PENDING",
+      "name_or_id": "",
+      "independent_of_implementation": true,
+      "reviewed_plan_sha256": "",
+      "reviewed_runner_sha256": "",
+      "reviewed_worker_sha256": "",
+      "explicitly_authorizes_kit_while_pause_flags_remain": false,
+      "approves_scoped_addendum_to_global_hold": false,
+      "approves_stage_2a_only_no_g1_usd_or_actions": false,
+      "approves_24_runs_and_resource_scope": false,
+      "door_thresholds_preregistered": false,
+      "signed_at": "",
+      "approval_reference": "",
+      "approval_evidence_path": "",
+      "approval_evidence_sha256": "",
+      "acknowledges_physx_seed_unverified_runs_remain_unresolved": false
+    }
+  },
+  "limits": {
+    "max_physics_runs": 24,
+    "max_concurrent_kit_processes": 1,
+    "max_loaded_scenes": 1,
+    "headless": true,
+    "single_gpu": "cuda:0",
+    "max_wall_seconds_per_run": 600,
+    "max_total_wall_seconds": 14400,
+    "max_output_gib": 10,
+    "stop_if_gpu_memory_used_mib_reaches": 7168,
+    "automatic_retries": 0,
+    "output_root": "outputs/round4070_comprehensive_traversability/physics_diagnostics/bimanual_v1_kit_physics_stage2_20261109",
+    "pause_flag_removal_or_mutation": false,
+    "manifest_or_g1_queue_access": false,
+    "g1_usd_or_controller": false,
+    "falcon_or_e1_execution": false,
+    "training_or_episode_creation": false,
+    "formal_g1_collection": false
+  },
+  "required_hashes": {
+    "pause_flag": "3231de7b0f0c282178d2b92fb44b0b37ec57b16364e07cd873ccfe8fafffc5ae",
+    "pause_g1_flag": "b44cceffe2c948e9f13bbf10c1c1a63adf6d76629cf5cd8dcd774720fa8b6f4f",
+    "v5_manifest": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200"
+  },
+  "stage_2b_g1_native_hand_and_stop_retract": {
+    "included": false,
+    "requires_separate_approval": true,
+    "status": "NOT_AUTHORIZED"
+  },
+  "invalid_if_any_bound_hash_or_scope_changes": true,
+  "seed_semantics": {
+    "physx_internal_rng_seed_controlled": false,
+    "physx_rng_seed_verified": false,
+    "stage2a_runs_can_be_recorded_as_initial_condition_repetitions": "true",
+    "PHYSICS_VALID_allowed_without_verified_physx_rng_seed": false,
+    "reviewer_acknowledgement_required": true
+  }
+}

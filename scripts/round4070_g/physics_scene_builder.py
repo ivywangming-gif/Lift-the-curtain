@@ -4,7 +4,7 @@ All mesh/constraint data and this bundle are evaluation-only. Legacy geometries
 retain the exact E builder, support dimensions and attachment construction.
 """
 from pathlib import Path
-from dataclasses import replace
+from dataclasses import asdict, replace
 import importlib.util
 import math
 import sys
@@ -114,6 +114,54 @@ class Bundle:
             kind=next(c['mechanism'] for c in self.constraints if c['support_path']==path)
             rows.append(dict(path=path,mechanism=kind,position_w=p.tolist(),quaternion_wxyz=q.tolist(),dy_m=float(p[1]-p0[1]),transverse_drift_m=float(np.linalg.norm((p-p0)[[0,2]])),rotation_error_rad=float(2*np.arccos(np.clip(abs(np.dot(q,q0)),0,1)))))
         return rows
+
+
+def serialize_bundle(bundle, *, door=None, prim_root='/World/Bimanual'):
+    """Serialize the path/topology data needed to bind a saved USD again.
+
+    Runtime tensor handles are deliberately excluded. A later Kit process
+    must recreate those handles from the reopened, hash-pinned stage.
+    """
+    return dict(
+        schema='round4070-g.saved-scene-binding.v1',
+        scene_id=bundle.spec['scene_id'],
+        physical_config_id=bundle.spec['physical_config_id'],
+        prim_root=prim_root,
+        infos=[asdict(info) for info in bundle.infos],
+        constraints=bundle.constraints,
+        wall=bundle.evaluation_metadata.get('wall'),
+        dynamic_body_paths=sorted(bundle.dynamic_bodies),
+        door=door,
+    )
+
+
+def bind_existing_scene(stage, spec, metadata):
+    """Recreate Python runtime handles from an already reopened native USD."""
+    from pxr import UsdGeom
+    from isaaclab.assets import RigidObject, RigidObjectCfg
+
+    if metadata.get('schema') != 'round4070-g.saved-scene-binding.v1':
+        raise ValueError('Unsupported saved scene binding metadata')
+    if metadata.get('scene_id') != spec.get('scene_id'):
+        raise ValueError('Saved scene binding scene_id mismatch')
+    if metadata.get('physical_config_id') != spec.get('physical_config_id'):
+        raise ValueError('Saved scene binding physical_config_id mismatch')
+    infos=[];faces=[]
+    for row in metadata.get('infos', []):
+        info=_legacy.SurfaceSheetInfo(**row)
+        prim=stage.GetPrimAtPath(info.prim_path)
+        if not prim or not prim.IsA(UsdGeom.Mesh):
+            raise RuntimeError('Saved deformable mesh is missing: '+info.prim_path)
+        raw=UsdGeom.Mesh(prim).GetFaceVertexIndicesAttr().Get()
+        if raw is None or len(raw)%3:
+            raise RuntimeError('Saved deformable mesh triangles are invalid: '+info.prim_path)
+        infos.append(info);faces.append(np.asarray(raw,int).reshape(-1,3))
+    bodies={}
+    for path in metadata.get('dynamic_body_paths', []):
+        if not stage.GetPrimAtPath(path):
+            raise RuntimeError('Saved dynamic support is missing: '+path)
+        bodies[path]=RigidObject(RigidObjectCfg(prim_path=path,spawn=None))
+    return Bundle(stage,spec,infos,[],faces,list(metadata.get('constraints', [])),bodies,metadata.get('wall'))
 
 
 def create_scene(stage,spec,prim_root='/World/GScene'):

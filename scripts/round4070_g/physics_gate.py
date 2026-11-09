@@ -29,7 +29,7 @@ parser.add_argument('--scene-config-json',type=Path,required=True)
 parser.add_argument('--seed',type=int,required=True)
 parser.add_argument('--seconds',type=float,default=24.)
 AppLauncher.add_app_launcher_args(parser);ARGS=parser.parse_args()
-APP=AppLauncher(ARGS).app;LOGGER.mark('AFTER_APP')
+APP=AppLauncher(ARGS,multi_gpu=False).app;LOGGER.mark('AFTER_APP')
 DT=.005
 
 
@@ -61,7 +61,7 @@ def main():
     import omni.kit.app
     spec=json.loads(ARGS.scene_config_json.read_text(encoding='utf-8'))
     assert physical_hash(spec)==spec['physical_config_id'],'Frozen physical configuration mismatch'
-    run=ARGS.run_root;report=dict(schema='round4070-g.physics-gate.v1',scene_id=spec['scene_id'],physical_config_id=spec['physical_config_id'],seed=ARGS.seed,physics_valid=False,real_material_validated=False,material_fidelity=spec['material_fidelity'],duration_requested_s=ARGS.seconds,sampling_hz=50,physics_hz=200,probe_force_cap_n=3.,discrete_collision_scope='50 Hz sampled triangle/interior box checks with 10 mm probe and 5 mm wall penetration tolerance; no continuous collision guarantee')
+    run=ARGS.run_root;report=dict(schema='round4070-g.physics-gate.v1',scene_id=spec['scene_id'],physical_config_id=spec['physical_config_id'],seed=ARGS.seed,physics_valid=False,real_material_validated=False,material_fidelity=spec['material_fidelity'],duration_requested_s=ARGS.seconds,sampling_hz=50,physics_hz=200,probe_force_cap_n=3.,discrete_collision_scope='50 Hz sampled triangle/interior box checks with 10 mm probe and 5 mm wall penetration tolerance; no continuous collision guarantee',simulation_host_configuration=dict(multi_gpu=False,active_gpu='cuda:0',physics_gpu='cuda:0',scope='Host startup stability only; no physics, controller, action, scene, or FALCON input change',reason='Single RTX 4070 host; current hybrid-GPU Kit multi-GPU startup path is unstable'))
     launch_file=run/'campaign_launch.json'
     if launch_file.exists():report['source_sha256']=json.loads(launch_file.read_text(encoding='utf-8')).get('source_sha256',{})
     rows=[];snapshots=[];velocities=[];probes=[];support_rows=[];checks={};failure=None

@@ -1,0 +1,222 @@
+{
+  "schema": "round4070-g.bimanual.kit-physics-only-plan.v1",
+  "created_local": "2026-11-09T18:07:19.3237335+08:00",
+  "stage_id": "BIMANUAL_V1_STAGE_2A_KIT_PHYSICS_ONLY",
+  "status": "PENDING_INDEPENDENT_AUTHORIZATION",
+  "execution_started": false,
+  "kit_launch_performed": false,
+  "native_usd_authored": false,
+  "physics_runs_completed": 0,
+  "g1_model_loaded": false,
+  "g1_action_executed": false,
+  "formal_episode_created": false,
+  "scene_matrix_recreated": false,
+  "manifest_reset": false,
+  "pause_files_modified": false,
+  "scope": {
+    "mode": "HEADLESS_KIT_PHYSICS_ONLY",
+    "max_concurrent_kit_processes": 1,
+    "max_loaded_scenes": 1,
+    "gpu": "cuda:0",
+    "multi_gpu": false,
+    "max_physics_runs": 24,
+    "run_isolation": "fresh Kit process and stage for every scene-seed run",
+    "scene_usd_policy": "author one immutable USD per scene during its first authorized seed run, save and reopen it before physics; later seed runs reopen the hash-pinned USD",
+    "output_root": "outputs/round4070_comprehensive_traversability/physics_diagnostics/bimanual_v1_kit_physics_stage2_20261109",
+    "requires_scoped_global_pause_addendum": true,
+    "pause_files_must_remain_present": true,
+    "formal_g1_collection_authorized": false
+  },
+  "resource_limits": {
+    "max_wall_seconds_per_run": 600,
+    "max_total_wall_seconds": 14400,
+    "max_output_gib": 10,
+    "stop_if_gpu_memory_used_mib_reaches": 7168,
+    "concurrent_kit_processes": 1,
+    "automatic_retries": 0,
+    "stop_on_first_source_or_schema_error": true,
+    "stop_on_first_preregistered_physics_failure_for_that_scene": true
+  },
+  "authorization": {
+    "state": "NOT_GRANTED",
+    "project_owner": "PENDING",
+    "independent_safety_reviewer": "PENDING",
+    "reviewer_must_not_be_implementation_author": true,
+    "global_pause_exception": "PENDING_EXPLICIT_APPROVAL",
+    "runner_source_hash": "fe0273adf7417a585ea252871abf3fdd3e6a55063ee26dd5f9416cdd8668381a",
+    "stage_2b_included": false,
+    "worker_source_hash": "611caef19fe9dc299f81c556c7fd56bd0e10865be85e29bf327092bd32b7d99a",
+    "door_contract_sha256": "82bc040348c3935eadff5001989d3989d25bce5c0a66ca608f98f34d82d2e094",
+    "bundle_state": "IMPLEMENTED_OFFLINE_TESTED_PENDING_OWNER_AND_INDEPENDENT_REVIEWER"
+  },
+  "protected_hashes": {
+    "pause_flag": "3231de7b0f0c282178d2b92fb44b0b37ec57b16364e07cd873ccfe8fafffc5ae",
+    "pause_g1_flag": "b44cceffe2c948e9f13bbf10c1c1a63adf6d76629cf5cd8dcd774720fa8b6f4f",
+    "v5_manifest": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+    "v6_decision": "NO_GO_FOR_FORMAL_G1_COLLECTION",
+    "e1_fixed": "7c264b68f74df161e3d317ed858acba0f91daef888da9c25f7600414d62fefb2",
+    "falcon_contract": "ee26c2086e135782ff7dff4a8c5ef2b9a8cbde6a39ba055e02aca9d22e273d26",
+    "falcon_onnx": "8ac8f51875b878a79d9b5782e702b66572697e204ed262e2002b55631f3105d0"
+  },
+  "environment": {
+    "isaac_sim": "5.1.0.0",
+    "isaac_lab": "0.54.4",
+    "physx": "107.3.26",
+    "python": "3.11.15",
+    "torch": "2.7.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "gpu_memory_mib": 8188,
+    "active_kit_python_processes": 0,
+    "active_campaign_workflow_resource_locks": 0,
+    "prior_probe": "PHASE_TIMEOUT_BEFORE_APP_180s_NO_PHYSICS_RESULT",
+    "prior_system_cpu_counter": "ACCESS_DENIED_GLOBAL_PERFORMANCECOUNTER_REGISTRY"
+  },
+  "seeds": {
+    "ids": [
+      4070701,
+      4070702,
+      4070703
+    ],
+    "namespace": "STAGE_2A_TEST_ONLY_NOT_G1_RANDOMIZATION",
+    "independence": "fresh process/stage; distinct reproducible probe and free-node initial-condition perturbations; the worker does not configure or verify a PhysX-internal RNG seed",
+    "if_physx_seed_unverified": "retain all preregistered repetitions and their initial-condition signatures, report physics checks but leave PHYSICS_VALID unresolved; do not call them independent PhysX-seeded runs"
+  },
+  "run_matrix": [
+    {
+      "scene_id": "BI_A01_BASIC_CLOTH",
+      "physical_config_id": "08f53745dc901298",
+      "coverage": "ordinary_cloth",
+      "material_status": "MATERIAL_UNCALIBRATED_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_A01_BASIC_CLOTH.json",
+      "plan_sha256": "0d1efd8f45944e7674eaafdda889f0c698b5a60ae2eb1e3beb35595a7beb3e60"
+    },
+    {
+      "scene_id": "BI_C_THREE_MISSING_TOP_LEFT",
+      "physical_config_id": "9e12015fb6b9b65d",
+      "coverage": "three_corner_topology",
+      "material_status": "MATERIAL_UNCALIBRATED_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_C_THREE_MISSING_TOP_LEFT.json",
+      "plan_sha256": "2efce4d414d05add8356310e3eec3fe0c71715954dfd13ca5b51fa0a83757042"
+    },
+    {
+      "scene_id": "BI_C_FOUR_CORNERS",
+      "physical_config_id": "ee23859eb40e7e74",
+      "coverage": "four_corner_topology",
+      "material_status": "MATERIAL_UNCALIBRATED_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_C_FOUR_CORNERS.json",
+      "plan_sha256": "c5bb78d99b937cfe331a3a148d1238c01e81567f894954e3d1abc89c4832ab68"
+    },
+    {
+      "scene_id": "BI_B_WALL_04CM",
+      "physical_config_id": "3bb3ee91e73f77a4",
+      "coverage": "hidden_wall_gap_4cm",
+      "material_status": "MATERIAL_UNCALIBRATED_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_B_WALL_04CM.json",
+      "plan_sha256": "71a2fd496e5d609be9499586f6c35d40e98704a7d5ad2cb12bf1efbc4ec7498d"
+    },
+    {
+      "scene_id": "BI_G_DOOR_ORDINARY",
+      "physical_config_id": "5dc87feb1d0da854",
+      "coverage": "hinged_door_composite",
+      "material_status": "DOOR_MASS_AND_RESISTANCE_UNCALIBRATED_PROXY",
+      "door_threshold_preregistration_required": true,
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_G_DOOR_ORDINARY.json",
+      "plan_sha256": "d96eb4e1fc43268e5dd0a65cbaaf9e5ada01e5820f107a52071ca24cefb4f9ae"
+    },
+    {
+      "scene_id": "BI_E_OPEN_MESH_PROXY",
+      "physical_config_id": "a9693c93a6e183c2",
+      "coverage": "perforated_mesh_proxy",
+      "material_status": "MATERIAL_UNCALIBRATED_MESH_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_E_OPEN_MESH_PROXY.json",
+      "plan_sha256": "b9cd6340b239212c332cb346baf3b5e46d89d9a24f1b1cbdfd4d106dc3b7a520"
+    },
+    {
+      "scene_id": "BI_E_PVC_INDEPENDENT_PROXY",
+      "physical_config_id": "235e4c18bd897993",
+      "coverage": "independent_pvc_strip_proxy",
+      "material_status": "MATERIAL_UNCALIBRATED_PVC_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_E_PVC_INDEPENDENT_PROXY.json",
+      "plan_sha256": "e3ebffe6c6459f57a54ec9a2cbfc9d7c0abacb0f7bd30e7f6ebcf2968671c341"
+    },
+    {
+      "scene_id": "BI_E_PVC_OVERLAP_PROXY",
+      "physical_config_id": "30cd46c15815f6cf",
+      "coverage": "overlapping_pvc_strip_proxy",
+      "material_status": "MATERIAL_UNCALIBRATED_PVC_PROXY",
+      "plan_path": "research/round4070_comprehensive_traversability/bimanual_v1_assets/dynamic_scene_plans/BI_E_PVC_OVERLAP_PROXY.json",
+      "plan_sha256": "02fa52999e73b437115f697179815501859867cc70b1d95c5f58190b9029bd95"
+    }
+  ],
+  "seeds_per_scene": [
+    4070701,
+    4070702,
+    4070703
+  ],
+  "expected_run_count": 24,
+  "run_id_template": "BIV1A_<scene_id>_seed<seed>_attempt01",
+  "per_run_evidence": [
+    "USD hash and successful reopen",
+    "prim/schema/collider/deformable/attachment checks",
+    "units and initial clearance",
+    "solver type/iterations/dt/GPU settings",
+    "distinct reproducible initial-condition signatures, explicit PhysX RNG verification status, and reset states",
+    "50 Hz sampled contact/release/collision telemetry during 200 Hz integration",
+    "GPU/process memory, temperature and utilization",
+    "failure category and unique append-only output"
+  ],
+  "acceptance_contract": {
+    "baseline_source": "scripts/round4070_g/physics_gate.py",
+    "baseline_sha256": "6a530c5ac53a87e4d11d85f83028da67eea2f26fe6d46dc73a34821d0cd9f64e",
+    "preserve_thresholds": true,
+    "dt_s": 0.005,
+    "duration_s": 24,
+    "probe_force_cap_n": 3.0,
+    "checks": {
+      "finite": true,
+      "neighbor_stretch_max": 4.0,
+      "fixed_or_support_drift_max_m": 0.01,
+      "nodes_below_ground": 0,
+      "sampled_interior_penetrations": 0,
+      "contact_demonstrated": true,
+      "release_clear": true,
+      "late_node_speed_max_mps": 0.25,
+      "node_speed_max_mps": 5.0,
+      "initial_hanging_speed_max_mps": 0.25,
+      "rail_bounds_and_rotation": true
+    },
+    "door_thresholds": "bound to BIMANUAL_STAGE2_DOOR_ACCEPTANCE_CONTRACT_20261109.json SHA-256; no joint-limit relaxation",
+    "sampled_collision_scope": "50 Hz sampled triangle/interior-box checks; probe-wall frozen 5 mm wall-core margin; door uses preregistered 5 mm probe-side margin; no continuous-time guarantee and not G1/native-hand admission"
+  },
+  "status_semantics": {
+    "BUILDER_READY": "offline recipe only",
+    "USD_AUTHORED": "saved/reopened/hash-bound USD and schema/bindings pass",
+    "PHYSICS_VALID": "all three verified independent PhysX-seeded runs pass all frozen applicable checks; reproducible non-PhysX initial-condition perturbations alone are insufficient",
+    "PHYSICS_INVALID": "actual physical check fails",
+    "MATERIAL_UNCALIBRATED": "proxy or uncalibrated door; not real-material validation",
+    "runtime_error": "unresolved, neither physical pass nor fail"
+  },
+  "source_hashes": {
+    "scene_matrix": "626b90808cc96439bbfd772e15011104e40d3af064cda7b1bdece5eb57286f83",
+    "readiness_csv": "7a965394ae16974e66925210e7b5f6d55b3d7b052d3173762e53261af5d88140",
+    "environment_report": "3391e6a1421ecb1a39b5442c5cec80863f0f5cfdec0eae8ec3c50fbab6e0fd03",
+    "dynamic_scene_builder": "4adfe8d63c9da1e6d8bed4cd2d4bf2f9b87affed66a9e8dfdca922876266e3d6",
+    "runtime_scene_builder": "9668f88a7e129eda1ba2d1760eabe8fcab36b372e270963b0279184161fd029b",
+    "pause_flag": "3231de7b0f0c282178d2b92fb44b0b37ec57b16364e07cd873ccfe8fafffc5ae",
+    "pause_g1_flag": "b44cceffe2c948e9f13bbf10c1c1a63adf6d76629cf5cd8dcd774720fa8b6f4f",
+    "v5_manifest": "c311a6aa876bf5bae011148c3df5b6e87d986f16e6197bdb52bb67cfa828b200",
+    "v6_executor": "19cdd05d776bb0ada9eba5b83643bb47343c1c7adae7c2ab20cc8dc6b67a9eba",
+    "v6_adapter": "3e643e5cc72891246a302007d8420dc9df1130524eeac85fcd53840ebbbf0c75",
+    "v6_protocol": "d02311b6d552b70a07dbfebe4712446a2b5646811fffb50302e295cdb1c2411e",
+    "e1_fixed": "7c264b68f74df161e3d317ed858acba0f91daef888da9c25f7600414d62fefb2",
+    "falcon_contract": "ee26c2086e135782ff7dff4a8c5ef2b9a8cbde6a39ba055e02aca9d22e273d26",
+    "falcon_onnx": "8ac8f51875b878a79d9b5782e702b66572697e204ed262e2002b55631f3105d0",
+    "door_acceptance_contract": "82bc040348c3935eadff5001989d3989d25bce5c0a66ca608f98f34d82d2e094",
+    "offline_supervisor": "fe0273adf7417a585ea252871abf3fdd3e6a55063ee26dd5f9416cdd8668381a",
+    "native_worker": "611caef19fe9dc299f81c556c7fd56bd0e10865be85e29bf327092bd32b7d99a",
+    "offline_supervisor_tests": "059d9ebf709697ccce2eead88d48b8a818a7b2e6683d3e6ddbecbcb2b35ab362",
+    "native_worker_tests": "b9bd1448ff056f7c356e55bc3421aa1dcab0a318e60024aefee8cb9293d91fb1"
+  },
+  "last_updated_local": "2026-11-10"
+}
